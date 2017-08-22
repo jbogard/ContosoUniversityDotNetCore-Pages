@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ContosoUniversity.Models;
-using Microsoft.EntityFrameworkCore;
-using ContosoUniversity.Data;
-using ContosoUniversity.Models.SchoolViewModels;
+﻿using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using ContosoUniversity.Data;
+using ContosoUniversity.Models;
+using ContosoUniversity.Models.SchoolViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Controllers
+namespace ContosoUniversity.Features.Home
 {
     public class HomeController : Controller
     {

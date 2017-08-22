@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ContosoUniversity.Data;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniversity
@@ -26,7 +29,13 @@ namespace ContosoUniversity
             services.AddDbContext<SchoolContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc();
+            services.AddAutoMapper();
+
+            services.AddMediatR();
+
+            services.AddMvc()
+                .AddFeatureFolders()
+                .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
