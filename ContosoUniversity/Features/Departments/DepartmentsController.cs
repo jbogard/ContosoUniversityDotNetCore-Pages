@@ -82,7 +82,7 @@ namespace ContosoUniversity.Features.Departments
             var department = await _context.Departments
                 .Include(i => i.Administrator)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.DepartmentID == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (department == null)
             {
@@ -104,7 +104,7 @@ namespace ContosoUniversity.Features.Departments
                 return NotFound();
             }
 
-            var departmentToUpdate = await _context.Departments.Include(i => i.Administrator).SingleOrDefaultAsync(m => m.DepartmentID == id);
+            var departmentToUpdate = await _context.Departments.Include(i => i.Administrator).SingleOrDefaultAsync(m => m.Id == id);
 
             if (departmentToUpdate == null)
             {
@@ -156,7 +156,7 @@ namespace ContosoUniversity.Features.Departments
                         }
                         if (databaseValues.InstructorID != clientValues.InstructorID)
                         {
-                            Instructor databaseInstructor = await _context.Instructors.SingleOrDefaultAsync(i => i.ID == databaseValues.InstructorID);
+                            Instructor databaseInstructor = await _context.Instructors.SingleOrDefaultAsync(i => i.Id == databaseValues.InstructorID);
                             ModelState.AddModelError("InstructorID", $"Current value: {databaseInstructor?.FullName}");
                         }
 
@@ -185,7 +185,7 @@ namespace ContosoUniversity.Features.Departments
             var department = await _context.Departments
                 .Include(d => d.Administrator)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.DepartmentID == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (department == null)
             {
                 if (concurrencyError.GetValueOrDefault())
@@ -214,7 +214,7 @@ namespace ContosoUniversity.Features.Departments
         {
             try
             {
-                if (await _context.Departments.AnyAsync(m => m.DepartmentID == department.DepartmentID))
+                if (await _context.Departments.AnyAsync(m => m.Id == department.Id))
                 {
                     _context.Departments.Remove(department);
                     await _context.SaveChangesAsync();
@@ -224,13 +224,13 @@ namespace ContosoUniversity.Features.Departments
             catch (DbUpdateConcurrencyException /* ex */)
             {
                 //Log the error (uncomment ex variable name and write a log.)
-                return RedirectToAction("Delete", new { concurrencyError = true, id = department.DepartmentID });
+                return RedirectToAction("Delete", new { concurrencyError = true, id = department.Id });
             }
         }
 
         private bool DepartmentExists(int id)
         {
-            return _context.Departments.Any(e => e.DepartmentID == id);
+            return _context.Departments.Any(e => e.Id == id);
         }
     }
 }

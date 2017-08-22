@@ -77,7 +77,7 @@ namespace ContosoUniversity.Features.Students
                 .Include(s => s.Enrollments)
                     .ThenInclude(e => e.Course)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (student == null)
             {
@@ -128,7 +128,7 @@ namespace ContosoUniversity.Features.Students
                 return NotFound();
             }
 
-            var student = await _context.Students.SingleOrDefaultAsync(m => m.ID == id);
+            var student = await _context.Students.SingleOrDefaultAsync(m => m.Id == id);
             if (student == null)
             {
                 return NotFound();
@@ -147,7 +147,7 @@ namespace ContosoUniversity.Features.Students
             {
                 return NotFound();
             }
-            var studentToUpdate = await _context.Students.SingleOrDefaultAsync(s => s.ID == id);
+            var studentToUpdate = await _context.Students.SingleOrDefaultAsync(s => s.Id == id);
             if (await TryUpdateModelAsync<Student>(
                 studentToUpdate,
                 "",
@@ -178,7 +178,7 @@ namespace ContosoUniversity.Features.Students
 
             var student = await _context.Students
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (student == null)
             {
                 return NotFound();
@@ -201,7 +201,7 @@ namespace ContosoUniversity.Features.Students
         {
             var student = await _context.Students
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (student == null)
             {
                 return RedirectToAction("Index");
@@ -222,7 +222,7 @@ namespace ContosoUniversity.Features.Students
 
         private bool StudentExists(int id)
         {
-            return _context.Students.Any(e => e.ID == id);
+            return _context.Students.Any(e => e.Id == id);
         }
     }
 }
