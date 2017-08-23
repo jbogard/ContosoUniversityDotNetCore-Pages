@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using ContosoUniversity.Infrastructure.Tags;
 using HtmlTags;
 using HtmlTags.Conventions;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,7 +14,7 @@ namespace ContosoUniversity.Features
         public static HtmlTag DisplayLabel<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression)
             where T : class
         {
-            return helper.Tag(expression, "DisplayLabels");
+            return helper.Tag(expression, nameof(TagConventions.DisplayLabels));
         }
 
         public static HtmlTag DisplayLabel<T>(this IHtmlHelper<IList<T>> helper, Expression<Func<T, object>> expression)
@@ -21,7 +22,7 @@ namespace ContosoUniversity.Features
         {
             var library = helper.ViewContext.HttpContext.RequestServices.GetService<HtmlConventionLibrary>();
             var generator = ElementGenerator<T>.For(library, t => helper.ViewContext.HttpContext.RequestServices.GetService(t));
-            return generator.TagFor(expression, "DisplayLabels");
+            return generator.TagFor(expression, nameof(TagConventions.DisplayLabels));
         }
 
         public static HtmlTag ValidationDiv(this IHtmlHelper helper)

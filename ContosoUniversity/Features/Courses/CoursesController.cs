@@ -24,28 +24,13 @@ namespace ContosoUniversity.Features.Courses
         public async Task<IActionResult> Index()
         {
             var courses = await _mediator.Send(new Index.Query());
-            //var courses = _context.Courses
-            //    .Include(c => c.Department)
-            //    .AsNoTracking();
             return View(courses);
         }
 
         // GET: Courses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Details.Query query)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var course = await _context.Courses
-                .Include(c => c.Department)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (course == null)
-            {
-                return NotFound();
-            }
+            var course = await _mediator.Send(query);
 
             return View(course);
         }

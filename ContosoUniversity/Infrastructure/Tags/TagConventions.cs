@@ -35,6 +35,6 @@ namespace ContosoUniversity.Infrastructure.Tags
             this.Defaults();
         }
 
-        public ElementCategoryExpression DisplayLabels => new ElementCategoryExpression(Library.TagLibrary.Category("DisplayLabels").Profile(TagConstants.Default));
+        public ElementCategoryExpression DisplayLabels => new ElementCategoryExpression(Library.TagLibrary.Category(nameof(DisplayLabels)).Profile(TagConstants.Default));
     }
 }
