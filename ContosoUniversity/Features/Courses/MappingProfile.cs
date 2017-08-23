@@ -10,9 +10,9 @@ namespace ContosoUniversity.Features.Courses
         {
             CreateMap<Course, Index.Result.Course>();
             CreateMap<Course, Details.Model>();
-            //CreateMap<Create.Command, Course>(MemberList.Source).ForSourceMember(c => c.Number, opt => opt.Ignore());
+            CreateMap<Create.Command, Course>(MemberList.Source).ForSourceMember(c => c.Number, opt => opt.Ignore());
             CreateMap<Course, Edit.Command>().ReverseMap();
-            //CreateMap<Course, Delete.Command>();
+            CreateMap<Course, Delete.Command>();
         }
     }
 }

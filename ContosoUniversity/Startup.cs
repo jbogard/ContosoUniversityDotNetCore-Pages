@@ -55,6 +55,7 @@ namespace ContosoUniversity
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+                Mapper.AssertConfigurationIsValid();
             }
             else
             {
