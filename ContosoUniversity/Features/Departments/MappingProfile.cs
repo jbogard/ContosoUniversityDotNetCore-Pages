@@ -9,9 +9,9 @@ namespace ContosoUniversity.Features.Departments
         {
             CreateMap<Department, Index.Model>();
             CreateMap<Department, Details.Model>();
-            //CreateMap<Create.Command, Department>(MemberList.Source);
-            //CreateMap<Department, Edit.Command>().ReverseMap();
-            //CreateMap<Department, Delete.Command>();
+            CreateMap<Create.Command, Department>(MemberList.Source);
+            CreateMap<Department, Edit.Command>().ReverseMap();
+            CreateMap<Department, Delete.Command>();
         }
     }
 }
