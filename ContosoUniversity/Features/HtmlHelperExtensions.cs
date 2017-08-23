@@ -17,7 +17,7 @@ namespace ContosoUniversity.Features
             return helper.Tag(expression, nameof(TagConventions.DisplayLabels));
         }
 
-        public static HtmlTag DisplayLabel<T>(this IHtmlHelper<IList<T>> helper, Expression<Func<T, object>> expression)
+        public static HtmlTag DisplayLabel<T>(this IHtmlHelper<List<T>> helper, Expression<Func<T, object>> expression)
             where T : class
         {
             var library = helper.ViewContext.HttpContext.RequestServices.GetService<HtmlConventionLibrary>();

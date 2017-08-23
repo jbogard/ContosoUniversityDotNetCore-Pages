@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,41 +12,21 @@ namespace ContosoUniversity.Features.Departments
     public class DepartmentsController : Controller
     {
         private readonly SchoolContext _context;
+        private readonly IMediator _mediator;
 
-        public DepartmentsController(SchoolContext context)
+        public DepartmentsController(SchoolContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         // GET: Departments
-        public async Task<IActionResult> Index()
-        {
-            var schoolContext = _context.Departments.Include(d => d.Administrator);
-            return View(await schoolContext.ToListAsync());
-        }
+        public async Task<IActionResult> Index() 
+            => View(await _mediator.Send(new Index.Query()));
 
         // GET: Departments/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            string query = "SELECT * FROM Department WHERE DepartmentID = {0}";
-            var department = await _context.Departments
-                .FromSql(query, id)
-                .Include(d => d.Administrator)
-                .AsNoTracking()
-                .SingleOrDefaultAsync();
-
-            if (department == null)
-            {
-                return NotFound();
-            }
-
-            return View(department);
-        }
+        public async Task<IActionResult> Details(Details.Query query) 
+            => View(await _mediator.Send(query));
 
         // GET: Departments/Create
         public IActionResult Create()

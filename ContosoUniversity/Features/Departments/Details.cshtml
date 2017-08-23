@@ -1,4 +1,4 @@
-﻿@model ContosoUniversity.Models.Department
+﻿@model ContosoUniversity.Features.Departments.Details.Model
 
 @{
     ViewData["Title"] = "Details";
@@ -11,32 +11,32 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            <display-label-tag for="Name"/>
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            <display-tag for="Name" />
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Budget)
+            <display-label-tag for="Budget" />
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Budget)
+            <display-tag for="Budget" />
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
+            <display-label-tag for="StartDate" />
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.StartDate)
+            <display-tag for="StartDate" />
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Administrator)
+            <display-label-tag for="AdministratorFullName" />
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Administrator.FullName)
+            <display-tag for="AdministratorFullName" />
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.DepartmentID">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
