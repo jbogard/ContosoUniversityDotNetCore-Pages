@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ContosoUniversity.Data;
+using ContosoUniversity.Infrastructure.Tags;
 using FluentValidation.AspNetCore;
+using HtmlTags;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +34,8 @@ namespace ContosoUniversity
             services.AddAutoMapper();
 
             services.AddMediatR();
+
+            services.AddHtmlTags(new TagConventions());
 
             services.AddMvc()
                 .AddFeatureFolders()

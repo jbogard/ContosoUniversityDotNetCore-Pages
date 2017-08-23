@@ -1,4 +1,4 @@
-﻿@model System.Collections.Generic.IEnumerable<ContosoUniversity.Features.Courses.Index.Model>
+﻿@model ContosoUniversity.Features.Courses.Index.Result
 
 @{
     ViewData["Title"] = "Courses";
@@ -13,35 +13,36 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                Number
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Credits)
+                Credits
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DepartmentName)
+                Department
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @{ int i = 0;}
+        @foreach (var item in Model.Courses)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    <display-tag for="Courses[i].Id"/>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title)
+                    <display-tag for="Courses[i].Title" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Credits)
+                    <display-tag for="Courses[i].Credits" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                    <display-tag for="Courses[i].DepartmentName" />
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -49,6 +50,7 @@
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
+            i++;
         }
     </tbody>
 </table>

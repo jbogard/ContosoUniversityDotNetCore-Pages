@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
@@ -11,20 +10,25 @@ namespace ContosoUniversity.Features.Courses
 {
     public class Index
     {
-        public class Query : IRequest<IEnumerable<Model>>
+        public class Query : IRequest<Result>
         {
         }
 
-        public class Model
+
+        public class Result
         {
-            public int Id { get; set; }
-            public string Title { get; set; }
-            public int Credits { get; set; }
-            [Display(Name = "Department")]
-            public string DepartmentName { get; set; }
+            public List<Course> Courses { get; set; }
+
+            public class Course
+            {
+                public int Id { get; set; }
+                public string Title { get; set; }
+                public int Credits { get; set; }
+                public string DepartmentName { get; set; }
+            }
         }
 
-        public class Handler : IAsyncRequestHandler<Query, IEnumerable<Model>>
+        public class Handler : IAsyncRequestHandler<Query, Result>
         {
             private readonly SchoolContext _db;
 
@@ -33,16 +37,19 @@ namespace ContosoUniversity.Features.Courses
                 _db = db;
             }
 
-            public async Task<IEnumerable<Model>> Handle(Query message)
+            public async Task<Result> Handle(Query message)
             {
                 var courses = await _db.Courses
                     .OrderBy(d => d.Id)
-                    .ProjectTo<Model>()
+                    .ProjectTo<Result.Course>()
                     .ToListAsync()
                     //.ProjectToListAsync<Result.Course>()
                     ;
 
-                return courses;
+                return new Result
+                {
+                    Courses = courses
+                };
             }
         }
     }
