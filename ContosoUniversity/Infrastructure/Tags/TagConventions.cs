@@ -22,7 +22,6 @@ namespace ContosoUniversity.Infrastructure.Tags
 
 
             Labels.Always.AddClass("control-label");
-            Labels.Always.AddClass("col-md-2");
             Labels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
             Editors.BuilderPolicy<InstructorSelectElementBuilder>();
             Editors.BuilderPolicy<DepartmentSelectElementBuilder>();

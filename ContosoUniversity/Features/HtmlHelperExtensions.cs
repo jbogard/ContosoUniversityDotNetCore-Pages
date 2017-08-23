@@ -34,32 +34,14 @@ namespace ContosoUniversity.Features
                 .AddClass("hidden");
         }
 
-        public static HtmlTag InputBlock<T>(this IHtmlHelper<T> helper,
-            Expression<Func<T, object>> expression,
-            Action<HtmlTag> inputModifier = null) where T : class
-        {
-            inputModifier = inputModifier ?? (_ => { });
-
-            var divTag = new HtmlTag("div");
-            divTag.AddClass("col-md-10");
-
-            var inputTag = helper.Input(expression);
-            inputModifier(inputTag);
-
-            divTag.Append(inputTag);
-
-            return divTag;
-        }
-
         public static HtmlTag FormBlock<T>(this IHtmlHelper<T> helper,
             Expression<Func<T, object>> expression,
             Action<HtmlTag> labelModifier = null,
-            Action<HtmlTag> inputBlockModifier = null,
             Action<HtmlTag> inputModifier = null
         ) where T : class
         {
             labelModifier = labelModifier ?? (_ => { });
-            inputBlockModifier = inputBlockModifier ?? (_ => { });
+            inputModifier = inputModifier ?? (_ => { });
 
             var divTag = new HtmlTag("div");
             divTag.AddClass("form-group");
@@ -67,13 +49,11 @@ namespace ContosoUniversity.Features
             var labelTag = helper.Label(expression);
             labelModifier(labelTag);
 
-            var inputBlockTag = helper.InputBlock(
-                expression,
-                inputModifier);
-            inputBlockModifier(inputBlockTag);
+            var inputTag = helper.Input(expression);
+            inputModifier(inputTag);
 
             divTag.Append(labelTag);
-            divTag.Append(inputBlockTag);
+            divTag.Append(inputTag);
 
             return divTag;
         }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ContosoUniversity.Data;
+using ContosoUniversity.Infrastructure;
 using ContosoUniversity.Infrastructure.Tags;
 using FluentValidation.AspNetCore;
 using HtmlTags;
@@ -37,7 +38,12 @@ namespace ContosoUniversity
 
             services.AddHtmlTags(new TagConventions());
 
-            services.AddMvc()
+            services.AddMvc(opt =>
+                {
+                    opt.Filters.Add(typeof(DbContextTransactionFilter));
+                    opt.Filters.Add(typeof(ValidatorActionFilter));
+                    opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
+                })
                 .AddFeatureFolders()
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
         }

@@ -56,55 +56,20 @@ namespace ContosoUniversity.Features.Courses
             return View(course);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Edit.Query query)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var model = await _mediator.Send(query);
 
-            var course = await _context.Courses
-                .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (course == null)
-            {
-                return NotFound();
-            }
-            PopulateDepartmentsDropDownList(course.DepartmentID);
-            return View(course);
+            return View(model);
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int? id)
+        public async Task<IActionResult> Edit(Edit.Command command)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            await _mediator.Send(command);
 
-            var courseToUpdate = await _context.Courses
-                .SingleOrDefaultAsync(c => c.Id == id);
-
-            if (await TryUpdateModelAsync<Course>(courseToUpdate,
-                "",
-                c => c.Credits, c => c.DepartmentID, c => c.Title))
-            {
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateException /* ex */)
-                {
-                    //Log the error (uncomment ex variable name and write a log.)
-                    ModelState.AddModelError("", "Unable to save changes. " +
-                        "Try again, and if the problem persists, " +
-                        "see your system administrator.");
-                }
-                return RedirectToAction("Index");
-            }
-            PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
-            return View(courseToUpdate);
+            return this.RedirectToActionJson(nameof(Index));
         }
 
         private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
