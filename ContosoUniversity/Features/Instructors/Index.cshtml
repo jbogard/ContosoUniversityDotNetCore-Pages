@@ -1,4 +1,5 @@
-﻿@model ContosoUniversity.Models.SchoolViewModels.InstructorIndexData
+﻿@using System.Linq
+@model ContosoUniversity.Features.Instructors.Index.Model
 
 @{
     ViewData["Title"] = "Instructors";
@@ -21,34 +22,32 @@
         </tr>
     </thead>
     <tbody>
+        @{ int i = 0; }
         @foreach (var item in Model.Instructors)
         {
             string selectedRow = "";
-            if (item.ID == (int?)ViewData["InstructorID"])
+            if (item.ID == Model.InstructorID)
             {
                 selectedRow = "success";
             }
             <tr class="@selectedRow">
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
+                    <display-tag for="Instructors[i].LastName"/>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FirstMidName)
+                    <display-tag for="Instructors[i].FirstMidName" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.HireDate)
+                    <display-tag for="Instructors[i].HireDate" />
                 </td>
                 <td>
-                    @if (item.OfficeAssignment != null)
-                    {
-                        @item.OfficeAssignment.Location
-                    }
+                    <display-tag for="Instructors[i].OfficeAssignmentLocation" />
                 </td>
                 <td>
                     @{
                         foreach (var course in item.CourseAssignments)
                         {
-                            @course.Course.CourseID @:  @course.Course.Title <br />
+                            @course.CourseID @:  @course.CourseTitle <br />
                         }
                     }
                 </td>
@@ -63,7 +62,7 @@
     </tbody>
 </table>
 
-@if (Model.Courses != null)
+@if (Model.Courses.Any())
 {
     <h3>Courses Taught by Selected Instructor</h3>
     <table class="table">
@@ -77,29 +76,29 @@
         @foreach (var item in Model.Courses)
         {
             string selectedRow = "";
-            if (item.CourseID == (int?)ViewData["CourseID"])
+            if (item.Id == Model.CourseID)
             {
                 selectedRow = "success";
             }
             <tr class="@selectedRow">
                 <td>
-                    @Html.ActionLink("Select", "Index", new { courseID = item.CourseID })
+                    @Html.ActionLink("Select", "Index", new { courseID = item.Id })
                 </td>
                 <td>
-                    @item.CourseID
+                    @item.Id
                 </td>
                 <td>
                     @item.Title
                 </td>
                 <td>
-                    @item.Department.Name
+                    @item.DepartmentName
                 </td>
             </tr>
         }
 
     </table>
 }
-@if (Model.Enrollments != null)
+@if (Model.Enrollments.Any())
 {
     <h3>
         Students Enrolled in Selected Course
@@ -109,16 +108,18 @@
             <th>Name</th>
             <th>Grade</th>
         </tr>
+        @{ i = 0; }
         @foreach (var item in Model.Enrollments)
         {
             <tr>
                 <td>
-                    @item.Student.FullName
+                    @item.StudentFullName
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Grade)
+                    <display-tag for="Enrollments[i].Grade"/>
                 </td>
             </tr>
+            i++;
         }
     </table>
 }

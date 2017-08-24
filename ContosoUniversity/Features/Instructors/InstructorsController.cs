@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using ContosoUniversity.Models.SchoolViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,47 +14,21 @@ namespace ContosoUniversity.Features.Instructors
     public class InstructorsController : Controller
     {
         private readonly SchoolContext _context;
+        private readonly IMediator _mediator;
 
-        public InstructorsController(SchoolContext context)
+        public InstructorsController(SchoolContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
-        // GET: Instructors
-        public async Task<IActionResult> Index(int? id, int? courseID)
+        public async Task<IActionResult> Index(Index.Query query)
         {
-            var viewModel = new InstructorIndexData();
-            viewModel.Instructors = await _context.Instructors
-                  .Include(i => i.OfficeAssignment)
-                  .Include(i => i.CourseAssignments)
-                    .ThenInclude(i => i.Course)
-                        .ThenInclude(i => i.Department)
-                  .OrderBy(i => i.LastName)
-                  .ToListAsync();
+            var model = await _mediator.Send(query);
 
-            if (id != null)
-            {
-                ViewData["InstructorID"] = id.Value;
-                Instructor instructor = viewModel.Instructors.Where(
-                    i => i.Id == id.Value).Single();
-                viewModel.Courses = instructor.CourseAssignments.Select(s => s.Course);
-            }
-
-            if (courseID != null)
-            {
-                ViewData["CourseID"] = courseID.Value;
-                var selectedCourse = viewModel.Courses.Where(x => x.Id == courseID).Single();
-                await _context.Entry(selectedCourse).Collection(x => x.Enrollments).LoadAsync();
-                foreach (Enrollment enrollment in selectedCourse.Enrollments)
-                {
-                    await _context.Entry(enrollment).Reference(x => x.Student).LoadAsync();
-                }
-                viewModel.Enrollments = selectedCourse.Enrollments;
-            }
-
-            return View(viewModel);
+            return View(model);
         }
-        
+
         // GET: Instructors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
