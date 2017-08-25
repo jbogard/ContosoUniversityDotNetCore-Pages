@@ -24,9 +24,9 @@ namespace ContosoUniversity.Features.Instructors
             public int? InstructorID { get; set; }
             public int? CourseID { get; set; }
 
-            public List<Instructor> Instructors { get; set; }
-            public List<Course> Courses { get; set; }
-            public List<Enrollment> Enrollments { get; set; }
+            public IList<Instructor> Instructors { get; set; }
+            public IList<Course> Courses { get; set; }
+            public IList<Enrollment> Enrollments { get; set; }
 
             public class Instructor
             {
@@ -80,9 +80,19 @@ namespace ContosoUniversity.Features.Instructors
             public async Task<Model> Handle(Query message)
             {
                 var instructors = await _db.Instructors
+                    .Include(i => i.OfficeAssignment)
+                    .Include(i => i.CourseAssignments)
+                    .ThenInclude(c => c.Course)
                     .OrderBy(i => i.LastName)
-                    .ProjectTo<Model.Instructor>()
-                    .ToListAsync();
+                    .Map()
+                    .ToListAsync<Model.Instructor>()
+                    ;
+
+                // EF Core cannot project child collections
+                // See https://github.com/aspnet/EntityFrameworkCore/issues/9128
+                //var instructors = await _db.Instructors
+                //    .OrderBy(i => i.LastName)
+                //    .ProjectToListAsync<Model.Instructor>();
 
                 var courses = new List<Model.Course>();
                 var enrollments = new List<Model.Enrollment>();
