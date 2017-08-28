@@ -20,34 +20,11 @@ namespace ContosoUniversity.Features.Students
             _mediator = mediator;
         }
 
-        public async Task<ViewResult> Index(Index.Query query)
-        {
-            var model = await _mediator.Send(query);
+        public async Task<ViewResult> Index(Index.Query query) 
+            => View(await _mediator.Send(query));
 
-            return View(model);
-        }
-
-        // GET: Students/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var student = await _context.Students
-                .Include(s => s.Enrollments)
-                    .ThenInclude(e => e.Course)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.Id == id);
-
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            return View(student);
-        }
+        public async Task<IActionResult> Details(Details.Query query) 
+            => View(await _mediator.Send(query));
 
         // GET: Students/Create
         public IActionResult Create()

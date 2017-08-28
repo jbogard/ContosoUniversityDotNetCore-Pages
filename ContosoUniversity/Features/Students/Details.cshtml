@@ -1,4 +1,4 @@
-﻿@model ContosoUniversity.Models.Student
+﻿@model ContosoUniversity.Features.Students.Details.Model
 
 @{
     ViewData["Title"] = "Details";
@@ -11,25 +11,25 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.LastName)
+            <display-label-tag for="LastName"/>
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.LastName)
+            <display-tag for="LastName"/>
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.FirstMidName)
+            <display-label-tag for="FirstMidName" />
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.FirstMidName)
+            <display-tag for="FirstMidName" />
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.EnrollmentDate)
+            <display-label-tag for="EnrollmentDate" />
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.EnrollmentDate)
+            <display-tag for="EnrollmentDate" />
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Enrollments)
+            <display-label-tag for="Enrollments" />
         </dt>
         <dd>
             <table class="table">
@@ -37,14 +37,14 @@
                     <th>Course Title</th>
                     <th>Grade</th>
                 </tr>
-                @foreach (var item in Model.Enrollments)
+                @for (var i = 0; i < Model.Enrollments.Count; i++)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Course.Title)
+                            <display-tag for="Enrollments[i].CourseTitle" />
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Grade)
+                            <display-tag for="Enrollments[i].Grade" />
                         </td>
                     </tr>
                 }
@@ -53,6 +53,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
