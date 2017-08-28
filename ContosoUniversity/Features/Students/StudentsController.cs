@@ -1,24 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Data;
-using ContosoUniversity.Models;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniversity.Features.Students
 {
     public class StudentsController : Controller
     {
-        private readonly SchoolContext _context;
         private readonly IMediator _mediator;
 
-        public StudentsController(SchoolContext context, IMediator mediator)
-        {
-            _context = context;
-            _mediator = mediator;
-        }
+        public StudentsController(IMediator mediator) => _mediator = mediator;
 
         public async Task<ViewResult> Index(Index.Query query) 
             => View(await _mediator.Send(query));
@@ -26,142 +16,40 @@ namespace ContosoUniversity.Features.Students
         public async Task<IActionResult> Details(Details.Query query) 
             => View(await _mediator.Send(query));
 
-        // GET: Students/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() 
+            => View(new Create.Command());
 
-        // POST: Students/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            [Bind("EnrollmentDate,FirstMidName,LastName")] Student student)
+        public async Task<IActionResult> Create(Create.Command command)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    _context.Add(student);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
-                }
-            }
-            catch (DbUpdateException /* ex */)
-            {
-                //Log the error (uncomment ex variable name and write a log.
-                ModelState.AddModelError("", "Unable to save changes. " +
-                    "Try again, and if the problem persists " +
-                    "see your system administrator.");
-            }
-            return View(student);
+            await _mediator.Send(command);
+
+            return this.RedirectToActionJson(nameof(Index));
         }
 
-        // GET: Students/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        public async Task<IActionResult> Edit(Edit.Query query) 
+            => View(await _mediator.Send(query));
 
-            var student = await _context.Students.SingleOrDefaultAsync(m => m.Id == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            return View(student);
-        }
-
-        // POST: Students/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ActionName("Edit")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int? id)
+        public async Task<IActionResult> Edit(Edit.Command command)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var studentToUpdate = await _context.Students.SingleOrDefaultAsync(s => s.Id == id);
-            if (await TryUpdateModelAsync<Student>(
-                studentToUpdate,
-                "",
-                s => s.FirstMidName, s => s.LastName, s => s.EnrollmentDate))
-            {
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
-                }
-                catch (DbUpdateException /* ex */)
-                {
-                    //Log the error (uncomment ex variable name and write a log.)
-                    ModelState.AddModelError("", "Unable to save changes. " +
-                        "Try again, and if the problem persists, " +
-                        "see your system administrator.");
-                }
-            }
-            return View(studentToUpdate);
-        }
-        // GET: Students/Delete/5
-        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            await _mediator.Send(command);
 
-            var student = await _context.Students
-                .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            if (saveChangesError.GetValueOrDefault())
-            {
-                ViewData["ErrorMessage"] =
-                    "Delete failed. Try again, and if the problem persists " +
-                    "see your system administrator.";
-            }
-
-            return View(student);
+            return this.RedirectToActionJson(nameof(Index));
         }
 
-        // POST: Students/Delete/5
-        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> Delete(Delete.Query query) 
+            => View(await _mediator.Send(query));
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(Delete.Command command)
         {
-            var student = await _context.Students
-                .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (student == null)
-            {
-                return RedirectToAction("Index");
-            }
+            await _mediator.Send(command);
 
-            try
-            {
-                _context.Students.Remove(student);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            catch (DbUpdateException /* ex */)
-            {
-                //Log the error (uncomment ex variable name and write a log.)
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
-            }
-        }
-
-        private bool StudentExists(int id)
-        {
-            return _context.Students.Any(e => e.Id == id);
+            return this.RedirectToActionJson(nameof(Index));
         }
     }
 }

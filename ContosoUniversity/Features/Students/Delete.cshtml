@@ -1,4 +1,4 @@
-﻿@model ContosoUniversity.Models.Student
+﻿@model ContosoUniversity.Features.Students.Delete.Command
 
 @{
     ViewData["Title"] = "Delete";
@@ -13,27 +13,27 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.LastName)
+            <display-label-tag for="LastName"/>
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.LastName)
+            <display-tag for="LastName"/>
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.FirstMidName)
+            <display-label-tag for="FirstMidName" />
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.FirstMidName)
+            <display-tag for="FirstMidName" />
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.EnrollmentDate)
+            <display-label-tag for="EnrollmentDate" />
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.EnrollmentDate)
+            <display-tag for="EnrollmentDate" />
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="ID" />
+        <input-tag for="ID" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
     </form>
