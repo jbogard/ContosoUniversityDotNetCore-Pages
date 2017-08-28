@@ -16,7 +16,7 @@ namespace ContosoUniversity.Features.Instructors
             CreateMap<CourseAssignment, CreateEdit.Command.CourseAssignment>();
 
             CreateMap<Instructor, Details.Model>();
-            //CreateMap<Instructor, Delete.Command>();
+            CreateMap<Instructor, Delete.Command>();
         }
     }
 }

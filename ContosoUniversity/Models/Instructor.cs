@@ -14,8 +14,8 @@ namespace ContosoUniversity.Models
         [Display(Name = "Hire Date")]
         public DateTime HireDate { get; set; }
 
-        public ICollection<CourseAssignment> CourseAssignments { get; set; }
-        public OfficeAssignment OfficeAssignment { get; set; }
+        public ICollection<CourseAssignment> CourseAssignments { get; private set; } = new List<CourseAssignment>();
+        public OfficeAssignment OfficeAssignment { get; private set; }
 
         public void Handle(CreateEdit.Command message,
             IEnumerable<Course> courses)
@@ -25,7 +25,7 @@ namespace ContosoUniversity.Models
             UpdateInstructorCourses(message.SelectedCourses, courses);
         }
 
-//        public void Handle(Delete.Command message) => OfficeAssignment = null;
+        public void Handle(Delete.Command message) => OfficeAssignment = null;
 
         private void UpdateDetails(CreateEdit.Command message)
         {

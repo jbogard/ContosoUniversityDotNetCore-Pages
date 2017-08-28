@@ -99,6 +99,9 @@ namespace ContosoUniversity.Features.Instructors
                 else
                 {
                     model = await _db.Instructors
+                        .Include(m => m.CourseAssignments)
+                        .ThenInclude(ca => ca.Course)
+                        .Include(m => m.OfficeAssignment)
                         .Where(i => i.Id == message.Id)
                         .Map()
                         .SingleOrDefaultAsync<Command>();
