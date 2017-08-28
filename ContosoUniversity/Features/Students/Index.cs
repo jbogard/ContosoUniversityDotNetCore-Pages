@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using MediatR;
@@ -42,10 +43,7 @@ namespace ContosoUniversity.Features.Students
         {
             private readonly SchoolContext _db;
 
-            public QueryHandler(SchoolContext db)
-            {
-                _db = db;
-            }
+            public QueryHandler(SchoolContext db) => _db = db;
 
             public async Task<Result> Handle(Query message)
             {
@@ -92,7 +90,9 @@ namespace ContosoUniversity.Features.Students
 
                 int pageSize = 3;
                 int pageNumber = (message.Page ?? 1);
-                model.Results = await students.Map().ToPaginatedListAsync<Model>(pageNumber, pageSize);
+                model.Results = await students
+                    .ProjectTo<Model>()
+                    .PaginatedListAsync(pageNumber, pageSize);
 
                 return model;
             }

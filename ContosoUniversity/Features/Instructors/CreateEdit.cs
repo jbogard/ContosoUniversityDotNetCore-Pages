@@ -84,10 +84,7 @@ namespace ContosoUniversity.Features.Instructors
         {
             private readonly SchoolContext _db;
 
-            public QueryHandler(SchoolContext db)
-            {
-                _db = db;
-            }
+            public QueryHandler(SchoolContext db) => _db = db;
 
             public async Task<Command> Handle(Query message)
             {
@@ -101,9 +98,8 @@ namespace ContosoUniversity.Features.Instructors
                     model = await _db.Instructors
                         .Include(m => m.CourseAssignments)
                         .ThenInclude(ca => ca.Course)
-                        .Include(m => m.OfficeAssignment)
                         .Where(i => i.Id == message.Id)
-                        .Map()
+                        .ProjectTo<Command>()
                         .SingleOrDefaultAsync<Command>();
 
                     //.ProjectTo<Command>()
@@ -134,10 +130,7 @@ namespace ContosoUniversity.Features.Instructors
         {
             private readonly SchoolContext _db;
 
-            public CommandHandler(SchoolContext db)
-            {
-                _db = db;
-            }
+            public CommandHandler(SchoolContext db) => _db = db;
 
             public async Task<int> Handle(Command message)
             {

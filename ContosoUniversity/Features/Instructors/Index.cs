@@ -72,23 +72,19 @@ namespace ContosoUniversity.Features.Instructors
         {
             private readonly SchoolContext _db;
 
-            public Handler(SchoolContext db)
-            {
-                _db = db;
-            }
+            public Handler(SchoolContext db) => _db = db;
 
             public async Task<Model> Handle(Query message)
             {
                 var instructors = await _db.Instructors
-                    .Include(i => i.OfficeAssignment)
                     .Include(i => i.CourseAssignments)
                     .ThenInclude(c => c.Course)
                     .OrderBy(i => i.LastName)
-                    .Map()
-                    .ToListAsync<Model.Instructor>()
+                    .ProjectTo<Model.Instructor>()
+                    .ToListAsync()
                     ;
 
-                // EF Core cannot project child collections
+                // EF Core cannot project child collections w/o Include
                 // See https://github.com/aspnet/EntityFrameworkCore/issues/9128
                 //var instructors = await _db.Instructors
                 //    .OrderBy(i => i.LastName)
