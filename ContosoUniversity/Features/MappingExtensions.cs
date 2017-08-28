@@ -18,10 +18,8 @@ namespace ContosoUniversity.Features
         {
             private readonly IEnumerable<TSource> _items;
 
-            public CollectionMapperExpression(IEnumerable<TSource> items)
-            {
-                _items = items;
-            }
+            public CollectionMapperExpression(IEnumerable<TSource> items) 
+                => _items = items;
 
             public IList<TDestination> ToList<TDestination>() => _items.Select(Mapper.Map<TSource, TDestination>).ToList();
         }
@@ -30,18 +28,14 @@ namespace ContosoUniversity.Features
         {
             private readonly IQueryable<TSource> _items;
 
-            public QueryableExpression(IQueryable<TSource> items)
-            {
-                _items = items;
-            }
-
+            public QueryableExpression(IQueryable<TSource> items) 
+                => _items = items;
 
             public async Task<IList<TDestination>> ToListAsync<TDestination>()
-            {
-                var returned = await _items.ToListAsync();
+                => (await _items.ToListAsync()).Select(src => Mapper.Map<TSource, TDestination>(src)).ToList();
 
-                return returned.Select(src => Mapper.Map<TSource, TDestination>(src)).ToList();
-            }
+            public async Task<TDestination> SingleOrDefaultAsync<TDestination>() 
+                => Mapper.Map<TSource, TDestination>(await _items.SingleOrDefaultAsync());
         }
     }
 
@@ -53,5 +47,6 @@ namespace ContosoUniversity.Features
     public interface IQueryableExpression
     {
         Task<IList<TDestination>> ToListAsync<TDestination>();
+        Task<TDestination> SingleOrDefaultAsync<TDestination>();
     }
 }

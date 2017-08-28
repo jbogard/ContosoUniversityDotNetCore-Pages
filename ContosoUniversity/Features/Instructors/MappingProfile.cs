@@ -12,10 +12,10 @@ namespace ContosoUniversity.Features.Instructors
             CreateMap<Course, Index.Model.Course>();
             CreateMap<Enrollment, Index.Model.Enrollment>();
 
-            //CreateMap<Instructor, CreateEdit.Command>();
-            //CreateMap<CourseInstructor, CreateEdit.Command.CourseInstructor>();
+            CreateMap<Instructor, CreateEdit.Command>();
+            CreateMap<CourseAssignment, CreateEdit.Command.CourseAssignment>();
 
-            //CreateMap<Instructor, Details.Model>();
+            CreateMap<Instructor, Details.Model>();
             //CreateMap<Instructor, Delete.Command>();
         }
     }
