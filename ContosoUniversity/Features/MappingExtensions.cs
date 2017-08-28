@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniversity.Features
@@ -34,6 +35,9 @@ namespace ContosoUniversity.Features
             public async Task<IList<TDestination>> ToListAsync<TDestination>()
                 => (await _items.ToListAsync()).Select(src => Mapper.Map<TSource, TDestination>(src)).ToList();
 
+            public Task<PaginatedList<TDestination>> ToPaginatedListAsync<TDestination>(int pageNumber, int pageSize)
+                => PaginatedList<TDestination>.CreateAsync(_items.ProjectTo<TDestination>(), pageNumber, pageSize);
+
             public async Task<TDestination> SingleOrDefaultAsync<TDestination>() 
                 => Mapper.Map<TSource, TDestination>(await _items.SingleOrDefaultAsync());
         }
@@ -48,5 +52,6 @@ namespace ContosoUniversity.Features
     {
         Task<IList<TDestination>> ToListAsync<TDestination>();
         Task<TDestination> SingleOrDefaultAsync<TDestination>();
+        Task<PaginatedList<TDestination>> ToPaginatedListAsync<TDestination>(int pageNumber, int pageSize);
     }
 }
