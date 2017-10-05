@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.IO;
 using System.Threading.Tasks;
 using ContosoUniversity.Data;
@@ -19,6 +20,9 @@ namespace ContosoUniversity.IntegrationTests
         private static readonly Checkpoint _checkpoint;
         private static readonly IConfigurationRoot _configuration;
         private static readonly IServiceScopeFactory _scopeFactory;
+        private static readonly string TestConnectionString;
+        private static readonly string MasterConnectionString;
+        private static string TestDbName;
 
         static SliceFixture()
         {
@@ -37,10 +41,55 @@ namespace ContosoUniversity.IntegrationTests
             startup.ConfigureServices(services);
             var provider = services.BuildServiceProvider();
             _scopeFactory = provider.GetService<IServiceScopeFactory>();
+
+            TestConnectionString = _configuration.GetConnectionString("DefaultConnection");
+            var connStringBuilder = new SqlConnectionStringBuilder(TestConnectionString);
+            TestDbName = connStringBuilder.InitialCatalog;
+            connStringBuilder.InitialCatalog = "master";
+            MasterConnectionString = connStringBuilder.ToString();
+
             _checkpoint = new Checkpoint();
+
+            CreateSnapshot();
         }
 
-        public static Task ResetCheckpoint() => _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        private static void CreateSnapshot()
+        {
+            _checkpoint.Reset(TestConnectionString).GetAwaiter().GetResult();
+
+            using (var conn = new SqlConnection(MasterConnectionString))
+            {
+                conn.Open();
+                var snapshotDbName = TestDbName + "-Snapshot";
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = $"DROP DATABASE IF EXISTS [{snapshotDbName}]";
+                    cmd.ExecuteNonQuery();
+                }
+                using (var cmd = conn.CreateCommand())
+                {
+                    var filename = Path.Combine(Environment.CurrentDirectory, $"{snapshotDbName}.ss");
+                    cmd.CommandText = $"CREATE DATABASE [{snapshotDbName}] ON (Name = [{TestDbName}], Filename='{filename}') AS SNAPSHOT OF [{TestDbName}]";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static async Task ResetCheckpoint()
+        {
+            using (var conn = new SqlConnection(MasterConnectionString))
+            {
+                await conn.OpenAsync();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = $@"ALTER DATABASE [{TestDbName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                                         RESTORE DATABASE [{TestDbName}] FROM DATABASE_SNAPSHOT = '{TestDbName}-Snapshot';
+                                         ALTER DATABASE [{TestDbName}] SET MULTI_USER;";
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+        //=> await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
 
         public static async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {
