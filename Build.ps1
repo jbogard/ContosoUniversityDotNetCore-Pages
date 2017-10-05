@@ -23,7 +23,6 @@ function Exec
 }
 
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
-if(Test-Path .\publish) { Remove-Item .\publish -Force -Recurse }
 
 
 $branch = @{ $true = $env:APPVEYOR_REPO_BRANCH; $false = $(git symbolic-ref --short -q HEAD) }[$env:APPVEYOR_REPO_BRANCH -ne $NULL];
@@ -32,6 +31,11 @@ $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch
 $commitHash = $(git rev-parse --short HEAD)
 $buildSuffix = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""]
 
+exec { & .\tools\rh.exe /d=ContosoUniversity /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent }
+exec { & .\tools\rh.exe /d=ContosoUniversity-Test /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent /drop }
+exec { & .\tools\rh.exe /d=ContosoUniversity-Test /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent /simple }
+
+
 exec { & dotnet restore }
 
 exec { & dotnet build -c Release --version-suffix=$buildSuffix }
@@ -39,23 +43,27 @@ exec { & dotnet build -c Release --version-suffix=$buildSuffix }
 Push-Location -Path .\ContosoUniversity.IntegrationTests
 
 try {
-	exec { & dotnet xunit -configuration Release -nobuild }
+	exec { & dotnet test -c Release --no-build }
 }
 finally {
 	Pop-Location
 }
 
-exec { & dotnet publish ContosoUniversity.Database --output .\..\publish\ContosoUniversity.Database --configuration Release }
+#Push-Location -Path .\test\ContosoUniversity.UnitTests
 
-exec { & dotnet .\publish\ContosoUniversity.Database\ContosoUniversity.Database.dll }
+#try {
+#	exec { & dotnet test -c Release --no-build }
+#}
+#finally {
+#	Pop-Location
+#}
 
-exec { & dotnet publish ContosoUniversity --output .\..\publish\ContosoUniversity --configuration Release }
+exec { & dotnet publish ContosoUniversity --output .\..\publish --configuration Release }
 
 $octo_revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = "0" }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
 $octo_version = "1.0.$octo_revision"
 
-exec { & .\tools\Octo.exe pack --id ContosoUniversity --version $octo_version --basePath publish\ContosoUniversity --outFolder artifacts }
-exec { & .\tools\Octo.exe pack --id ContosoUniversity.Database --version $octo_version --basePath publish\ContosoUniversity.Database --outFolder artifacts }
+exec { & .\tools\Octo.exe pack --id ContosoUniversity --version $octo_version --basePath publish --outFolder artifacts }
 
 
 

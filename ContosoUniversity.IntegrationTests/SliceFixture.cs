@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
-using DbUp;
 using FakeItEasy;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -39,22 +38,6 @@ namespace ContosoUniversity.IntegrationTests
             var provider = services.BuildServiceProvider();
             _scopeFactory = provider.GetService<IServiceScopeFactory>();
             _checkpoint = new Checkpoint();
-
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
-
-            var upgrader =
-                DeployChanges.To
-                    .SqlDatabase(connectionString)
-                    .WithScriptsEmbeddedInAssembly(typeof(ContosoUniversity.Database.Program).Assembly, s => s.EndsWith(".sql"))
-                    .LogToConsole()
-                    .Build();
-
-            EnsureDatabase.For.SqlDatabase(connectionString);
-
-            var result = upgrader.PerformUpgrade();
-
-            if (!result.Successful)
-                throw result.Error;
         }
 
         public static Task ResetCheckpoint() => _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
