@@ -22,7 +22,7 @@ namespace ContosoUniversity.IntegrationTests
         private static readonly IServiceScopeFactory _scopeFactory;
         private static readonly string TestConnectionString;
         private static readonly string MasterConnectionString;
-        private static string TestDbName;
+        private static readonly string TestDbName;
 
         static SliceFixture()
         {
