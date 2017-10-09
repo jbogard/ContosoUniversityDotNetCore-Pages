@@ -26,14 +26,14 @@
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = 123
+                Id = NextCourseNumber()
             };
             var english201 = new Course
             {
                 Department = englishDept,
                 Title = "English 201",
                 Credits = 4,
-                Id = 456
+                Id = NextCourseNumber()
             };
 
             await InsertAsync(englishDept, english101, english201);
@@ -47,9 +47,9 @@
                 SelectedCourses = new [] {english101.Id.ToString(), english201.Id.ToString()}
             };
 
-            await SendAsync(command);
+            var id = await SendAsync(command);
 
-            var created = await ExecuteDbContextAsync(db => db.Instructors.Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
+            var created = await ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == id).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
             created.FirstMidName.ShouldBe(command.FirstMidName);
             created.LastName.ShouldBe(command.LastName);
@@ -72,14 +72,14 @@
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = 123
+                Id = NextCourseNumber()
             };
             var english201 = new Course
             {
                 Department = englishDept,
                 Title = "English 201",
                 Credits = 4,
-                Id = 456
+                Id = NextCourseNumber()
             };
 
             await InsertAsync(englishDept, english101, english201);

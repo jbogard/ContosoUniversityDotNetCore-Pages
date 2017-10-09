@@ -1,4 +1,6 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Instructors
+﻿using System.Linq;
+
+namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
     using System;
     using System.Collections.Generic;
@@ -24,14 +26,14 @@
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = 123
+                Id = NextCourseNumber()
             };
             var english201 = new Course
             {
                 Department = englishDept,
                 Title = "English 201",
                 Credits = 4,
-                Id = 456
+                Id = NextCourseNumber()
             };
 
             await InsertAsync(englishDept, english101, english201);
@@ -45,7 +47,7 @@
                 OfficeAssignmentLocation = "Austin",
             });
 
-            await SendAsync(new CreateEdit.Command
+            var instructor2Id = await SendAsync(new CreateEdit.Command
             {
                 OfficeAssignmentLocation = "Houston",
                 FirstMidName = "Jerry",
@@ -78,7 +80,9 @@
             result.ShouldNotBeNull();
 
             result.Instructors.ShouldNotBeNull();
-            result.Instructors.Count.ShouldBe(2);
+            result.Instructors.Count.ShouldBeGreaterThanOrEqualTo(2);
+            result.Instructors.Select(i => i.ID).ShouldContain(instructor1Id);
+            result.Instructors.Select(i => i.ID).ShouldContain(instructor2Id);
 
             result.Courses.ShouldNotBeNull();
             result.Courses.Count.ShouldBe(2);

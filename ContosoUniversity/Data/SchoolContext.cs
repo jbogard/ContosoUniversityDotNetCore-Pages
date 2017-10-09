@@ -45,14 +45,14 @@ namespace ContosoUniversity.Data
                 return;
             }
 
-            _currentTransaction = await Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+            _currentTransaction = await Database.BeginTransactionAsync(IsolationLevel.ReadCommitted).ConfigureAwait(false);
         }
 
         public async Task CommitTransactionAsync()
         {
             try
             {
-                await SaveChangesAsync();
+                await SaveChangesAsync().ConfigureAwait(false);
 
                 _currentTransaction?.Commit();
             }

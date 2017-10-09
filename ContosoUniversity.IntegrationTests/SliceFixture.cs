@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
@@ -9,8 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
-
-[assembly: Xunit.CollectionBehavior(DisableTestParallelization = true)]
 
 namespace ContosoUniversity.IntegrationTests
 {
@@ -50,11 +49,11 @@ namespace ContosoUniversity.IntegrationTests
 
                 try
                 {
-                    await dbContext.BeginTransactionAsync();
+                    await dbContext.BeginTransactionAsync().ConfigureAwait(false);
 
-                    await action(scope.ServiceProvider);
+                    await action(scope.ServiceProvider).ConfigureAwait(false);
 
-                    await dbContext.CommitTransactionAsync();
+                    await dbContext.CommitTransactionAsync().ConfigureAwait(false);
                 }
                 catch (Exception)
                 {
@@ -72,11 +71,11 @@ namespace ContosoUniversity.IntegrationTests
 
                 try
                 {
-                    await dbContext.BeginTransactionAsync();
+                    await dbContext.BeginTransactionAsync().ConfigureAwait(false);
 
-                    var result = await action(scope.ServiceProvider);
+                    var result = await action(scope.ServiceProvider).ConfigureAwait(false);
 
-                    await dbContext.CommitTransactionAsync();
+                    await dbContext.CommitTransactionAsync().ConfigureAwait(false);
 
                     return result;
                 }
@@ -88,25 +87,17 @@ namespace ContosoUniversity.IntegrationTests
             }
         }
 
-        public static Task ExecuteDbContextAsync(Func<SchoolContext, Task> action)
-        {
-            return ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()));
-        }
+        public static Task ExecuteDbContextAsync(Func<SchoolContext, Task> action) 
+            => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()));
 
-        public static Task ExecuteDbContextAsync(Func<SchoolContext, IMediator, Task> action)
-        {
-            return ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>(), sp.GetService<IMediator>()));
-        }
+        public static Task ExecuteDbContextAsync(Func<SchoolContext, IMediator, Task> action) 
+            => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>(), sp.GetService<IMediator>()));
 
-        public static Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, Task<T>> action)
-        {
-            return ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()));
-        }
+        public static Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, Task<T>> action) 
+            => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()));
 
-        public static Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, IMediator, Task<T>> action)
-        {
-            return ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>(), sp.GetService<IMediator>()));
-        }
+        public static Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, IMediator, Task<T>> action) 
+            => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>(), sp.GetService<IMediator>()));
 
         public static Task InsertAsync<T>(params T[] entities) where T : class
         {
@@ -200,5 +191,10 @@ namespace ContosoUniversity.IntegrationTests
                 return mediator.Send(request);
             });
         }
+
+        private static int CourseNumber = 1;
+
+        public static int NextCourseNumber() => Interlocked.Increment(ref CourseNumber);
+
     }
 }

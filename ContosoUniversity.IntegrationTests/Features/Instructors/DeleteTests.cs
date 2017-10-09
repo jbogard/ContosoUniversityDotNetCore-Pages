@@ -1,4 +1,6 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Instructors
+﻿using System.Linq;
+
+namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +27,7 @@
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = 123
+                Id = NextCourseNumber()
             };
             var command = new CreateEdit.Command
             {
@@ -67,7 +69,7 @@
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = 123
+                Id = NextCourseNumber()
             };
 
             await InsertAsync(englishDept, english101);
@@ -84,7 +86,7 @@
 
             await SendAsync(new Delete.Command { ID = instructorId });
 
-            var instructorCount = await ExecuteDbContextAsync(db => db.Instructors.CountAsync());
+            var instructorCount = await ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId).CountAsync());
 
             instructorCount.ShouldBe(0);
 
@@ -93,7 +95,7 @@
 
             englishDept.InstructorID.ShouldBeNull();
 
-            var courseInstructorCount = await ExecuteDbContextAsync(db => db.CourseAssignments.CountAsync());
+            var courseInstructorCount = await ExecuteDbContextAsync(db => db.CourseAssignments.Where(ci => ci.InstructorID == instructorId).CountAsync());
 
             courseInstructorCount.ShouldBe(0);
         }

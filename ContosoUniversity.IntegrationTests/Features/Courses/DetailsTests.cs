@@ -32,7 +32,7 @@
             {
                 Credits = 4,
                 Department = dept,
-                Id = 1234,
+                Id = NextCourseNumber(),
                 Title = "English 101"
             };
 

@@ -24,7 +24,7 @@
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = 123
+                Id = NextCourseNumber()
             };
             await InsertAsync(englishDept, english101);
 
