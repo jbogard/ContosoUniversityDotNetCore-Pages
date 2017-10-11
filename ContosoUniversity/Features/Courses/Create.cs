@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using MediatR;
@@ -7,7 +8,7 @@ namespace ContosoUniversity.Features.Courses
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<int>
         {
             [IgnoreMap]
             public int Number { get; set; }
@@ -16,18 +17,22 @@ namespace ContosoUniversity.Features.Courses
             public Department Department { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IAsyncRequestHandler<Command, int>
         {
             private readonly SchoolContext _db;
 
             public Handler(SchoolContext db) => _db = db;
 
-            public void Handle(Command message)
+            public async Task<int> Handle(Command message)
             {
                 var course = Mapper.Map<Command, Course>(message);
                 course.Id = message.Number;
 
                 _db.Courses.Add(course);
+
+                await _db.SaveChangesAsync();
+
+                return course.Id;
             }
         }
     }

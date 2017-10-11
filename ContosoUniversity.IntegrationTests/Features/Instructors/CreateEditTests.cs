@@ -126,14 +126,14 @@
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = 123
+                Id = NextCourseNumber()
             };
             var english201 = new Course
             {
                 Department = englishDept,
                 Title = "English 201",
                 Credits = 4,
-                Id = 456
+                Id = NextCourseNumber()
             };
             await InsertAsync(englishDept, english101, english201);
 

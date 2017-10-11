@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks;
 using AutoMapper;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
@@ -22,7 +23,7 @@ namespace ContosoUniversity.Features.Departments
             }
         }
 
-        public class Command : IRequest
+        public class Command : IRequest<int>
         {
             [StringLength(50, MinimumLength = 3)]
             public string Name { get; set; }
@@ -38,17 +39,21 @@ namespace ContosoUniversity.Features.Departments
             public Instructor Administrator { get; set; }
         }
 
-        public class CommandHandler : IRequestHandler<Command>
+        public class CommandHandler : IAsyncRequestHandler<Command, int>
         {
             private readonly SchoolContext _context;
 
             public CommandHandler(SchoolContext context) => _context = context;
 
-            public void Handle(Command message)
+            public async Task<int> Handle(Command message)
             {
                 var department = Mapper.Map<Command, Department>(message);
 
                 _context.Departments.Add(department);
+
+                await _context.SaveChangesAsync();
+
+                return department.Id;
             }
         }
     }

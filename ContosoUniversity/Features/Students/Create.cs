@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using AutoMapper;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
@@ -10,7 +11,7 @@ namespace ContosoUniversity.Features.Students
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<int>
         {
             public string LastName { get; set; }
 
@@ -27,17 +28,27 @@ namespace ContosoUniversity.Features.Students
                 RuleFor(m => m.LastName).NotNull().Length(1, 50);
                 RuleFor(m => m.FirstMidName).NotNull().Length(1, 50);
                 RuleFor(m => m.EnrollmentDate).NotNull();
+
+
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IAsyncRequestHandler<Command, int>
         {
             private readonly SchoolContext _db;
 
             public Handler(SchoolContext db) => _db = db;
 
-            public void Handle(Command message) 
-                => _db.Students.Add(Mapper.Map<Command, Student>(message));
+            public async Task<int> Handle(Command message)
+            {
+                var student = Mapper.Map<Command, Student>(message);
+
+                _db.Students.Add(student);
+
+                await _db.SaveChangesAsync();
+
+                return student.Id;
+            }
         }
     }
 }
