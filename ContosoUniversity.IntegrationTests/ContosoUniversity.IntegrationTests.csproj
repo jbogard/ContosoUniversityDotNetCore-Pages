@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="roundhouse.lib" Version="0.8.9-PullRequest.294" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0" />
     <PackageReference Include="Shouldly" Version="3.0.0-beta0003" />

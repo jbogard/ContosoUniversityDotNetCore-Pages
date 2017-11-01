@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using roundhouse;
 using Respawn;
 
 namespace ContosoUniversity.IntegrationTests
@@ -35,7 +36,17 @@ namespace ContosoUniversity.IntegrationTests
             _checkpoint = new Checkpoint();
         }
 
-        public static Task ResetCheckpoint() => _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        public static Task ResetCheckpoint()
+        {
+            var thing = new Migrate();
+            thing.Set(cfg =>
+            {
+                cfg.ConnectionString = _configuration.GetConnectionString("DefaultConnection");
+                cfg.SqlFilesDirectory = @"..\..\ContosoUniversity\App_Data";
+            });
+            thing.Run();
+            return _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        }
 
         public static async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -32,7 +33,18 @@ namespace ContosoUniversity
             services.AddDbContext<SchoolContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAutoMapper();
+            try
+            {
+                services.AddAutoMapper();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                foreach (var loaderException in e.LoaderExceptions)
+                {
+                    Console.WriteLine(loaderException);
+                }
+                throw;
+            }
 
             services.AddMediatR();
 
