@@ -21,10 +21,6 @@ namespace ContosoUniversity.IntegrationTests
 
         static SliceFixture()
         {
-            var host = A.Fake<IHostingEnvironment>();
-
-            A.CallTo(() => host.ContentRootPath).Returns(Directory.GetCurrentDirectory());
-
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
