@@ -1,23 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Data;
-using ContosoUniversity.Models;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniversity.Features.Courses
 {
     public class CoursesController : Controller
     {
-        private readonly SchoolContext _context;
         private readonly IMediator _mediator;
 
-        public CoursesController(SchoolContext context, IMediator mediator)
-        {
-            _context = context;
-            _mediator = mediator;
-        }
+        public CoursesController(IMediator mediator) => _mediator = mediator;
 
         // GET: Courses
         public async Task<IActionResult> Index()
