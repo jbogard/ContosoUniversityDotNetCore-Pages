@@ -11,15 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0-preview-20170923-02" />
-    <PackageReference Include="xunit" Version="2.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0" />
     <PackageReference Include="Shouldly" Version="3.0.0-beta0003" />
     <PackageReference Include="Respawn" Version="1.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
-    <PackageReference Include="FakeItEasy" Version="4.0.0" />
+    <PackageReference Include="FakeItEasy" Version="4.2.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <PackageReference Include="Nito.AsyncEx" Version="5.0.0-pre-05" />
   </ItemGroup>
 
