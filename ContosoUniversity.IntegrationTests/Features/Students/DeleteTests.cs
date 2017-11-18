@@ -8,7 +8,7 @@ using Shouldly;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
-    public class DeleteTests
+    public class DeleteTests : IntegrationTestBase
     {
         [Fact]
         public async Task Should_get_delete_details()

@@ -8,7 +8,7 @@ using Shouldly;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
-    public class EditTests
+    public class EditTests : IntegrationTestBase
     {
         [Fact]
         public async Task Should_get_edit_details()

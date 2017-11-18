@@ -9,7 +9,7 @@ using static ContosoUniversity.IntegrationTests.SliceFixture;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
-    public class IndexTests
+    public class IndexTests : IntegrationTestBase
     {
         [Fact]
         public async Task Should_return_all_items_for_default_search()
