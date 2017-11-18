@@ -9,7 +9,7 @@ using static ContosoUniversity.IntegrationTests.SliceFixture;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
-    public class DetailsTests
+    public class DetailsTests : IntegrationTestBase
     {
         [Fact]
         public async Task Should_get_details()
