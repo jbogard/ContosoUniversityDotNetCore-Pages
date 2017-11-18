@@ -20,9 +20,17 @@ namespace ContosoUniversity.Infrastructure
             {
                 await _dbContext.BeginTransactionAsync();
 
-                await next();
+                var actionExecuted = await next();
+                if (actionExecuted.Exception != null && !actionExecuted.ExceptionHandled)
+                {
+                    _dbContext.RollbackTransaction();
 
-                await _dbContext.CommitTransactionAsync();
+                }
+                else
+                {
+                    await _dbContext.CommitTransactionAsync();
+
+                }
             }
             catch (Exception)
             {
