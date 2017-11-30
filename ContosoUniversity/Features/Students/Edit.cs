@@ -47,25 +47,25 @@ namespace ContosoUniversity.Features.Students
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            public async Task<Command> Handle(Query message) => await _db.Students
+            protected override async Task<Command> HandleCore(Query message) => await _db.Students
                 .Where(s => s.Id == message.Id)
                 .ProjectTo<Command>()
                 .SingleOrDefaultAsync();
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            public async Task Handle(Command message) 
+            protected override async Task HandleCore(Command message) 
                 => Mapper.Map(message, await _db.Students.FindAsync(message.ID));
         }
     }

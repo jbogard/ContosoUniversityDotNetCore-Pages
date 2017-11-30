@@ -34,13 +34,13 @@ namespace ContosoUniversity.Features.Students
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Query, Model>
+        public class Handler : AsyncRequestHandler<Query, Model>
         {
             private readonly SchoolContext _db;
 
             public Handler(SchoolContext db) => _db = db;
 
-            public async Task<Model> Handle(Query message) => await _db
+            protected override async Task<Model> HandleCore(Query message) => await _db
                 .Students
                 .Include(m => m.Enrollments)
                 .ThenInclude(e => e.Course)

@@ -42,26 +42,26 @@ namespace ContosoUniversity.Features.Departments
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            public async Task<Command> Handle(Query message) => await _db
+            protected override async Task<Command> HandleCore(Query message) => await _db
                 .Departments
                 .Where(d => d.Id == message.Id)
                 .ProjectTo<Command>()
                 .SingleOrDefaultAsync();
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            public async Task Handle(Command message)
+            protected override async Task HandleCore(Command message)
             {
                 var dept = await _db.Departments.FindAsync(message.Id);
                 message.Administrator = await _db.Instructors.FindAsync(message.Administrator.Id);

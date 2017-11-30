@@ -29,13 +29,13 @@ namespace ContosoUniversity.Features.Departments
             public string AdministratorFullName { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, List<Model>>
+        public class QueryHandler : AsyncRequestHandler<Query, List<Model>>
         {
             private readonly SchoolContext _context;
 
             public QueryHandler(SchoolContext context) => _context = context;
 
-            public async Task<List<Model>> Handle(Query message)
+            protected override async Task<List<Model>> HandleCore(Query message)
             {
                 var projectTo = _context.Departments
                     .ProjectTo<Model>();

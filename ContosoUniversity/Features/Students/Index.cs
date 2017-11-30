@@ -39,13 +39,13 @@ namespace ContosoUniversity.Features.Students
             public DateTime EnrollmentDate { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Result>
+        public class QueryHandler : AsyncRequestHandler<Query, Result>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            public async Task<Result> Handle(Query message)
+            protected override async Task<Result> HandleCore(Query message)
             {
                 var model = new Result
                 {
