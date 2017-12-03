@@ -41,26 +41,26 @@ namespace ContosoUniversity.Features.Instructors
             public string OfficeAssignmentLocation { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            public Task<Command> Handle(Query message) => _db
+            protected override Task<Command> HandleCore(Query message) => _db
                 .Instructors
                 .Where(i => i.Id == message.Id)
                 .ProjectTo<Command>()
                 .SingleOrDefaultAsync();
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            public async Task Handle(Command message)
+            protected override async Task HandleCore(Command message)
             {
                 Instructor instructor = await _db.Instructors
                     .Include(i => i.OfficeAssignment)

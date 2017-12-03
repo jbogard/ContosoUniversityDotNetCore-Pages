@@ -33,13 +33,13 @@ namespace ContosoUniversity.Features.Courses
             public string DepartmentName { get; set; }
         }
 
-        public class Handler : IAsyncRequestHandler<Query, Model>
+        public class Handler : AsyncRequestHandler<Query, Model>
         {
             private readonly SchoolContext _db;
 
             public Handler(SchoolContext db) => _db = db;
 
-            public Task<Model> Handle(Query message) => 
+            protected override Task<Model> HandleCore(Query message) => 
                 _db.Courses
                 .Where(i => i.Id == message.Id)
                 .ProjectTo<Model>()

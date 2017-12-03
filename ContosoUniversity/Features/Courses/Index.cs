@@ -28,7 +28,7 @@ namespace ContosoUniversity.Features.Courses
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Query, Result>
+        public class Handler : AsyncRequestHandler<Query, Result>
         {
             private readonly SchoolContext _db;
 
@@ -37,7 +37,7 @@ namespace ContosoUniversity.Features.Courses
                 _db = db;
             }
 
-            public async Task<Result> Handle(Query message)
+            protected override async Task<Result> HandleCore(Query message)
             {
                 var courses = await _db.Courses
                     .OrderBy(d => d.Id)

@@ -39,13 +39,13 @@ namespace ContosoUniversity.Features.Departments
             public Instructor Administrator { get; set; }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, int>
+        public class CommandHandler : AsyncRequestHandler<Command, int>
         {
             private readonly SchoolContext _context;
 
             public CommandHandler(SchoolContext context) => _context = context;
 
-            public async Task<int> Handle(Command message)
+            protected override async Task<int> HandleCore(Command message)
             {
                 var department = Mapper.Map<Command, Department>(message);
 

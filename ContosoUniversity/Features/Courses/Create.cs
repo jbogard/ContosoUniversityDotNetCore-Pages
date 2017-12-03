@@ -17,13 +17,13 @@ namespace ContosoUniversity.Features.Courses
             public Department Department { get; set; }
         }
 
-        public class Handler : IAsyncRequestHandler<Command, int>
+        public class Handler : AsyncRequestHandler<Command, int>
         {
             private readonly SchoolContext _db;
 
             public Handler(SchoolContext db) => _db = db;
 
-            public async Task<int> Handle(Command message)
+            protected override async Task<int> HandleCore(Command message)
             {
                 var course = Mapper.Map<Command, Course>(message);
                 course.Id = message.Number;

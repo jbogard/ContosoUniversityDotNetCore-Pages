@@ -30,13 +30,13 @@ namespace ContosoUniversity.Features.Departments
 
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Model>
+        public class QueryHandler : AsyncRequestHandler<Query, Model>
         {
             private readonly SchoolContext _context;
 
             public QueryHandler(SchoolContext context) => _context = context;
 
-            public Task<Model> Handle(Query message) => _context.Departments
+            protected override Task<Model> HandleCore(Query message) => _context.Departments
                 .FromSql(@"SELECT * FROM Department WHERE DepartmentID = {0}", message.Id)
                 .ProjectTo<Model>()
                 .SingleOrDefaultAsync();

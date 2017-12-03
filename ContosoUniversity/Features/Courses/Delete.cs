@@ -24,13 +24,13 @@ namespace ContosoUniversity.Features.Courses
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            public Task<Command> Handle(Query message) =>
+            protected override Task<Command> HandleCore(Query message) =>
                 _db.Courses
                     .Where(c => c.Id == message.Id)
                     .ProjectTo<Command>()
@@ -48,13 +48,13 @@ namespace ContosoUniversity.Features.Courses
             public string DepartmentName { get; set; }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            public async Task Handle(Command message)
+            protected override async Task HandleCore(Command message)
             {
                 var course = await _db.Courses.FindAsync(message.Id);
 
