@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  contosouniversity:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+  db:
+    environment:
+      - sa_password=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5433:1433"
+networks:
+  default:
+    external:
+      name: nat
