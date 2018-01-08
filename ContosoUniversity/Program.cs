@@ -23,17 +23,8 @@ namespace ContosoUniversity
                 {
                     var config = services.GetRequiredService<IConfiguration>();
                     var connString = config.GetConnectionString("DefaultConnection");
-                    var builder = new SqlConnectionStringBuilder(connString) {InitialCatalog = "master"};
 
-                    EnsureDatabase.For.SqlDatabase(connString);
-
-                    var upgrader = DeployChanges.To
-                        .SqlDatabase(connString)
-                        .WithScriptsFromFileSystem(@"App_Data")
-                        .LogToConsole()
-                        .Build();
-
-                    var result = upgrader.PerformUpgrade();
+                    var result = DbInitializer.Migrate(connString);
 
                     if (!result.Successful)
                     {

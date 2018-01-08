@@ -1,13 +1,26 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using ContosoUniversity.Models;
+using DbUp;
+using DbUp.Engine;
 
 namespace ContosoUniversity.Data
 {
     public static class DbInitializer
     {
+        public static DatabaseUpgradeResult Migrate(string connString)
+        {
+            EnsureDatabase.For.SqlDatabase(connString);
+
+            var upgrader = DeployChanges.To
+                .SqlDatabase(connString)
+                .WithScriptsEmbeddedInAssembly(typeof(Program).Assembly)
+                .LogToConsole()
+                .Build();
+
+            return upgrader.PerformUpgrade();
+        }
+
         public static void Initialize(SchoolContext context)
         {
             //context.Database.EnsureCreated();
