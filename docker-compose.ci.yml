@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  db:
+    image: microsoft/mssql-server-windows-developer
+    environment:
+      - sa_password=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5433:1433"
+networks:
+  default:
+    external:
+      name: nat
