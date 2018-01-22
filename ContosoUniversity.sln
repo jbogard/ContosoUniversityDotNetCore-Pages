@@ -10,8 +10,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{13186C93-7307-4FEA-A17C-4556F54FF5F1}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
-		Build.bat = Build.bat
 		Build.ps1 = Build.ps1
+		ci.ps1 = ci.ps1
 		ci\Dockerfile = ci\Dockerfile
 		LICENSE = LICENSE
 		README.md = README.md
