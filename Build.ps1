@@ -22,26 +22,48 @@ function Exec
     }
 }
 
-exec { & dotnet --info }
+if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
-#exec { & dotnet build ContosoUniversity.CI.sln -c Release --version-suffix=$buildSuffix }
-exec { & dotnet build ContosoUniversity.CI.sln -c Release }
+
+$branch = @{ $true = $env:APPVEYOR_REPO_BRANCH; $false = $(git symbolic-ref --short -q HEAD) }[$env:APPVEYOR_REPO_BRANCH -ne $NULL];
+$revision = @{ $true = "{0:00000}" -f [convert]::ToInt32("0" + $env:APPVEYOR_BUILD_NUMBER, 10); $false = "local" }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
+$suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch.Length)))-$revision"}[$branch -eq "master" -and $revision -ne "local"]
+$commitHash = $(git rev-parse --short HEAD)
+$buildSuffix = @{ $true = "$($suffix)-$($commitHash)"; $false = "$($branch)-$($commitHash)" }[$suffix -ne ""]
+
+exec { & .\tools\rh.exe /d=ContosoUniversity /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent }
+exec { & .\tools\rh.exe /d=ContosoUniversity-Test /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent /drop }
+exec { & .\tools\rh.exe /d=ContosoUniversity-Test /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent /simple }
+
+
+exec { & dotnet restore }
+
+exec { & dotnet build -c Release --version-suffix=$buildSuffix }
 
 Push-Location -Path .\ContosoUniversity.IntegrationTests
 
 try {
-	exec { & dotnet xunit -configuration Release -nobuild --fx-version 2.0.5 }
+	exec { & dotnet xunit -configuration Release -nobuild --fx-version 2.0.0 }
 }
 finally {
 	Pop-Location
 }
 
-#exec { & dotnet publish ContosoUniversity --output .\..\publish --configuration Release }
+#Push-Location -Path .\test\ContosoUniversity.UnitTests
 
-#$octo_revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = "0" }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
-#$octo_version = "1.0.$octo_revision"
+#try {
+#	exec { & dotnet test -c Release --no-build }
+#}
+#finally {
+#	Pop-Location
+#}
 
-#exec { & .\tools\Octo.exe pack --id ContosoUniversity --version $octo_version --basePath publish --outFolder artifacts }
+exec { & dotnet publish ContosoUniversity --output .\..\publish --configuration Release }
+
+$octo_revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = "0" }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
+$octo_version = "1.0.$octo_revision"
+
+exec { & .\tools\Octo.exe pack --id ContosoUniversity --version $octo_version --basePath publish --outFolder artifacts }
 
 
 
