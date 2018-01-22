@@ -20,7 +20,7 @@ namespace ContosoUniversity.IntegrationTests
                 if (_initialized)
                     return;
                 
-                await SliceFixture.ResetCheckpoint();
+                //await SliceFixture.ResetCheckpoint();
 
                 _initialized = true;
             }

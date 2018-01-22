@@ -7,9 +7,6 @@ services:
       - "ConnectionStrings:DefaultConnection=Server=db;Database=contosouniversity;User Id=sa;Password=Pass@word"
     ports:
       - "80"
-    build:
-      args:
-        connString: "Server=db;Database=contosouniversity-test;User Id=sa;Password=Pass@word"
   db:
     environment:
       - sa_password=Pass@word

@@ -41,6 +41,7 @@ namespace ContosoUniversity.IntegrationTests
 
             if (!result.Successful)
             {
+                throw result.Error;
                 var logger = provider.GetRequiredService<ILogger<Program>>();
                 logger.LogError(result.Error, "An error occurred while migrating the database.");
             }
