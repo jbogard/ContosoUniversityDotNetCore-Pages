@@ -24,6 +24,8 @@ function Exec
 
 exec { & docker-compose -f .\docker-compose.ci.yml -p contosouniversitydotnetcore-ci up -d --build --remove-orphans --force-recreate }
 
+exec { & docker ps }
+
 exec { & docker run `
   -e "ConnectionStrings:DefaultConnection=Server=test-db;Database=contosouniversity-test;User Id=sa;Password=Pass@word" `
    contosouniversitydotnetcoreci_ci:latest `
