@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  contosouniversity:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Server=db;Database=contosouniversity;User Id=sa;Password=Pass@word"
+    ports:
+      - "80"
+  db:
+    environment:
+      - sa_password=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5433:1433"
+networks:
+  default:
+    external:
+      name: nat

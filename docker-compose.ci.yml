@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  ci:
+    build:
+      context: .
+      dockerfile: ci\Dockerfile
+    depends_on:
+      - test-db
+  test-db:
+    image: microsoft/mssql-server-windows-developer
+    environment:
+      - sa_password=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "6433:1433"
+networks:
+  default:
+    external:
+      name: nat

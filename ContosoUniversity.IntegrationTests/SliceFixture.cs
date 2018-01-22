@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Respawn;
 
 namespace ContosoUniversity.IntegrationTests
@@ -33,6 +34,17 @@ namespace ContosoUniversity.IntegrationTests
             var provider = services.BuildServiceProvider();
             _scopeFactory = provider.GetService<IServiceScopeFactory>();
             _checkpoint = new Checkpoint();
+
+            var connString = _configuration.GetConnectionString("DefaultConnection");
+
+            var result = DbInitializer.Migrate(connString);
+
+            if (!result.Successful)
+            {
+                throw result.Error;
+                var logger = provider.GetRequiredService<ILogger<Program>>();
+                logger.LogError(result.Error, "An error occurred while migrating the database.");
+            }
         }
 
         public static Task ResetCheckpoint() => _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));

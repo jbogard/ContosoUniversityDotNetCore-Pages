@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  contosouniversity:
+    image: contosouniversity
+    build:
+      context: .
+      dockerfile: ContosoUniversity\Dockerfile
+    depends_on:
+      - db
+  db:
+    image: microsoft/mssql-server-windows-developer

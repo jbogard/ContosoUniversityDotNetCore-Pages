@@ -7,18 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoUniversity", "Contos
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoUniversity.IntegrationTests", "ContosoUniversity.IntegrationTests\ContosoUniversity.IntegrationTests.csproj", "{70FF0FF8-4876-4A7A-AE4A-53C92A2C1531}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{13186C93-7307-4FEA-A17C-4556F54FF5F1}"
-	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
-		Build.bat = Build.bat
-		Build.ps1 = Build.ps1
-		ci\Dockerfile = ci\Dockerfile
-		LICENSE = LICENSE
-		README.md = README.md
-	EndProjectSection
-EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4342BA3E-5DA3-4011-BC83-26484BC1A844}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,10 +21,6 @@ Global
 		{70FF0FF8-4876-4A7A-AE4A-53C92A2C1531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70FF0FF8-4876-4A7A-AE4A-53C92A2C1531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70FF0FF8-4876-4A7A-AE4A-53C92A2C1531}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4342BA3E-5DA3-4011-BC83-26484BC1A844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4342BA3E-5DA3-4011-BC83-26484BC1A844}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4342BA3E-5DA3-4011-BC83-26484BC1A844}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4342BA3E-5DA3-4011-BC83-26484BC1A844}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

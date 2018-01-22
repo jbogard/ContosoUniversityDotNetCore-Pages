@@ -1,7 +1,7 @@
 ﻿version: 1.0.{build}
 image: Visual Studio 2017
 build_script:
-- ps: .\Build.ps1
+- ps: .\ci.ps1
 artifacts:
 - path: artifacts\*.nupkg
   name: nuget
