@@ -44,6 +44,7 @@ namespace ContosoUniversity
                     opt.Filters.Add(typeof(ValidatorActionFilter));
                     opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
                 })
+                .WithRazorPagesRoot("/Features")
                 .AddFeatureFolders()
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
         }

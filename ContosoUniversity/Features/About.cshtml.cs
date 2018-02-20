@@ -1,30 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using ContosoUniversity.Data;
-using ContosoUniversity.Models;
 using ContosoUniversity.Models.SchoolViewModels;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Home
+namespace ContosoUniversity.Features
 {
-    public class HomeController : Controller
+    public class AboutPage : PageModel
     {
         private readonly SchoolContext _context;
 
-        public HomeController(SchoolContext context)
+        public AboutPage(SchoolContext context)
         {
             _context = context;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IEnumerable<EnrollmentDateGroup> Data { get; private set; }
 
-        public async Task<ActionResult> About()
+        public async Task OnGetAsync()
         {
             List<EnrollmentDateGroup> groups = new List<EnrollmentDateGroup>();
             var conn = _context.Database.GetDbConnection();
@@ -55,19 +50,8 @@ namespace ContosoUniversity.Features.Home
             {
                 conn.Close();
             }
-            return View(groups);
-        }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            Data = groups;
         }
     }
 }
