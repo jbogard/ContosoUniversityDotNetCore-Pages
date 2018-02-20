@@ -15,6 +15,16 @@ namespace ContosoUniversity.Features
             );
         }
 
+        public static ActionResult RedirectToPageJson<TController>(this TController controller, string pageName)
+            where TController : Controller
+        {
+            return controller.JsonNet(new
+                {
+                    redirect = controller.Url.Page(pageName)
+                }
+            );
+        }
+
         public static ContentResult JsonNet(this Controller controller, object model)
         {
             var serialized = JsonConvert.SerializeObject(model, new JsonSerializerSettings

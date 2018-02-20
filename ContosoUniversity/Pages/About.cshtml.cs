@@ -6,7 +6,7 @@ using ContosoUniversity.Models.SchoolViewModels;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features
+namespace ContosoUniversity.Pages
 {
     public class AboutPage : PageModel
     {

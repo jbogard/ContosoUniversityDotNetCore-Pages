@@ -4,12 +4,20 @@ using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Departments
+namespace ContosoUniversity.Pages.Departments
 {
-    public class Details
+    public class Details : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Model Data { get; private set; }
+
+        public Details(IMediator mediator) => _mediator = mediator;
+
         public class Query : IRequest<Model>
         {
             public int Id { get; set; }
@@ -29,6 +37,9 @@ namespace ContosoUniversity.Features.Departments
             public string AdministratorFullName { get; set; }
 
         }
+
+        public async Task OnGetAsync(Query query)
+            => Data = await _mediator.Send(query);
 
         public class QueryHandler : AsyncRequestHandler<Query, Model>
         {

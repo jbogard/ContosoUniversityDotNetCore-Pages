@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Departments;
 
 namespace ContosoUniversity.Features.Departments
 {
@@ -7,7 +8,7 @@ namespace ContosoUniversity.Features.Departments
     {
         public MappingProfile()
         {
-            CreateMap<Department, Index.Model>();
+            CreateMap<Department, Pages.Departments.Index.Model>();
             CreateMap<Department, Details.Model>();
             CreateMap<Create.Command, Department>(MemberList.Source);
             CreateMap<Department, Edit.Command>().ReverseMap();

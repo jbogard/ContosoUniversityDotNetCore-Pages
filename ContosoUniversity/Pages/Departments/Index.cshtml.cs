@@ -5,15 +5,25 @@ using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Departments
+namespace ContosoUniversity.Pages.Departments
 {
-    public class Index
+    public class Index : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Index(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
         public class Query : IRequest<List<Model>>
         {
         }
+
+        public List<Model> Data { get; private set; }
 
         public class Model
         {
@@ -25,9 +35,11 @@ namespace ContosoUniversity.Features.Departments
 
             public int Id { get; set; }
 
-            [Display(Name = "Administrator")]
             public string AdministratorFullName { get; set; }
         }
+
+        public async Task OnGetAsync()
+            => Data = await _mediator.Send(new Query());
 
         public class QueryHandler : AsyncRequestHandler<Query, List<Model>>
         {
