@@ -1,5 +1,5 @@
 ﻿@page
-@model Index
+@model Pages.Departments.Index
 
 @{
     ViewData["Title"] = "Departments";
@@ -8,7 +8,7 @@
 <h2>Departments</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-page="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -40,7 +40,7 @@
                 <td>
                     <a asp-page="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-page="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
             i++;

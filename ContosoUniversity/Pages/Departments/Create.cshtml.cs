@@ -7,11 +7,32 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ContosoUniversity.Features.Departments
+namespace ContosoUniversity.Pages.Departments
 {
-    public class Create
+    public class Create : PageModel
     {
+        private readonly IMediator _mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public Create(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OnPost()
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson("Index");
+        }
+
         public class Validator : AbstractValidator<Command>
         {
             public Validator()
@@ -21,6 +42,11 @@ namespace ContosoUniversity.Features.Departments
                 RuleFor(m => m.StartDate).NotNull();
                 RuleFor(m => m.Administrator).NotNull();
             }
+        }
+
+        public class MappingProfiler : Profile
+        {
+            public MappingProfiler() => CreateMap<Command, Department>(MemberList.Source);
         }
 
         public class Command : IRequest<int>

@@ -23,6 +23,16 @@ namespace ContosoUniversity.Pages.Departments
 
         public Edit(IMediator mediator) => _mediator = mediator;
 
+        public async Task OnGetAsync(Query query)
+            => Data = await _mediator.Send(query);
+
+        public async Task<ActionResult> OnPostAsync(int id)
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson("Index");
+        }
+
         public class Query : IRequest<Command>
         {
             public int Id { get; set; }
@@ -52,14 +62,9 @@ namespace ContosoUniversity.Pages.Departments
             }
         }
 
-        public async Task OnGetAsync(Query query)
-            => Data = await _mediator.Send(query);
-
-        public async Task<ActionResult> OnPostAsync(int id)
+        public class MappingProfile : Profile
         {
-            await _mediator.Send(Data);
-
-            return this.RedirectToPageJson("Index");
+            public MappingProfile() => CreateMap<Department, Command>().ReverseMap();
         }
 
         public class QueryHandler : AsyncRequestHandler<Query, Command>

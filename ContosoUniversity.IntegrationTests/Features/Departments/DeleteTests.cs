@@ -1,11 +1,11 @@
 ﻿using System.Linq;
+using ContosoUniversity.Pages.Departments;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
     using System;
     using Microsoft.EntityFrameworkCore;
     using System.Threading.Tasks;
-    using ContosoUniversity.Features.Departments;
     using Models;
     using Shouldly;
     using Xunit;

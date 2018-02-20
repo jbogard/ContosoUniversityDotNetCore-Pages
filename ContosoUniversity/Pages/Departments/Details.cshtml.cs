@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
+using ContosoUniversity.Models;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,9 @@ namespace ContosoUniversity.Pages.Departments
         public Model Data { get; private set; }
 
         public Details(IMediator mediator) => _mediator = mediator;
+
+        public async Task OnGetAsync(Query query)
+            => Data = await _mediator.Send(query);
 
         public class Query : IRequest<Model>
         {
@@ -35,12 +39,13 @@ namespace ContosoUniversity.Pages.Departments
 
             [Display(Name = "Administrator")]
             public string AdministratorFullName { get; set; }
-
         }
 
-        public async Task OnGetAsync(Query query)
-            => Data = await _mediator.Send(query);
-
+        public class MappingProfile : Profile
+        {
+            public MappingProfile() => CreateMap<Department, Model>();
+        }
+        
         public class QueryHandler : AsyncRequestHandler<Query, Model>
         {
             private readonly SchoolContext _context;

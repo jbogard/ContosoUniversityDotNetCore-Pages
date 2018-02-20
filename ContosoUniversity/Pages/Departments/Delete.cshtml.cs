@@ -2,15 +2,37 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
+using ContosoUniversity.Models;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Departments
+namespace ContosoUniversity.Pages.Departments
 {
-    public class Delete
+    public class Delete : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Delete(IMediator mediator) => _mediator = mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public async Task OnGetAsync(Query query)
+            => Data = await _mediator.Send(query);
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OnPostAsync()
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson("Index");
+        }
+
         public class Query : IRequest<Command>
         {
             public int Id { get; set; }
@@ -30,6 +52,11 @@ namespace ContosoUniversity.Features.Departments
             public string AdministratorFullName { get; set; }
 
             public byte[] RowVersion { get; set; }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile() => CreateMap<Department, Command>();
         }
 
         public class QueryHandler : AsyncRequestHandler<Query, Command>

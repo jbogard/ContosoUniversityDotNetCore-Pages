@@ -6,7 +6,6 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
     using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;
-    using ContosoUniversity.Features.Departments;
     using Models;
     using Shouldly;
     using Xunit;
