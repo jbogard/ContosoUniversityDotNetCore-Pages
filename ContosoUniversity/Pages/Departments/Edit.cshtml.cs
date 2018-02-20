@@ -4,15 +4,25 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
+using ContosoUniversity.Features;
 using ContosoUniversity.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Departments
+namespace ContosoUniversity.Pages.Departments
 {
-    public class Edit
+    public class Edit : PageModel
     {
+        private readonly IMediator _mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public Edit(IMediator mediator) => _mediator = mediator;
+
         public class Query : IRequest<Command>
         {
             public int Id { get; set; }
@@ -40,6 +50,16 @@ namespace ContosoUniversity.Features.Departments
                 RuleFor(m => m.StartDate).NotNull();
                 RuleFor(m => m.Administrator).NotNull();
             }
+        }
+
+        public async Task OnGetAsync(Query query)
+            => Data = await _mediator.Send(query);
+
+        public async Task<ActionResult> OnPostAsync(int id)
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson("Index");
         }
 
         public class QueryHandler : AsyncRequestHandler<Query, Command>

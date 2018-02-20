@@ -1,4 +1,6 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Departments
+﻿using ContosoUniversity.Pages.Departments;
+
+namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
     using System;
     using Microsoft.EntityFrameworkCore;

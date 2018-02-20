@@ -2,22 +2,12 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 
-namespace ContosoUniversity.Features
+namespace ContosoUniversity.Pages
 {
-    public static class ControllerExtensions
+    public static class PageModelExtensions
     {
-        public static ActionResult RedirectToActionJson<TController>(this TController controller, string action)
-            where TController : Controller
-        {
-            return controller.JsonNet(new
-                {
-                    redirect = controller.Url.Action(action)
-                }
-            );
-        }
-
-        public static ActionResult RedirectToPageJson<TController>(this TController controller, string pageName)
-            where TController : Controller
+        public static ActionResult RedirectToPageJson<TPage>(this TPage controller, string pageName)
+            where TPage : PageModel
         {
             return controller.JsonNet(new
                 {
@@ -26,7 +16,7 @@ namespace ContosoUniversity.Features
             );
         }
 
-        public static ContentResult JsonNet(this Controller controller, object model)
+        public static ContentResult JsonNet(this PageModel controller, object model)
         {
             var serialized = JsonConvert.SerializeObject(model, new JsonSerializerSettings
             {
@@ -39,5 +29,6 @@ namespace ContosoUniversity.Features
                 ContentType = "application/json"
             };
         }
+
     }
 }

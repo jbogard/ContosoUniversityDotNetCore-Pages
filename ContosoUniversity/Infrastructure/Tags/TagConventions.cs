@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using HtmlTags;
 using HtmlTags.Conventions;
+using HtmlTags.Reflection;
 
 namespace ContosoUniversity.Infrastructure.Tags
 {
@@ -9,7 +11,6 @@ namespace ContosoUniversity.Infrastructure.Tags
     {
         public TagConventions()
         {
-
             Editors.Always.AddClass("form-control");
 
             Editors.IfPropertyIs<DateTime?>().ModifyWith(m => m.CurrentTag
@@ -23,6 +24,10 @@ namespace ContosoUniversity.Infrastructure.Tags
 
             Labels.Always.AddClass("control-label");
             Labels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
+
+            // Just assume a "Data." prefix for attributes.
+            Labels.Always.ModifyWith(er => er.CurrentTag.Text(er.CurrentTag.Text().Replace("Data ", "")));
+
             Editors.BuilderPolicy<InstructorSelectElementBuilder>();
             Editors.BuilderPolicy<DepartmentSelectElementBuilder>();
             DisplayLabels.Always.BuildBy<DefaultDisplayLabelBuilder>();

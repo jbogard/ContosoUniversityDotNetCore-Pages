@@ -23,18 +23,6 @@ namespace ContosoUniversity.Features.Departments
             return this.RedirectToPageJson("/departments/index");
         }
 
-        public async Task<ActionResult> Edit(Edit.Query query) 
-            => View(await _mediator.Send(query));
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Edit.Command model)
-        {
-            await _mediator.Send(model);
-
-            return this.RedirectToPageJson("/departments/index");
-        }
-
         public async Task<ActionResult> Delete(Delete.Query query) 
             => View(await _mediator.Send(query));
 
