@@ -3,16 +3,27 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Instructors
+namespace ContosoUniversity.Pages.Instructors
 {
-    public class Index
+    public class Index : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Index(IMediator mediator) => _mediator = mediator;
+
+        public Model Data { get; private set; }
+
+        public async Task OnGetAsync(Query query)
+            => Data = await _mediator.Send(query);
+
         public class Query : IRequest<Model>
         {
             public int? Id { get; set; }
@@ -65,6 +76,17 @@ namespace ContosoUniversity.Features.Instructors
                 [DisplayFormat(NullDisplayText = "No grade")]
                 public Grade? Grade { get; set; }
                 public string StudentFullName { get; set; }
+            }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile()
+            {
+                CreateMap<Instructor, Model.Instructor>();
+                CreateMap<CourseAssignment, Model.CourseAssignment>();
+                CreateMap<Course, Model.Course>();
+                CreateMap<Enrollment, Model.Enrollment>();
             }
         }
 

@@ -14,7 +14,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
         [Fact]
         public async Task Should_get_details()
         {
-            var adminId = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",

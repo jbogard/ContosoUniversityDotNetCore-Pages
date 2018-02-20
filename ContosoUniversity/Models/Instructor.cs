@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using ContosoUniversity.Features.Instructors;
+using ContosoUniversity.Pages.Instructors;
 
 namespace ContosoUniversity.Models
 {

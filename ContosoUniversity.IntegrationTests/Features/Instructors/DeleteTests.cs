@@ -6,7 +6,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
     using System.Collections.Generic;
     using Microsoft.EntityFrameworkCore;
     using System.Threading.Tasks;
-    using ContosoUniversity.Features.Instructors;
+    using Pages.Instructors;
     using Models;
     using Shouldly;
     using Xunit;

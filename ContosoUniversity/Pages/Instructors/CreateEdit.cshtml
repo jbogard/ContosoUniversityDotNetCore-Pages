@@ -1,10 +1,11 @@
-﻿@model ContosoUniversity.Features.Instructors.CreateEdit.Command
+﻿@page "{handler?}"
+@model Instructors.CreateEdit
 
 @{
-    ViewBag.Title = Model.Id == null ? "Create" : "Edit";
+    ViewBag.Title = Model.Data.Id == null ? "Create" : "Edit";
 }
 
-<h2>@(Model.Id == null ? "Create" : "Edit")</h2>
+<h2>@(Model.Data.Id == null ? "Create" : "Edit")</h2>
 
 <h4>Instructor</h4>
 <hr />
@@ -12,10 +13,11 @@
     <div class="col-md-4">
         <form method="post">
             @Html.ValidationDiv()
-            @Html.FormBlock(m => m.LastName)
-            @Html.FormBlock(m => m.FirstMidName)
-            @Html.FormBlock(m => m.HireDate)
-            @Html.FormBlock(m => m.OfficeAssignmentLocation)
+            @Html.HiddenFor(m => m.Data.Id)
+            @Html.FormBlock(m => m.Data.LastName)
+            @Html.FormBlock(m => m.Data.FirstMidName)
+            @Html.FormBlock(m => m.Data.HireDate)
+            @Html.FormBlock(m => m.Data.OfficeAssignmentLocation)
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <table>
@@ -23,7 +25,7 @@
                         @{
                             int cnt = 0;
 
-                            foreach (var course in Model.AssignedCourses)
+                            foreach (var course in Model.Data.AssignedCourses)
                             {
                                 if (cnt++ % 3 == 0)
                                 {
@@ -32,7 +34,7 @@
                                 @:<td>
                                 <label style="font-weight: normal">
                                     <input type="checkbox"
-                                           name="selectedCourses"
+                                           name="data.selectedCourses"
                                            value="@course.CourseID"
                                            @(Html.Raw(course.Assigned ? "checked=\"checked\"" : "")) />
                                     @course.CourseID :  @course.Title
@@ -53,7 +55,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

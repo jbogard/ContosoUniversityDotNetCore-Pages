@@ -9,12 +9,41 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Instructors
+namespace ContosoUniversity.Pages.Instructors
 {
-    public class CreateEdit
+    public class CreateEdit : PageModel
     {
+        private readonly IMediator _mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public CreateEdit(IMediator mediator) => _mediator = mediator;
+
+        public async Task OnGetCreateAsync() => Data = await _mediator.Send(new Query());
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OnPostCreateAsync()
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson(nameof(Index));
+        }
+
+        public async Task OnGetEditAsync(Query query) => Data = await _mediator.Send(query);
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OnPostEditAsync()
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson(nameof(Index));
+        }
+
         public class Query : IRequest<Command>
         {
             public int? Id { get; set; }
@@ -27,7 +56,6 @@ namespace ContosoUniversity.Features.Instructors
                 RuleFor(m => m.Id).NotNull();
             }
         }
-
 
         public class Command : IRequest<int>
         {
@@ -77,6 +105,15 @@ namespace ContosoUniversity.Features.Instructors
                 RuleFor(m => m.LastName).NotNull().Length(0, 50);
                 RuleFor(m => m.FirstMidName).NotNull().Length(0, 50);
                 RuleFor(m => m.HireDate).NotNull();
+            }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile()
+            {
+                CreateMap<Instructor, Command>();
+                CreateMap<CourseAssignment, Command.CourseAssignment>();
             }
         }
 
