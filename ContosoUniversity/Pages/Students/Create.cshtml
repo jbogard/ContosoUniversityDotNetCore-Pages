@@ -1,4 +1,5 @@
-﻿@model ContosoUniversity.Features.Students.Create.Command
+﻿@page
+@model Students.Create
 
 @{
     ViewData["Title"] = "Create";
@@ -10,11 +11,11 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form method="post">
             @Html.ValidationDiv()
-            @Html.FormBlock(m => m.LastName)
-            @Html.FormBlock(m => m.FirstMidName)
-            @Html.FormBlock(m => m.EnrollmentDate)
+            @Html.FormBlock(m => m.Data.LastName)
+            @Html.FormBlock(m => m.Data.FirstMidName)
+            @Html.FormBlock(m => m.Data.EnrollmentDate)
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -23,7 +24,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

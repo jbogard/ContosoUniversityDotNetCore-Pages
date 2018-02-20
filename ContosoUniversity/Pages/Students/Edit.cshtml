@@ -1,4 +1,5 @@
-﻿@model ContosoUniversity.Features.Students.Edit.Command
+﻿@page "{id:int}"
+@model Students.Edit
 
 @{
     ViewData["Title"] = "Edit";
@@ -10,12 +11,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form method="post">
             @Html.ValidationDiv()
-            @Html.Input(m => m.ID)
-            @Html.FormBlock(m => m.LastName)
-            @Html.FormBlock(m => m.FirstMidName)
-            @Html.FormBlock(m => m.EnrollmentDate)
+            @Html.Input(m => m.Data.ID)
+            @Html.FormBlock(m => m.Data.LastName)
+            @Html.FormBlock(m => m.Data.FirstMidName)
+            @Html.FormBlock(m => m.Data.EnrollmentDate)
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
@@ -24,7 +25,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Xunit;
 using static ContosoUniversity.IntegrationTests.SliceFixture;
-using ContosoUniversity.Features.Students;
+using ContosoUniversity.Pages.Students;
 using ContosoUniversity.Models;
 using Shouldly;
 

@@ -2,15 +2,28 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
+using ContosoUniversity.Features;
 using ContosoUniversity.Models;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ContosoUniversity.Features.Students
+namespace ContosoUniversity.Pages.Students
 {
-    public class Index
+    public class Index : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Index(IMediator mediator) => _mediator = mediator;
+
+        public Result Data { get; private set; }
+
+        public async Task OnGetAsync(string sortOrder,
+            string currentFilter, string searchString, int? pageIndex)
+            => Data = await _mediator.Send(new Query { CurrentFilter = currentFilter, Page = pageIndex, SearchString = searchString, SortOrder = sortOrder});
+
         public class Query : IRequest<Result>
         {
             public string SortOrder { get; set; }
@@ -37,6 +50,11 @@ namespace ContosoUniversity.Features.Students
             public string FirstMidName { get; set; }
             public string LastName { get; set; }
             public DateTime EnrollmentDate { get; set; }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile() => CreateMap<Student, Model>();
         }
 
         public class QueryHandler : AsyncRequestHandler<Query, Result>

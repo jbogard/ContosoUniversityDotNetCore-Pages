@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ContosoUniversity.Features.Students;
+using ContosoUniversity.Pages.Students;
 using ContosoUniversity.Models;
 using Shouldly;
 using Xunit;

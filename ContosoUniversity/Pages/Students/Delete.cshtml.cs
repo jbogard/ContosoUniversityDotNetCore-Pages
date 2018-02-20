@@ -2,15 +2,36 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
+using ContosoUniversity.Models;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Students
+namespace ContosoUniversity.Pages.Students
 {
-    public class Delete
+    public class Delete : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Delete(IMediator mediator) => _mediator = mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public async Task OnGetAsync(Query query) => Data = await _mediator.Send(query);
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OnPostAsync()
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson(nameof(Index));
+        }
+
         public class Query : IRequest<Command>
         {
             public int Id { get; set; }
@@ -23,6 +44,11 @@ namespace ContosoUniversity.Features.Students
             public string FirstMidName { get; set; }
             public string LastName { get; set; }
             public DateTime EnrollmentDate { get; set; }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile() => CreateMap<Student, Command>();
         }
 
         public class QueryHandler : AsyncRequestHandler<Query, Command>

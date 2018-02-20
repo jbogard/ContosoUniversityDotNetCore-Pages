@@ -1,0 +1,82 @@
+﻿@page
+@model Students.Index
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+
+<form method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@Model.Data.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-page="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-page="Index" asp-route-sortOrder="@Model.Data.NameSortParm" asp-route-currentFilter="@Model.Data.CurrentFilter">Last Name</a>
+            </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                <a asp-page="Index" asp-route-sortOrder="@Model.Data.DateSortParm" asp-route-currentFilter="@Model.Data.CurrentFilter">Enrollment Date</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var item in Model.Data.Results)
+        {
+            <tr>
+                <td>
+                    <display-tag for="Data.Results[i].LastName"/>
+                </td>
+                <td>
+                    <display-tag for="Data.Results[i].FirstMidName" />
+                </td>
+                <td>
+                    <display-tag for="Data.Results[i].EnrollmentDate" />
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-page="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-page="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Data.Results.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Data.Results.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="Index"
+   asp-route-sortOrder="@Model.Data.CurrentSort"
+   asp-route-pageindex="@(Model.Data.Results.PageIndex - 1)"
+   asp-route-currentFilter="@Model.Data.CurrentFilter"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-page="Index"
+   asp-route-sortOrder="@Model.Data.CurrentSort"
+   asp-route-pageindex="@(Model.Data.Results.PageIndex + 1)"
+   asp-route-currentFilter="@Model.Data.CurrentFilter"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

@@ -5,14 +5,35 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
+using ContosoUniversity.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Students
+namespace ContosoUniversity.Pages.Students
 {
-    public class Edit
+    public class Edit : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Edit(IMediator mediator) => _mediator = mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public async Task OnGetAsync(Query query)
+            => Data = await _mediator.Send(query);
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OnPostAsync()
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson(nameof(Index));
+        }
+
         public class Query : IRequest<Command>
         {
             public int? Id { get; set; }
@@ -45,6 +66,11 @@ namespace ContosoUniversity.Features.Students
                 RuleFor(m => m.FirstMidName).NotNull().Length(1, 50);
                 RuleFor(m => m.EnrollmentDate).NotNull();
             }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile() => CreateMap<Student, Command>().ReverseMap();
         }
 
         public class QueryHandler : AsyncRequestHandler<Query, Command>

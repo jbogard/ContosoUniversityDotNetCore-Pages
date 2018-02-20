@@ -6,11 +6,34 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ContosoUniversity.Features.Students
+namespace ContosoUniversity.Pages.Students
 {
-    public class Create
+    public class Create : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Create(IMediator mediator) => _mediator = mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public void OnGet() => Data = new Command();
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson(nameof(Index));
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile() => CreateMap<Command, Student>(MemberList.Source);
+        }
+
         public class Command : IRequest<int>
         {
             public string LastName { get; set; }
@@ -28,8 +51,6 @@ namespace ContosoUniversity.Features.Students
                 RuleFor(m => m.LastName).NotNull().Length(1, 50);
                 RuleFor(m => m.FirstMidName).NotNull().Length(1, 50);
                 RuleFor(m => m.EnrollmentDate).NotNull();
-
-
             }
         }
 
