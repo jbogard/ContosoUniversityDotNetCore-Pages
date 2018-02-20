@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-    using ContosoUniversity.Features.Courses;
+    using Pages.Courses;
     using Models;
     using Shouldly;
     using Xunit;

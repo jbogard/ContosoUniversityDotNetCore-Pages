@@ -7,12 +7,31 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Courses
+namespace ContosoUniversity.Pages.Courses
 {
-    public class Edit
+    public class Edit : PageModel
     {
+        private readonly IMediator _mediator;
+
+        [BindProperty]
+        public Command Data { get; set; }
+
+        public Edit(IMediator mediator) => _mediator = mediator;
+
+        public async Task OnGetAsync(Query query) => Data = await _mediator.Send(query);
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OnPostAsync()
+        {
+            await _mediator.Send(Data);
+
+            return this.RedirectToPageJson(nameof(Index));
+        }
+
         public class Query : IRequest<Command>
         {
             public int? Id { get; set; }
@@ -46,6 +65,11 @@ namespace ContosoUniversity.Features.Courses
             public string Title { get; set; }
             public int? Credits { get; set; }
             public Department Department { get; set; }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile() => CreateMap<Course, Command>().ReverseMap();
         }
 
         public class CommandValidator : AbstractValidator<Command>

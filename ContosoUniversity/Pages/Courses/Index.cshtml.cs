@@ -1,19 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
+using ContosoUniversity.Models;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Features.Courses
+namespace ContosoUniversity.Pages.Courses
 {
-    public class Index
+    public class Index : PageModel
     {
+        private readonly IMediator _mediator;
+
+        public Index(IMediator mediator) => _mediator = mediator;
+
+        public Result Data { get; private set; }
+
+        public async Task OnGetAsync() => Data = await _mediator.Send(new Query());
+
         public class Query : IRequest<Result>
         {
         }
-
 
         public class Result
         {
@@ -28,14 +38,16 @@ namespace ContosoUniversity.Features.Courses
             }
         }
 
+        public class MappingProfile : Profile
+        {
+            public MappingProfile() => CreateMap<Course, Result.Course>();
+        }
+
         public class Handler : AsyncRequestHandler<Query, Result>
         {
             private readonly SchoolContext _db;
 
-            public Handler(SchoolContext db)
-            {
-                _db = db;
-            }
+            public Handler(SchoolContext db) => _db = db;
 
             protected override async Task<Result> HandleCore(Query message)
             {
