@@ -1,13 +1,15 @@
-# ContosoUniversity on ASP.NET Core with Full .NET Framework
+# ContosoUniversity on ASP.NET Core 2.0 on .NET Core and Razor Pages
 
 Contoso University, the way I would write it.
 
-To run, create a database "ContosoUniversity" and run the SchemaAndData.sql script against it. Modify the connection string in appsettings and go!
+To run, execute the build script (`Build.ps1`). Open the solution and run!
 
 ## Things demonstrated
 
 - CQRS and MediatR
 - AutoMapper
-- Feature folders and vertical slices
+- Vertical slice architecture
+- Razor Pages
+- Fluent Validation
 - HtmlTags
-- Entity Framework 6
+- Entity Framework Core
