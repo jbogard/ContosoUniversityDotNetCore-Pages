@@ -1,10 +1,11 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Departments
+﻿using ContosoUniversity.Pages.Departments;
+
+namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
     using System;
     using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;
-    using ContosoUniversity.Features.Departments;
     using Models;
     using Shouldly;
     using Xunit;
@@ -15,7 +16,7 @@
         [Fact]
         public async Task Should_get_edit_department_details()
         {
-            var adminId = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -46,14 +47,14 @@
         [Fact]
         public async Task Should_edit_department()
         {
-            var adminId = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
                 HireDate = DateTime.Today,
             });
 
-            var admin2Id = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var admin2Id = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",

@@ -1,0 +1,59 @@
+﻿@page "{id:int}"
+@model Students.Details
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Student</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <display-label-tag for="Data.LastName"/>
+        </dt>
+        <dd>
+            <display-tag for="Data.LastName"/>
+        </dd>
+        <dt>
+            <display-label-tag for="Data.FirstMidName" />
+        </dt>
+        <dd>
+            <display-tag for="Data.FirstMidName" />
+        </dd>
+        <dt>
+            <display-label-tag for="Data.EnrollmentDate" />
+        </dt>
+        <dd>
+            <display-tag for="Data.EnrollmentDate" />
+        </dd>
+        <dt>
+            <display-label-tag for="Data.Enrollments" />
+        </dt>
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>Course Title</th>
+                    <th>Grade</th>
+                </tr>
+                @for (var i = 0; i < Model.Data.Enrollments.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <display-tag for="Data.Enrollments[i].CourseTitle" />
+                        </td>
+                        <td>
+                            <display-tag for="Data.Enrollments[i].Grade" />
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="Edit" asp-route-id="@Model.Data.ID">Edit</a> |
+    <a asp-page="Index">Back to List</a>
+</div>

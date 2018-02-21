@@ -1,0 +1,57 @@
+﻿@page
+@model Courses.Index
+
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<h2>Courses</h2>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Number
+            </th>
+            <th>
+                Title
+            </th>
+            <th>
+                Credits
+            </th>
+            <th>
+                Department
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0;}
+        @foreach (var item in Model.Data.Courses)
+        {
+            <tr>
+                <td>
+                    <display-tag for="Data.Courses[i].Id"/>
+                </td>
+                <td>
+                    <display-tag for="Data.Courses[i].Title" />
+                </td>
+                <td>
+                    <display-tag for="Data.Courses[i].Credits" />
+                </td>
+                <td>
+                    <display-tag for="Data.Courses[i].DepartmentName" />
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>

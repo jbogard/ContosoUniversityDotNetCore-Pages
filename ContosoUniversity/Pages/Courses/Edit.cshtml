@@ -1,0 +1,40 @@
+﻿@page "{id:int}"
+@model Courses.Edit
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            @Html.ValidationDiv()
+            <input-tag for="Data.Id" />
+
+            <div class="form-group">
+                <label-tag for="Data.Id" />
+                <div><display-tag for="Data.Id" /></div>
+            </div>
+
+            @Html.FormBlock(m => m.Data.Title)
+            @Html.FormBlock(m => m.Data.Credits)
+            @Html.FormBlock(m => m.Data.Department)
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

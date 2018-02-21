@@ -4,7 +4,6 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
     using System;
     using System.Threading.Tasks;
-    using ContosoUniversity.Features.Departments;
     using Models;
     using Shouldly;
     using Xunit;
@@ -15,7 +14,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
         [Fact]
         public async Task Should_list_departments()
         {
-            var adminId = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -39,7 +38,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
 
             await InsertAsync(dept, dept2);
 
-            var query = new Index.Query();
+            var query = new Pages.Departments.Index.Query();
 
             var result = await SendAsync(query);
 

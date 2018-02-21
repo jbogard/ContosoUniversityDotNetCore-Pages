@@ -1,0 +1,49 @@
+﻿@page
+@model Pages.Departments.Index
+
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<h2>Departments</h2>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Budget</th>
+            <th>Start Date</th>
+            <th>Administrator</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var item in Model.Data)
+        {
+            <tr>
+                <td>
+                    @Html.Display(modelItem => modelItem.Data[i].Name)
+                </td>
+                <td>
+                    @Html.Display(modelItem => modelItem.Data[i].Budget)
+                </td>
+                <td>
+                    @Html.Display(modelItem => modelItem.Data[i].StartDate)
+                </td>
+                <td>
+                    @Html.Display(modelItem => modelItem.Data[i].AdministratorFullName)
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>

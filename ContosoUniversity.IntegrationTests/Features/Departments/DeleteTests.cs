@@ -1,11 +1,11 @@
 ﻿using System.Linq;
+using ContosoUniversity.Pages.Departments;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
     using System;
     using Microsoft.EntityFrameworkCore;
     using System.Threading.Tasks;
-    using ContosoUniversity.Features.Departments;
     using Models;
     using Shouldly;
     using Xunit;
@@ -16,7 +16,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
         [Fact]
         public async Task Should_delete_department()
         {
-            var adminId = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",

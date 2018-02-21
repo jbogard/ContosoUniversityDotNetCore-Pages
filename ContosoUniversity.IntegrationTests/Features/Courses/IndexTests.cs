@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-    using ContosoUniversity.Features.Courses;
+    using Pages.Courses;
     using Models;
     using Shouldly;
     using Xunit;
@@ -13,7 +13,7 @@
         [Fact]
         public async Task Should_return_all_courses()
         {
-            var adminId = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",

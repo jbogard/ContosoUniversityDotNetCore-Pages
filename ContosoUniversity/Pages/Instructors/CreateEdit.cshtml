@@ -1,0 +1,63 @@
+﻿@page "{handler?}"
+@model Instructors.CreateEdit
+
+@{
+    ViewBag.Title = Model.Data.Id == null ? "Create" : "Edit";
+}
+
+<h2>@(Model.Data.Id == null ? "Create" : "Edit")</h2>
+
+<h4>Instructor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            @Html.ValidationDiv()
+            @Html.HiddenFor(m => m.Data.Id)
+            @Html.FormBlock(m => m.Data.LastName)
+            @Html.FormBlock(m => m.Data.FirstMidName)
+            @Html.FormBlock(m => m.Data.HireDate)
+            @Html.FormBlock(m => m.Data.OfficeAssignmentLocation)
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table>
+                        <tr>
+                        @{
+                            int cnt = 0;
+
+                            foreach (var course in Model.Data.AssignedCourses)
+                            {
+                                if (cnt++ % 3 == 0)
+                                {
+                                    @:</tr><tr>
+                                }
+                                @:<td>
+                                <label style="font-weight: normal">
+                                    <input type="checkbox"
+                                           name="data.selectedCourses"
+                                           value="@course.CourseID"
+                                           @(Html.Raw(course.Assigned ? "checked=\"checked\"" : "")) />
+                                    @course.CourseID :  @course.Title
+                                </label>
+                                @:</td>
+                            }
+                            @:</tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ContosoUniversity.Features.Courses;
+using ContosoUniversity.Pages.Courses;
 using ContosoUniversity.Models;
 using Shouldly;
 using Xunit;
@@ -16,7 +16,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
         [Fact]
         public async Task Should_query_for_command()
         {
-            var adminId = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -52,7 +52,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
         [Fact]
         public async Task Should_delete()
         {
-            var adminId = await SendAsync(new ContosoUniversity.Features.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",

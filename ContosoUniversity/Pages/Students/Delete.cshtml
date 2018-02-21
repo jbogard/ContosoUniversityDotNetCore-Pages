@@ -1,0 +1,41 @@
+﻿@page "{id:int}"
+@model Students.Delete
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+<p class="text-danger">@ViewData["ErrorMessage"]</p>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Student</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <display-label-tag for="Data.LastName"/>
+        </dt>
+        <dd>
+            <display-tag for="Data.LastName"/>
+        </dd>
+        <dt>
+            <display-label-tag for="Data.FirstMidName" />
+        </dt>
+        <dd>
+            <display-tag for="Data.FirstMidName" />
+        </dd>
+        <dt>
+            <display-label-tag for="Data.EnrollmentDate" />
+        </dt>
+        <dd>
+            <display-tag for="Data.EnrollmentDate" />
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input-tag for="Data.ID" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-page="Index">Back to List</a>
+    </form>
+</div>
