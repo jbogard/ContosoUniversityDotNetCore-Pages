@@ -40,9 +40,7 @@ namespace ContosoUniversity
 
             services.AddMvc(opt =>
                 {
-                    opt.Filters.Add(typeof(DbContextTransactionFilter));
                     opt.Filters.Add(typeof(DbContextTransactionPageFilter));
-                    opt.Filters.Add(typeof(ValidatorActionFilter));
                     opt.Filters.Add(typeof(ValidatorPageFilter));
                     opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
                 })
