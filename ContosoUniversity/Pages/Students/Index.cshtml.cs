@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
-using ContosoUniversity.Features;
 using ContosoUniversity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
