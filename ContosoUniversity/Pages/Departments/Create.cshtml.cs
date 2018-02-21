@@ -24,9 +24,7 @@ namespace ContosoUniversity.Pages.Departments
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> OnPost()
+        public async Task<ActionResult> OnPostAsync()
         {
             await _mediator.Send(Data);
 

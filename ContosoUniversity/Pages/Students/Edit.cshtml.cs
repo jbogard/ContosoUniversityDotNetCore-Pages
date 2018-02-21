@@ -26,7 +26,6 @@ namespace ContosoUniversity.Pages.Students
         public async Task OnGetAsync(Query query)
             => Data = await _mediator.Send(query);
 
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPostAsync()
         {
             await _mediator.Send(Data);

@@ -17,7 +17,6 @@ namespace ContosoUniversity.Pages.Courses
         [BindProperty]
         public Command Data { get; set; }
 
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPostAsync()
         {
             await _mediator.Send(Data);

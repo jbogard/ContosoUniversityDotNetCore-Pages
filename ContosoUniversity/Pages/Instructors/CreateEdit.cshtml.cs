@@ -26,7 +26,6 @@ namespace ContosoUniversity.Pages.Instructors
 
         public async Task OnGetCreateAsync() => Data = await _mediator.Send(new Query());
 
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPostCreateAsync()
         {
             await _mediator.Send(Data);
@@ -36,7 +35,6 @@ namespace ContosoUniversity.Pages.Instructors
 
         public async Task OnGetEditAsync(Query query) => Data = await _mediator.Send(query);
 
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPostEditAsync()
         {
             await _mediator.Send(Data);

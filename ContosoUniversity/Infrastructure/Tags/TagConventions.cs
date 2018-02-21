@@ -26,7 +26,9 @@ namespace ContosoUniversity.Infrastructure.Tags
             Labels.ModifyForAttribute<DisplayAttribute>((t, a) => t.Text(a.Name));
 
             // Just assume a "Data." prefix for attributes.
-            Labels.Always.ModifyWith(er => er.CurrentTag.Text(er.CurrentTag.Text().Replace("Data ", "")));
+            Labels
+                .Always
+                .ModifyWith(er => er.CurrentTag.Text(er.CurrentTag.Text().Replace("Data ", "")));
 
             Editors.BuilderPolicy<InstructorSelectElementBuilder>();
             Editors.BuilderPolicy<DepartmentSelectElementBuilder>();
