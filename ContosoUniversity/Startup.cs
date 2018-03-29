@@ -53,7 +53,7 @@ namespace ContosoUniversity
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseMiniProfiler();
-
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -62,17 +62,11 @@ namespace ContosoUniversity
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseStaticFiles();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvc();
         }
     }
 }
