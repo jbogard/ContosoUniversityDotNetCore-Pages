@@ -55,7 +55,7 @@ namespace ContosoUniversity.Pages.Courses
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override Task<Model> HandleCore(Query message) => 
+            protected override Task<Model> Handle(Query message) => 
                 _db.Courses
                 .Where(i => i.Id == message.Id)
                 .ProjectTo<Model>()

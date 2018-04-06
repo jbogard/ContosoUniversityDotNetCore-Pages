@@ -56,7 +56,7 @@ namespace ContosoUniversity.Pages.Students
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<Command> HandleCore(Query message) => await _db
+            protected override async Task<Command> Handle(Query message) => await _db
                 .Students
                 .Where(s => s.Id == message.Id)
                 .ProjectTo<Command>()
@@ -69,7 +69,7 @@ namespace ContosoUniversity.Pages.Students
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task HandleCore(Command message) 
+            protected override async Task Handle(Command message) 
                 => _db.Students.Remove(await _db.Students.FindAsync(message.ID));
         }
 

@@ -60,7 +60,7 @@ namespace ContosoUniversity.Pages.Students
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override async Task<int> HandleCore(Command message)
+            protected override async Task<int> Handle(Command message)
             {
                 var student = Mapper.Map<Command, Student>(message);
 

@@ -50,7 +50,7 @@ namespace ContosoUniversity.Pages.Departments
 
             public QueryHandler(SchoolContext context) => _context = context;
 
-            protected override async Task<List<Model>> HandleCore(Query message)
+            protected override async Task<List<Model>> Handle(Query message)
             {
                 var projectTo = _context.Departments
                     .ProjectTo<Model>();

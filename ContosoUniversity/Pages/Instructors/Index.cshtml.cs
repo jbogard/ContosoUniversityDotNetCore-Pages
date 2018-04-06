@@ -96,7 +96,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override async Task<Model> HandleCore(Query message)
+            protected override async Task<Model> Handle(Query message)
             {
                 var instructors = await _db.Instructors
                     .Include(i => i.CourseAssignments)

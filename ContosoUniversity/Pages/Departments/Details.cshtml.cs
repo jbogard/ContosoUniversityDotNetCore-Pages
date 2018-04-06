@@ -52,7 +52,7 @@ namespace ContosoUniversity.Pages.Departments
 
             public QueryHandler(SchoolContext context) => _context = context;
 
-            protected override Task<Model> HandleCore(Query message) => _context.Departments
+            protected override Task<Model> Handle(Query message) => _context.Departments
                 .FromSql(@"SELECT * FROM Department WHERE DepartmentID = {0}", message.Id)
                 .ProjectTo<Model>()
                 .SingleOrDefaultAsync();

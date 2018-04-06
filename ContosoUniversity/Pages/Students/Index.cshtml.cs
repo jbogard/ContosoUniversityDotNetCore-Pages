@@ -62,7 +62,7 @@ namespace ContosoUniversity.Pages.Students
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<Result> HandleCore(Query message)
+            protected override async Task<Result> Handle(Query message)
             {
                 var model = new Result
                 {

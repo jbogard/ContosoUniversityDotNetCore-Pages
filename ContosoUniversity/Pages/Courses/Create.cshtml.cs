@@ -47,7 +47,7 @@ namespace ContosoUniversity.Pages.Courses
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override async Task<int> HandleCore(Command message)
+            protected override async Task<int> Handle(Command message)
             {
                 var course = Mapper.Map<Command, Course>(message);
                 course.Id = message.Number;
