@@ -121,7 +121,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<Command> HandleCore(Query message)
+            protected override async Task<Command> Handle(Query message)
             {
                 Command model;
                 if (message.Id == null)
@@ -167,7 +167,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<int> HandleCore(Command message)
+            protected override async Task<int> Handle(Command message)
             {
                 Instructor instructor;
                 if (message.Id == null)

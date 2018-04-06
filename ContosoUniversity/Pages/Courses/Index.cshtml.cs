@@ -49,7 +49,7 @@ namespace ContosoUniversity.Pages.Courses
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override async Task<Result> HandleCore(Query message)
+            protected override async Task<Result> Handle(Query message)
             {
                 var courses = await _db.Courses
                     .OrderBy(d => d.Id)

@@ -64,7 +64,7 @@ namespace ContosoUniversity.Pages.Departments
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<Command> HandleCore(Query message) => await _db
+            protected override async Task<Command> Handle(Query message) => await _db
                 .Departments
                 .Where(d => d.Id == message.Id)
                 .ProjectTo<Command>()
@@ -77,7 +77,7 @@ namespace ContosoUniversity.Pages.Departments
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task HandleCore(Command message)
+            protected override async Task Handle(Command message)
             {
                 var department = await _db.Departments.FindAsync(message.Id);
 

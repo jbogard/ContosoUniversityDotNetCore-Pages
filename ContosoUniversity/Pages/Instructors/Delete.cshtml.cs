@@ -72,7 +72,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override Task<Command> HandleCore(Query message) => _db
+            protected override Task<Command> Handle(Query message) => _db
                 .Instructors
                 .Where(i => i.Id == message.Id)
                 .ProjectTo<Command>()
@@ -85,7 +85,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task HandleCore(Command message)
+            protected override async Task Handle(Command message)
             {
                 Instructor instructor = await _db.Instructors
                     .Include(i => i.OfficeAssignment)

@@ -62,7 +62,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override Task<Model> HandleCore(Query message) => _db
+            protected override Task<Model> Handle(Query message) => _db
                 .Instructors
                 .Where(i => i.Id == message.Id)
                 .ProjectTo<Model>()

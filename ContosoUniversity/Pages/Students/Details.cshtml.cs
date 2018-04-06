@@ -60,7 +60,7 @@ namespace ContosoUniversity.Pages.Students
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override async Task<Model> HandleCore(Query message) => await _db
+            protected override async Task<Model> Handle(Query message) => await _db
                 .Students
                 .Include(m => m.Enrollments)
                 .ThenInclude(e => e.Course)

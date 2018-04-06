@@ -69,7 +69,7 @@ namespace ContosoUniversity.Pages.Departments
 
             public CommandHandler(SchoolContext context) => _context = context;
 
-            protected override async Task<int> HandleCore(Command message)
+            protected override async Task<int> Handle(Command message)
             {
                 var department = Mapper.Map<Command, Department>(message);
 
