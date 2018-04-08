@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models.SchoolViewModels;
@@ -21,35 +21,15 @@ namespace ContosoUniversity.Pages
 
         public async Task OnGetAsync()
         {
-            List<EnrollmentDateGroup> groups = new List<EnrollmentDateGroup>();
-            var conn = _context.Database.GetDbConnection();
-            try
-            {
-                await conn.OpenAsync();
-                using (var command = conn.CreateCommand())
+            var groups = await _context
+                .Students
+                .GroupBy(x => x.EnrollmentDate)
+                .Select(x => new EnrollmentDateGroup
                 {
-                    string query = "SELECT EnrollmentDate, COUNT(*) AS StudentCount "
-                        + "FROM Person "
-                        + "WHERE Discriminator = 'Student' "
-                        + "GROUP BY EnrollmentDate";
-                    command.CommandText = query;
-                    DbDataReader reader = await command.ExecuteReaderAsync();
-
-                    if (reader.HasRows)
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var row = new EnrollmentDateGroup { EnrollmentDate = reader.GetDateTime(0), StudentCount = reader.GetInt32(1) };
-                            groups.Add(row);
-                        }
-                    }
-                    reader.Dispose();
-                }
-            }
-            finally
-            {
-                conn.Close();
-            }
+                    EnrollmentDate = x.Key,
+                    StudentCount = x.Count(),
+                })
+                .ToListAsync();
 
             Data = groups;
         }
