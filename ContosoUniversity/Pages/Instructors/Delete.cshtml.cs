@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -66,17 +67,17 @@ namespace ContosoUniversity.Pages.Instructors
             public MappingProfile() => CreateMap<Instructor, Command>();
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override Task<Command> Handle(Query message) => _db
+            public Task<Command> Handle(Query message, CancellationToken token) => _db
                 .Instructors
                 .Where(i => i.Id == message.Id)
                 .ProjectTo<Command>()
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(token);
         }
 
         public class CommandHandler : AsyncRequestHandler<Command>
@@ -85,7 +86,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task Handle(Command message)
+            protected override async Task Handle(Command message, CancellationToken token)
             {
                 Instructor instructor = await _db.Instructors
                     .Include(i => i.OfficeAssignment)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -115,13 +116,13 @@ namespace ContosoUniversity.Pages.Instructors
             }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<Command> Handle(Query message)
+            public async Task<Command> Handle(Query message, CancellationToken token)
             {
                 Command model;
                 if (message.Id == null)
@@ -135,7 +136,7 @@ namespace ContosoUniversity.Pages.Instructors
                         .ThenInclude(ca => ca.Course)
                         .Where(i => i.Id == message.Id)
                         .ProjectTo<Command>()
-                        .SingleOrDefaultAsync<Command>();
+                        .SingleOrDefaultAsync(token);
 
                     //.ProjectTo<Command>()
                     //.SingleOrDefaultAsync();
@@ -161,13 +162,13 @@ namespace ContosoUniversity.Pages.Instructors
 
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command, int>
+        public class CommandHandler : IRequestHandler<Command, int>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<int> Handle(Command message)
+            public async Task<int> Handle(Command message, CancellationToken token)
             {
                 Instructor instructor;
                 if (message.Id == null)

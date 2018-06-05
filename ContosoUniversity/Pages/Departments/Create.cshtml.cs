@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContosoUniversity.Data;
@@ -63,19 +64,19 @@ namespace ContosoUniversity.Pages.Departments
             public Instructor Administrator { get; set; }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command, int>
+        public class CommandHandler : IRequestHandler<Command, int>
         {
             private readonly SchoolContext _context;
 
             public CommandHandler(SchoolContext context) => _context = context;
 
-            protected override async Task<int> Handle(Command message)
+            public async Task<int> Handle(Command message, CancellationToken token)
             {
                 var department = Mapper.Map<Command, Department>(message);
 
                 _context.Departments.Add(department);
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(token);
 
                 return department.Id;
             }

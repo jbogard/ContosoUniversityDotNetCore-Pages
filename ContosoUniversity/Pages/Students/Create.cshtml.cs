@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContosoUniversity.Data;
@@ -54,19 +55,19 @@ namespace ContosoUniversity.Pages.Students
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command, int>
+        public class Handler : IRequestHandler<Command, int>
         {
             private readonly SchoolContext _db;
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override async Task<int> Handle(Command message)
+            public async Task<int> Handle(Command message, CancellationToken token)
             {
                 var student = Mapper.Map<Command, Student>(message);
 
                 _db.Students.Add(student);
 
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync(token);
 
                 return student.Id;
             }

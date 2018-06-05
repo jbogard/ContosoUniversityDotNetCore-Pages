@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -90,20 +91,20 @@ namespace ContosoUniversity.Pages.Instructors
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Model>
+        public class Handler : IRequestHandler<Query, Model>
         {
             private readonly SchoolContext _db;
 
             public Handler(SchoolContext db) => _db = db;
 
-            protected override async Task<Model> Handle(Query message)
+            public async Task<Model> Handle(Query message, CancellationToken token)
             {
                 var instructors = await _db.Instructors
                     .Include(i => i.CourseAssignments)
                     .ThenInclude(c => c.Course)
                     .OrderBy(i => i.LastName)
                     .ProjectTo<Model.Instructor>()
-                    .ToListAsync()
+                    .ToListAsync(token)
                     ;
 
                 // EF Core cannot project child collections w/o Include
@@ -121,7 +122,7 @@ namespace ContosoUniversity.Pages.Instructors
                         .Where(ci => ci.InstructorID == message.Id)
                         .Select(ci => ci.Course)
                         .ProjectTo<Model.Course>()
-                        .ToListAsync();
+                        .ToListAsync(token);
                 }
 
                 if (message.CourseID != null)
@@ -129,7 +130,7 @@ namespace ContosoUniversity.Pages.Instructors
                     enrollments = await _db.Enrollments
                         .Where(x => x.CourseID == message.CourseID)
                         .ProjectTo<Model.Enrollment>()
-                        .ToListAsync();
+                        .ToListAsync(token);
                 }
 
                 var viewModel = new Model

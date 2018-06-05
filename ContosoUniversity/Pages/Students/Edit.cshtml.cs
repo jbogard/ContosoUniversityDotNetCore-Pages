@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -72,16 +73,16 @@ namespace ContosoUniversity.Pages.Students
             public MappingProfile() => CreateMap<Student, Command>().ReverseMap();
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<Command> Handle(Query message) => await _db.Students
+            public async Task<Command> Handle(Query message, CancellationToken token) => await _db.Students
                 .Where(s => s.Id == message.Id)
                 .ProjectTo<Command>()
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(cancellationToken: token);
         }
 
         public class CommandHandler : AsyncRequestHandler<Command>
@@ -90,7 +91,7 @@ namespace ContosoUniversity.Pages.Students
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task Handle(Command message) 
+            protected override async Task Handle(Command message, CancellationToken token) 
                 => Mapper.Map(message, await _db.Students.FindAsync(message.ID));
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -46,16 +47,16 @@ namespace ContosoUniversity.Pages.Departments
             public MappingProfile() => CreateMap<Department, Model>();
         }
         
-        public class QueryHandler : AsyncRequestHandler<Query, Model>
+        public class QueryHandler : IRequestHandler<Query, Model>
         {
             private readonly SchoolContext _context;
 
             public QueryHandler(SchoolContext context) => _context = context;
 
-            protected override Task<Model> Handle(Query message) => _context.Departments
+            public Task<Model> Handle(Query message, CancellationToken token) => _context.Departments
                 .FromSql(@"SELECT * FROM Department WHERE DepartmentID = {0}", message.Id)
                 .ProjectTo<Model>()
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(token);
         }
     }
 }

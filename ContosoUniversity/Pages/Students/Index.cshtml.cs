@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -56,13 +57,13 @@ namespace ContosoUniversity.Pages.Students
             public MappingProfile() => CreateMap<Student, Model>();
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Result>
+        public class QueryHandler : IRequestHandler<Query, Result>
         {
             private readonly SchoolContext _db;
 
             public QueryHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<Result> Handle(Query message)
+            public async Task<Result> Handle(Query message, CancellationToken token)
             {
                 var model = new Result
                 {
