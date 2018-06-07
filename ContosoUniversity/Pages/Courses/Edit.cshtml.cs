@@ -89,7 +89,7 @@ namespace ContosoUniversity.Pages.Courses
 
             protected override async Task Handle(Command message, CancellationToken token)
             {
-                var course = await _db.Courses.FindAsync(message.Id, token);
+                var course = await _db.Courses.FindAsync(new object[] { message.Id }, token);
 
                 Mapper.Map(message, course);
             }
