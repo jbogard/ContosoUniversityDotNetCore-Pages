@@ -80,7 +80,7 @@ namespace ContosoUniversity.Pages.Departments
 
             protected override async Task Handle(Command message, CancellationToken token)
             {
-                var department = await _db.Departments.FindAsync(message.Id, token);
+                var department = await _db.Departments.FindAsync(new object[] { message.Id }, token);
 
                 _db.Departments.Remove(department);
             }
