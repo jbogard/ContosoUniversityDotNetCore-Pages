@@ -11,13 +11,13 @@ namespace ContosoUniversity.Pages
 {
     public static class HtmlHelperExtensions
     {
-        public static HtmlTag DisplayLabel<T>(this IHtmlHelper<T> helper, Expression<Func<T, object>> expression)
+        public static HtmlTag DisplayLabel<T, TResult>(this IHtmlHelper<T> helper, Expression<Func<T, TResult>> expression)
             where T : class
         {
             return helper.Tag(expression, nameof(TagConventions.DisplayLabels));
         }
 
-        public static HtmlTag DisplayLabel<T>(this IHtmlHelper<List<T>> helper, Expression<Func<T, object>> expression)
+        public static HtmlTag DisplayLabel<T, TResult>(this IHtmlHelper<List<T>> helper, Expression<Func<T, TResult>> expression)
             where T : class
         {
             var library = helper.ViewContext.HttpContext.RequestServices.GetService<HtmlConventionLibrary>();
@@ -34,8 +34,8 @@ namespace ContosoUniversity.Pages
                 .AddClass("hidden");
         }
 
-        public static HtmlTag FormBlock<T>(this IHtmlHelper<T> helper,
-            Expression<Func<T, object>> expression,
+        public static HtmlTag FormBlock<T, TResult>(this IHtmlHelper<T> helper,
+            Expression<Func<T, TResult>> expression,
             Action<HtmlTag> labelModifier = null,
             Action<HtmlTag> inputModifier = null
         ) where T : class
