@@ -58,15 +58,18 @@ namespace ContosoUniversity.Pages.Students
         public class Handler : IRequestHandler<Query, Model>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public Handler(SchoolContext db) => _db = db;
+            public Handler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public async Task<Model> Handle(Query message, CancellationToken token) => await _db
                 .Students
-                .Include(m => m.Enrollments)
-                .ThenInclude(e => e.Course)
                 .Where(s => s.Id == message.Id)
-                .ProjectTo<Model>()
+                .ProjectTo<Model>(_configuration)
                 .SingleOrDefaultAsync(token);
         }
     }

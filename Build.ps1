@@ -43,7 +43,7 @@ exec { & dotnet build -c Release --version-suffix=$buildSuffix }
 Push-Location -Path .\ContosoUniversity.IntegrationTests
 
 try {
-	exec { & dotnet xunit -configuration Release -nobuild --fx-version 2.0.0 }
+	exec { & dotnet test -c Release --no-build }
 }
 finally {
 	Pop-Location

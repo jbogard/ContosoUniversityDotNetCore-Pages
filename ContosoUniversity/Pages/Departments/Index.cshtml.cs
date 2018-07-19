@@ -48,13 +48,18 @@ namespace ContosoUniversity.Pages.Departments
         public class QueryHandler : IRequestHandler<Query, List<Model>>
         {
             private readonly SchoolContext _context;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext context) => _context = context;
+            public QueryHandler(SchoolContext context, IConfigurationProvider configuration)
+            {
+                _context = context;
+                _configuration = configuration;
+            }
 
             public async Task<List<Model>> Handle(Query message, CancellationToken token)
             {
                 var projectTo = _context.Departments
-                    .ProjectTo<Model>();
+                    .ProjectTo<Model>(_configuration);
                 return await projectTo.ToListAsync(token);
             }
         }

@@ -58,12 +58,17 @@ namespace ContosoUniversity.Pages.Students
         public class Handler : IRequestHandler<Command, int>
         {
             private readonly SchoolContext _db;
+            private readonly IMapper _mapper;
 
-            public Handler(SchoolContext db) => _db = db;
+            public Handler(SchoolContext db, IMapper mapper)
+            {
+                _db = db;
+                _mapper = mapper;
+            }
 
             public async Task<int> Handle(Command message, CancellationToken token)
             {
-                var student = Mapper.Map<Command, Student>(message);
+                var student = _mapper.Map<Command, Student>(message);
 
                 _db.Students.Add(student);
 

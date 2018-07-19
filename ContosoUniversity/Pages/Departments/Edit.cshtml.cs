@@ -70,28 +70,38 @@ namespace ContosoUniversity.Pages.Departments
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext db) => _db = db;
+            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public async Task<Command> Handle(Query message, CancellationToken token) => await _db
                 .Departments
                 .Where(d => d.Id == message.Id)
-                .ProjectTo<Command>()
+                .ProjectTo<Command>(_configuration)
                 .SingleOrDefaultAsync(token);
         }
 
         public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly SchoolContext _db;
+            private readonly IMapper _mapper;
 
-            public CommandHandler(SchoolContext db) => _db = db;
+            public CommandHandler(SchoolContext db, IMapper mapper)
+            {
+                _db = db;
+                _mapper = mapper;
+            }
 
             protected override async Task Handle(Command message, CancellationToken token)
             {
                 var dept = await _db.Departments.FindAsync(message.Id);
                 message.Administrator = await _db.Instructors.FindAsync(message.Administrator.Id);
 
-                Mapper.Map(message, dept);
+                _mapper.Map(message, dept);
             }
         }
     }

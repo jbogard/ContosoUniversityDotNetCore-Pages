@@ -94,8 +94,13 @@ namespace ContosoUniversity.Pages.Instructors
         public class Handler : IRequestHandler<Query, Model>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public Handler(SchoolContext db) => _db = db;
+            public Handler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public async Task<Model> Handle(Query message, CancellationToken token)
             {
@@ -103,7 +108,7 @@ namespace ContosoUniversity.Pages.Instructors
                     .Include(i => i.CourseAssignments)
                     .ThenInclude(c => c.Course)
                     .OrderBy(i => i.LastName)
-                    .ProjectTo<Model.Instructor>()
+                    .ProjectTo<Model.Instructor>(_configuration)
                     .ToListAsync(token)
                     ;
 
@@ -121,7 +126,7 @@ namespace ContosoUniversity.Pages.Instructors
                     courses = await _db.CourseAssignments
                         .Where(ci => ci.InstructorID == message.Id)
                         .Select(ci => ci.Course)
-                        .ProjectTo<Model.Course>()
+                        .ProjectTo<Model.Course>(_configuration)
                         .ToListAsync(token);
                 }
 
@@ -129,7 +134,7 @@ namespace ContosoUniversity.Pages.Instructors
                 {
                     enrollments = await _db.Enrollments
                         .Where(x => x.CourseID == message.CourseID)
-                        .ProjectTo<Model.Enrollment>()
+                        .ProjectTo<Model.Enrollment>(_configuration)
                         .ToListAsync(token);
                 }
 

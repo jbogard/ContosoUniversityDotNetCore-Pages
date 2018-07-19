@@ -53,13 +53,18 @@ namespace ContosoUniversity.Pages.Courses
         public class Handler : IRequestHandler<Query, Model>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public Handler(SchoolContext db) => _db = db;
+            public Handler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public Task<Model> Handle(Query message, CancellationToken token) => 
                 _db.Courses
                 .Where(i => i.Id == message.Id)
-                .ProjectTo<Model>()
+                .ProjectTo<Model>(_configuration)
                 .SingleOrDefaultAsync(token);
         }
     }

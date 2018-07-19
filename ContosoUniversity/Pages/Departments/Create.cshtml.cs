@@ -67,12 +67,17 @@ namespace ContosoUniversity.Pages.Departments
         public class CommandHandler : IRequestHandler<Command, int>
         {
             private readonly SchoolContext _context;
+            private readonly IMapper _mapper;
 
-            public CommandHandler(SchoolContext context) => _context = context;
+            public CommandHandler(SchoolContext context, IMapper mapper)
+            {
+                _context = context;
+                _mapper = mapper;
+            }
 
             public async Task<int> Handle(Command message, CancellationToken token)
             {
-                var department = Mapper.Map<Command, Department>(message);
+                var department = _mapper.Map<Command, Department>(message);
 
                 _context.Departments.Add(department);
 

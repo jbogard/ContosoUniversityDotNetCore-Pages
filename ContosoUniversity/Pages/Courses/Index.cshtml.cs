@@ -47,17 +47,19 @@ namespace ContosoUniversity.Pages.Courses
         public class Handler : IRequestHandler<Query, Result>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public Handler(SchoolContext db) => _db = db;
+            public Handler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public async Task<Result> Handle(Query message, CancellationToken token)
             {
                 var courses = await _db.Courses
                     .OrderBy(d => d.Id)
-                    .ProjectTo<Result.Course>()
-                    .ToListAsync(token)
-                    //.ProjectToListAsync<Result.Course>()
-                    ;
+                    .ProjectToListAsync<Result.Course>(_configuration);
 
                 return new Result
                 {

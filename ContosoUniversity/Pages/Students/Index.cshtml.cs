@@ -60,8 +60,13 @@ namespace ContosoUniversity.Pages.Students
         public class QueryHandler : IRequestHandler<Query, Result>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext db) => _db = db;
+            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public async Task<Result> Handle(Query message, CancellationToken token)
             {
@@ -109,7 +114,7 @@ namespace ContosoUniversity.Pages.Students
                 int pageSize = 3;
                 int pageNumber = (message.Page ?? 1);
                 model.Results = await students
-                    .ProjectTo<Model>()
+                    .ProjectTo<Model>(_configuration)
                     .PaginatedListAsync(pageNumber, pageSize);
 
                 return model;

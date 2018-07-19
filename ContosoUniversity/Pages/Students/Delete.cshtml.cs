@@ -54,13 +54,18 @@ namespace ContosoUniversity.Pages.Students
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext db) => _db = db;
+            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public async Task<Command> Handle(Query message, CancellationToken token) => await _db
                 .Students
                 .Where(s => s.Id == message.Id)
-                .ProjectTo<Command>()
+                .ProjectTo<Command>(_configuration)
                 .SingleOrDefaultAsync(token);
         }
 

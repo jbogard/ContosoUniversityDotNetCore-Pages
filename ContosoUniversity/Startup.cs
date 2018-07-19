@@ -55,7 +55,7 @@ namespace ContosoUniversity
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                Mapper.AssertConfigurationIsValid();
+                app.AssertAutoMapperConfigurationIsValid();
             }
             else
             {

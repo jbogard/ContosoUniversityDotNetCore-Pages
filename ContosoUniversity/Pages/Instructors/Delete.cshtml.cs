@@ -70,13 +70,18 @@ namespace ContosoUniversity.Pages.Instructors
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext db) => _db = db;
+            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public Task<Command> Handle(Query message, CancellationToken token) => _db
                 .Instructors
                 .Where(i => i.Id == message.Id)
-                .ProjectTo<Command>()
+                .ProjectTo<Command>(_configuration)
                 .SingleOrDefaultAsync(token);
         }
 
@@ -91,7 +96,7 @@ namespace ContosoUniversity.Pages.Instructors
                 Instructor instructor = await _db.Instructors
                     .Include(i => i.OfficeAssignment)
                     .Where(i => i.Id == message.ID)
-                    .SingleAsync();
+                    .SingleAsync(token);
 
                 instructor.Handle(message);
 

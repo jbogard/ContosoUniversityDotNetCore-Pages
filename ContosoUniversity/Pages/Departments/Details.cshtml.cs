@@ -50,12 +50,17 @@ namespace ContosoUniversity.Pages.Departments
         public class QueryHandler : IRequestHandler<Query, Model>
         {
             private readonly SchoolContext _context;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext context) => _context = context;
+            public QueryHandler(SchoolContext context, IConfigurationProvider configuration)
+            {
+                _context = context;
+                _configuration = configuration;
+            }
 
             public Task<Model> Handle(Query message, CancellationToken token) => _context.Departments
                 .FromSql(@"SELECT * FROM Department WHERE DepartmentID = {0}", message.Id)
-                .ProjectTo<Model>()
+                .ProjectTo<Model>(_configuration)
                 .SingleOrDefaultAsync(token);
         }
     }

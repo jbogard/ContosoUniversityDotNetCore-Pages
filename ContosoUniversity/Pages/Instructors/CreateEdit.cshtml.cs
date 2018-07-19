@@ -119,8 +119,13 @@ namespace ContosoUniversity.Pages.Instructors
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext db) => _db = db;
+            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
             public async Task<Command> Handle(Query message, CancellationToken token)
             {
@@ -132,14 +137,11 @@ namespace ContosoUniversity.Pages.Instructors
                 else
                 {
                     model = await _db.Instructors
-                        .Include(m => m.CourseAssignments)
-                        .ThenInclude(ca => ca.Course)
+                        //.Include(m => m.CourseAssignments)
+                        //.ThenInclude(ca => ca.Course)
                         .Where(i => i.Id == message.Id)
-                        .ProjectTo<Command>()
+                        .ProjectTo<Command>(_configuration)
                         .SingleOrDefaultAsync(token);
-
-                    //.ProjectTo<Command>()
-                    //.SingleOrDefaultAsync();
                 }
 
                 PopulateAssignedCourseData(model);
