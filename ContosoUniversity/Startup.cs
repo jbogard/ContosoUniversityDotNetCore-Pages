@@ -31,9 +31,9 @@ namespace ContosoUniversity
             services.AddDbContext<SchoolContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(typeof(Startup));
 
-            services.AddMediatR();
+            services.AddMediatR(typeof(Startup));
 
             services.AddHtmlTags(new TagConventions());
 
@@ -55,7 +55,6 @@ namespace ContosoUniversity
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.AssertAutoMapperConfigurationIsValid();
             }
             else
             {
