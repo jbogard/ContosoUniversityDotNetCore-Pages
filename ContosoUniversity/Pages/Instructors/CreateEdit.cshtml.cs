@@ -157,7 +157,7 @@ namespace ContosoUniversity.Pages.Instructors
                 {
                     CourseID = course.Id,
                     Title = course.Title,
-                    Assigned = instructorCourses.Contains(course.Id)
+                    Assigned = instructorCourses.Any() && instructorCourses.Contains(course.Id)
                 }).ToList();
                 model.AssignedCourses = viewModel;
             }
