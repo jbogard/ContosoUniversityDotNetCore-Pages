@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -50,18 +51,18 @@ namespace ContosoUniversity.Pages.Departments
             private readonly SchoolContext _context;
             private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext context, IConfigurationProvider configuration)
+            public QueryHandler(SchoolContext context, 
+                IConfigurationProvider configuration)
             {
                 _context = context;
                 _configuration = configuration;
             }
 
-            public async Task<List<Model>> Handle(Query message, CancellationToken token)
-            {
-                var projectTo = _context.Departments
-                    .ProjectTo<Model>(_configuration);
-                return await projectTo.ToListAsync(token);
-            }
+            public Task<List<Model>> Handle(Query message, 
+                CancellationToken token) => _context
+                .Departments
+                .ProjectTo<Model>(_configuration)
+                .ToListAsync(token);
         }
     }
 }

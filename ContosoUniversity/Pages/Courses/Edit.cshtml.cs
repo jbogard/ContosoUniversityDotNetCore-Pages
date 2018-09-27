@@ -97,7 +97,8 @@ namespace ContosoUniversity.Pages.Courses
                 _mapper = mapper;
             }
 
-            protected override async Task Handle(Command message, CancellationToken token)
+            protected override async Task Handle(
+                Command message, CancellationToken token)
             {
                 var course = await _db.Courses.FindAsync(message.Id);
 

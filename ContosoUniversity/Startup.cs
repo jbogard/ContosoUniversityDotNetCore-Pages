@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ContosoUniversity.Data;
 using ContosoUniversity.Infrastructure;
 using ContosoUniversity.Infrastructure.Tags;
+using ContosoUniversity.Pages.Instructors;
 using FluentValidation.AspNetCore;
 using HtmlTags;
 using MediatR;
@@ -24,6 +25,7 @@ namespace ContosoUniversity
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMiniProfiler().AddEntityFramework();
@@ -34,6 +36,12 @@ namespace ContosoUniversity
             services.AddAutoMapper(typeof(Startup));
 
             services.AddMediatR(typeof(Startup));
+            services.AddScoped(
+                typeof(IPipelineBehavior<,>), 
+                typeof(TransactionBehavior<,>));
+            services.AddScoped(
+                typeof(IPipelineBehavior<,>), 
+                typeof(LoggingBehavior<,>));
 
             services.AddHtmlTags(new TagConventions());
 

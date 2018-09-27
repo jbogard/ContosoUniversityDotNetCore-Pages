@@ -11,14 +11,63 @@ using ContosoUniversity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ContosoUniversity.Pages.Instructors
 {
+    public class TransactionBehavior<TRequest, TResponse>
+        : IPipelineBehavior<TRequest, TResponse>
+    {
+        private readonly SchoolContext _dbContext;
+
+        public TransactionBehavior(SchoolContext dbContext) => _dbContext = dbContext;
+
+        public async Task<TResponse> Handle(TRequest request, 
+            CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            try
+            {
+                await _dbContext.BeginTransactionAsync();
+                var response = await next();
+                await _dbContext.CommitTransactionAsync();
+                return response;
+            }
+            catch (Exception)
+            {
+                _dbContext.RollbackTransaction();
+                throw;
+            }
+        }
+    }
+
+    public class LoggingBehavior<TRequest, TResponse>
+        : IPipelineBehavior<TRequest, TResponse>
+    {
+        private readonly ILogger<TRequest> _logger;
+
+        public LoggingBehavior(ILogger<TRequest> logger) 
+            => _logger = logger;
+
+        public async Task<TResponse> Handle(
+            TRequest request, CancellationToken cancellationToken, 
+            RequestHandlerDelegate<TResponse> next)
+        {
+            using (_logger.BeginScope(request))
+            {
+                _logger.LogInformation("Calling handler...");
+                var response = await next();
+                _logger.LogInformation("Called handler with result {0}", response);
+                return response;
+            }
+        }
+    }
+
     public class Index : PageModel
     {
         private readonly IMediator _mediator;
 
-        public Index(IMediator mediator) => _mediator = mediator;
+        public Index(IMediator mediator) 
+            => _mediator = mediator;
 
         public Model Data { get; private set; }
 
@@ -28,7 +77,7 @@ namespace ContosoUniversity.Pages.Instructors
         public class Query : IRequest<Model>
         {
             public int? Id { get; set; }
-            public int? CourseID { get; set; }
+            public int? CourseId { get; set; }
         }
 
         public class Model
@@ -130,10 +179,10 @@ namespace ContosoUniversity.Pages.Instructors
                         .ToListAsync(token);
                 }
 
-                if (message.CourseID != null)
+                if (message.CourseId != null)
                 {
                     enrollments = await _db.Enrollments
-                        .Where(x => x.CourseID == message.CourseID)
+                        .Where(x => x.CourseID == message.CourseId)
                         .ProjectTo<Model.Enrollment>(_configuration)
                         .ToListAsync(token);
                 }
@@ -144,12 +193,11 @@ namespace ContosoUniversity.Pages.Instructors
                     Courses = courses,
                     Enrollments = enrollments,
                     InstructorID = message.Id,
-                    CourseID = message.CourseID
+                    CourseID = message.CourseId
                 };
 
                 return viewModel;
             }
         }
-
     }
 }

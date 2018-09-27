@@ -49,7 +49,7 @@ namespace ContosoUniversity.Pages.Students
 
         public class Command : IRequest
         {
-            public int ID { get; set; }
+            public int Id { get; set; }
             public string LastName { get; set; }
 
             [Display(Name = "First Name")]
@@ -102,7 +102,7 @@ namespace ContosoUniversity.Pages.Students
             }
 
             protected override async Task Handle(Command message, CancellationToken token) 
-                => _mapper.Map(message, await _db.Students.FindAsync(message.ID));
+                => _mapper.Map(message, await _db.Students.FindAsync(message.Id));
         }
     }
 }

@@ -72,13 +72,15 @@ namespace ContosoUniversity.Pages.Departments
             private readonly SchoolContext _db;
             private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+            public QueryHandler(SchoolContext db, 
+                IConfigurationProvider configuration)
             {
                 _db = db;
                 _configuration = configuration;
             }
 
-            public async Task<Command> Handle(Query message, CancellationToken token) => await _db
+            public async Task<Command> Handle(Query message, 
+                CancellationToken token) => await _db
                 .Departments
                 .Where(d => d.Id == message.Id)
                 .ProjectTo<Command>(_configuration)
@@ -96,10 +98,14 @@ namespace ContosoUniversity.Pages.Departments
                 _mapper = mapper;
             }
 
-            protected override async Task Handle(Command message, CancellationToken token)
+            protected override async Task Handle(Command message, 
+                CancellationToken token)
             {
-                var dept = await _db.Departments.FindAsync(message.Id);
-                message.Administrator = await _db.Instructors.FindAsync(message.Administrator.Id);
+                var dept = 
+                    await _db.Departments.FindAsync(message.Id);
+
+                message.Administrator = 
+                    await _db.Instructors.FindAsync(message.Administrator.Id);
 
                 _mapper.Map(message, dept);
             }

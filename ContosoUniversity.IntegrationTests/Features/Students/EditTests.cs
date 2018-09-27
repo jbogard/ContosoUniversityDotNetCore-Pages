@@ -48,7 +48,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
 
             var editCommand = new Edit.Command
             {
-                ID = studentId,
+                Id = studentId,
                 FirstMidName = "Mary",
                 LastName = "Smith",
                 EnrollmentDate = DateTime.Today.AddYears(-1)

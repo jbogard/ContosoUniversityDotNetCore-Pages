@@ -184,14 +184,14 @@ namespace ContosoUniversity.Pages.Instructors
                         .Include(i => i.OfficeAssignment)
                         .Include(i => i.CourseAssignments)
                         .Where(i => i.Id == message.Id)
-                        .SingleAsync();
+                        .SingleAsync(token);
                 }
 
-                var courses = await _db.Courses.ToListAsync();
+                var courses = await _db.Courses.ToListAsync(token);
 
                 instructor.Handle(message, courses);
 
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync(token);
 
                 return instructor.Id;
             }
