@@ -90,7 +90,7 @@ namespace ContosoUniversity.Pages.Students
                 .SingleOrDefaultAsync(token);
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
             private readonly IMapper _mapper;
@@ -101,8 +101,12 @@ namespace ContosoUniversity.Pages.Students
                 _mapper = mapper;
             }
 
-            protected override async Task Handle(Command message, CancellationToken token) 
-                => _mapper.Map(message, await _db.Students.FindAsync(message.Id));
+            public async Task<Unit> Handle(Command message, CancellationToken token)
+            {
+                _mapper.Map(message, await _db.Students.FindAsync(message.Id));
+
+                return default;
+            }
         }
     }
 }

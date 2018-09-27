@@ -86,7 +86,7 @@ namespace ContosoUniversity.Pages.Courses
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command, Unit>
         {
             private readonly SchoolContext _db;
             private readonly IMapper _mapper;
@@ -97,12 +97,13 @@ namespace ContosoUniversity.Pages.Courses
                 _mapper = mapper;
             }
 
-            protected override async Task Handle(
-                Command message, CancellationToken token)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var course = await _db.Courses.FindAsync(message.Id);
+                var course = await _db.Courses.FindAsync(request.Id);
 
-                _mapper.Map(message, course);
+                _mapper.Map(request, course);
+
+                return default;
             }
         }
     }

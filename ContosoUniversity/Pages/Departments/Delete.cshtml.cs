@@ -77,17 +77,19 @@ namespace ContosoUniversity.Pages.Departments
                 .SingleOrDefaultAsync(token);
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task Handle(Command message, CancellationToken token)
+            public async Task<Unit> Handle(Command message, CancellationToken token)
             {
                 var department = await _db.Departments.FindAsync(message.Id);
 
                 _db.Departments.Remove(department);
+
+                return default;
             }
         }
     }

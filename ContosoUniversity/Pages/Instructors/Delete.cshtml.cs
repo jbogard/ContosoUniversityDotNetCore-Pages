@@ -85,13 +85,13 @@ namespace ContosoUniversity.Pages.Instructors
                 .SingleOrDefaultAsync(token);
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task Handle(Command message, CancellationToken token)
+            public async Task<Unit> Handle(Command message, CancellationToken token)
             {
                 Instructor instructor = await _db.Instructors
                     .Include(i => i.OfficeAssignment)
@@ -104,12 +104,13 @@ namespace ContosoUniversity.Pages.Instructors
 
                 var department = await _db.Departments
                     .Where(d => d.InstructorID == message.ID)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(token);
                 if (department != null)
                 {
                     department.InstructorID = null;
                 }
 
+                return default;
             }
         }
     }

@@ -69,14 +69,18 @@ namespace ContosoUniversity.Pages.Students
                 .SingleOrDefaultAsync(token);
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task Handle(Command message, CancellationToken token) 
-                => _db.Students.Remove(await _db.Students.FindAsync(message.ID));
+            public async Task<Unit> Handle(Command message, CancellationToken token)
+            {
+                _db.Students.Remove(await _db.Students.FindAsync(message.ID));
+
+                return default;
+            }
         }
 
     }

@@ -79,17 +79,19 @@ namespace ContosoUniversity.Pages.Courses
             public string DepartmentName { get; set; }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task Handle(Command message, CancellationToken token)
+            public async Task<Unit> Handle(Command message, CancellationToken token)
             {
                 var course = await _db.Courses.FindAsync(message.Id);
 
                 _db.Courses.Remove(course);
+
+                return default;
             }
         }
     }

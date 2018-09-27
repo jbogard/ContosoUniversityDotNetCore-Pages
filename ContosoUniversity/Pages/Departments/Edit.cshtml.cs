@@ -87,7 +87,7 @@ namespace ContosoUniversity.Pages.Departments
                 .SingleOrDefaultAsync(token);
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
             private readonly IMapper _mapper;
@@ -98,7 +98,7 @@ namespace ContosoUniversity.Pages.Departments
                 _mapper = mapper;
             }
 
-            protected override async Task Handle(Command message, 
+            public async Task<Unit> Handle(Command message, 
                 CancellationToken token)
             {
                 var dept = 
@@ -108,6 +108,8 @@ namespace ContosoUniversity.Pages.Departments
                     await _db.Instructors.FindAsync(message.Administrator.Id);
 
                 _mapper.Map(message, dept);
+
+                return default;
             }
         }
     }
