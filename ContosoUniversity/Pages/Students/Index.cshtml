@@ -33,6 +33,7 @@
             <th>
                 <a asp-page="Index" asp-route-sortOrder="@Model.Data.DateSortParm" asp-route-currentFilter="@Model.Data.CurrentFilter">Enrollment Date</a>
             </th>
+            <th>Enrollments Count</th>
             <th></th>
         </tr>
     </thead>
@@ -49,6 +50,9 @@
                 </td>
                 <td>
                     <display-tag for="Data.Results[i].EnrollmentDate" />
+                </td>
+                <td>
+                    <display-tag for="Data.Results[i].EnrollmentsCount" />
                 </td>
                 <td>
                     <a asp-page="Edit" asp-route-id="@item.ID">Edit</a> |

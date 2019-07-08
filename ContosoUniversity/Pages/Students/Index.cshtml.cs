@@ -50,6 +50,7 @@ namespace ContosoUniversity.Pages.Students
             public string FirstMidName { get; set; }
             public string LastName { get; set; }
             public DateTime EnrollmentDate { get; set; }
+            public int EnrollmentsCount { get; set; }
         }
 
         public class MappingProfile : Profile
@@ -114,6 +115,14 @@ namespace ContosoUniversity.Pages.Students
                 int pageSize = 3;
                 int pageNumber = (message.Page ?? 1);
                 model.Results = await students
+                    //.Select(src => new Model
+                    //{
+                    //    ID = src.Id,
+                    //    FirstMidName = src.FirstMidName,
+                    //    LastName = src.LastName,
+                    //    EnrollmentsCount = src.Enrollments.Count(),
+                    //    EnrollmentDate = src.EnrollmentDate
+                    //})
                     .ProjectTo<Model>(_configuration)
                     .PaginatedListAsync(pageNumber, pageSize);
 

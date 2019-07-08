@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContosoUniversity.Data;
@@ -37,8 +37,8 @@ namespace ContosoUniversity.Pages.Courses
         public class MappingProfile : Profile
         {
             public MappingProfile() =>
-                CreateMap<Command, Course>(MemberList.Source)
-                    .ForSourceMember(c => c.Number, opt => opt.Ignore());
+                CreateMap<Command, Course>(MemberList.Source);
+                    //.ForSourceMember(c => c.Number, opt => opt.Ignore());
         }
 
 

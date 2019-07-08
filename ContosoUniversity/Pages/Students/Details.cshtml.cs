@@ -66,11 +66,11 @@ namespace ContosoUniversity.Pages.Students
                 _configuration = configuration;
             }
 
-            public async Task<Model> Handle(Query message, CancellationToken token) => await _db
-                .Students
-                .Where(s => s.Id == message.Id)
-                .ProjectTo<Model>(_configuration)
-                .SingleOrDefaultAsync(token);
+            public Task<Model> Handle(Query message, CancellationToken token) => _db
+                    .Students
+                    .Where(s => s.Id == message.Id)
+                    .ProjectTo<Model>(_configuration)
+                    .SingleOrDefaultAsync(token);
         }
     }
 }
