@@ -2,7 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Pages.Courses;
     using Models;
     using Shouldly;
     using Xunit;
@@ -51,7 +50,7 @@
             };
             await InsertAsync(englishDept, historyDept, english, history);
 
-            var result = await SendAsync(new Index.Query());
+            var result = await SendAsync(new Pages.Courses.Index.Query());
 
             result.ShouldNotBeNull();
             result.Courses.Count.ShouldBeGreaterThanOrEqualTo(2);

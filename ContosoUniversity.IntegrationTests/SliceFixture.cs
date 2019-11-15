@@ -29,6 +29,7 @@ namespace ContosoUniversity.IntegrationTests
 
             var startup = new Startup(_configuration);
             var services = new ServiceCollection();
+            services.AddLogging();
             startup.ConfigureServices(services);
             var provider = services.BuildServiceProvider();
             _scopeFactory = provider.GetService<IServiceScopeFactory>();
@@ -86,11 +87,17 @@ namespace ContosoUniversity.IntegrationTests
         public static Task ExecuteDbContextAsync(Func<SchoolContext, Task> action) 
             => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()));
 
+        public static Task ExecuteDbContextAsync(Func<SchoolContext, ValueTask> action) 
+            => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()).AsTask());
+
         public static Task ExecuteDbContextAsync(Func<SchoolContext, IMediator, Task> action) 
             => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>(), sp.GetService<IMediator>()));
 
         public static Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, Task<T>> action) 
             => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()));
+
+        public static Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, ValueTask<T>> action) 
+            => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()).AsTask());
 
         public static Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, IMediator, Task<T>> action) 
             => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>(), sp.GetService<IMediator>()));
@@ -165,7 +172,7 @@ namespace ContosoUniversity.IntegrationTests
         public static Task<T> FindAsync<T>(int id)
             where T : class, IEntity
         {
-            return ExecuteDbContextAsync(db => db.Set<T>().FindAsync(id));
+            return ExecuteDbContextAsync(db => db.Set<T>().FindAsync(id).AsTask());
         }
 
         public static Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
