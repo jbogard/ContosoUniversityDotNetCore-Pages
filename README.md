@@ -1,4 +1,4 @@
-# ContosoUniversity on ASP.NET Core 2.0 on .NET Core and Razor Pages
+# ContosoUniversity on ASP.NET Core 3.0 on .NET Core and Razor Pages
 
 Contoso University, the way I would write it.
 

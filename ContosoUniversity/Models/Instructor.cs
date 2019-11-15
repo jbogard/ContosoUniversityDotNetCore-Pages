@@ -4,15 +4,28 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using ContosoUniversity.Pages.Instructors;
+using DelegateDecompiler;
 
 namespace ContosoUniversity.Models
 {
-    public class Instructor : Person
+    public class Instructor : IEntity
     {
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string LastName { get; set; }
+
+        [Required]
+        [Column("FirstName")]
+        [StringLength(50)]
+        public string FirstMidName { get; set; }
+
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Hire Date")]
         public DateTime HireDate { get; set; }
+
+        [Computed]
+        public string FullName => LastName + ", " + FirstMidName;
 
         public ICollection<CourseAssignment> CourseAssignments { get; private set; } = new List<CourseAssignment>();
         public OfficeAssignment OfficeAssignment { get; private set; }

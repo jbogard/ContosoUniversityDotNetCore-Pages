@@ -22,7 +22,7 @@ function Exec
     }
 }
 
-if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
+if(Test-Path .\publish) { Remove-Item .\publish -Force -Recurse }
 
 
 $branch = @{ $true = $env:APPVEYOR_REPO_BRANCH; $false = $(git symbolic-ref --short -q HEAD) }[$env:APPVEYOR_REPO_BRANCH -ne $NULL];
@@ -35,36 +35,19 @@ exec { & .\tools\rh.exe /d=ContosoUniversityDotNetCore-Pages /f=ContosoUniversit
 exec { & .\tools\rh.exe /d=ContosoUniversityDotNetCore-Pages-Test /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent /drop }
 exec { & .\tools\rh.exe /d=ContosoUniversityDotNetCore-Pages-Test /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent /simple }
 
-
 exec { & dotnet restore }
 
 exec { & dotnet build -c Release --version-suffix=$buildSuffix }
 
-Push-Location -Path .\ContosoUniversity.IntegrationTests
+exec { & dotnet test -c Release --no-build }
+
+Push-Location ContosoUniversity
 
 try {
-	exec { & dotnet test -c Release --no-build }
-}
-finally {
+	exec { & dotnet publish -o ..\publish -c Release }
+} finally {
 	Pop-Location
 }
-
-#Push-Location -Path .\test\ContosoUniversity.UnitTests
-
-#try {
-#	exec { & dotnet test -c Release --no-build }
-#}
-#finally {
-#	Pop-Location
-#}
-
-exec { & dotnet publish ContosoUniversity --output .\..\publish --configuration Release }
-
-$octo_revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = "0" }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
-$octo_version = "1.0.$octo_revision"
-
-exec { & .\tools\Octo.exe pack --id ContosoUniversity --version $octo_version --basePath publish --outFolder artifacts }
-
-
+ 
 
 

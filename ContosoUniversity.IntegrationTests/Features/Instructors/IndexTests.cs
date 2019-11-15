@@ -3,7 +3,6 @@
 namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Pages.Instructors;
     using Models;
@@ -75,7 +74,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
 
             await InsertAsync(enrollment1, enrollment2);
 
-            var result = await SendAsync(new Index.Query { Id = instructor1Id, CourseId = english101.Id });
+            var result = await SendAsync(new Pages.Instructors.Index.Query { Id = instructor1Id, CourseId = english101.Id });
 
             result.ShouldNotBeNull();
 
