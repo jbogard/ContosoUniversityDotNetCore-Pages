@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Remove="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +31,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContosoUniversity\ContosoUniversity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
