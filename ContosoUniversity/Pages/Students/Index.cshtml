@@ -15,7 +15,7 @@
     <div class="form-actions no-color">
         <p>
             Find by name: <input type="text" name="SearchString" value="@Model.Data.CurrentFilter" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
+            <input type="submit" value="Search" class="btn btn-primary" /> |
             <a asp-page="Index">Back to Full List</a>
         </p>
     </div>
@@ -74,13 +74,13 @@
    asp-route-sortOrder="@Model.Data.CurrentSort"
    asp-route-pageindex="@(Model.Data.Results.PageIndex - 1)"
    asp-route-currentFilter="@Model.Data.CurrentFilter"
-   class="btn btn-default @prevDisabled">
+   class="btn btn-primary @prevDisabled">
     Previous
 </a>
 <a asp-page="Index"
    asp-route-sortOrder="@Model.Data.CurrentSort"
    asp-route-pageindex="@(Model.Data.Results.PageIndex + 1)"
    asp-route-currentFilter="@Model.Data.CurrentFilter"
-   class="btn btn-default @nextDisabled">
+   class="btn btn-primary @nextDisabled">
     Next
 </a>

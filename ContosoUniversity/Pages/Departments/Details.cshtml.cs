@@ -7,6 +7,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
+using DelegateDecompiler.EntityFrameworkCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +65,7 @@ namespace ContosoUniversity.Pages.Departments
                 _context.Departments
                 .Where(m => m.Id == message.Id)
                 .ProjectTo<Model>(_configuration)
+                .DecompileAsync()
                 .SingleOrDefaultAsync(token);
         }
     }
