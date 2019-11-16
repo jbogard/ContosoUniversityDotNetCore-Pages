@@ -46,13 +46,14 @@ namespace ContosoUniversity
 
             services.AddHtmlTags(new TagConventions());
 
-            services.AddMvc(opt =>
+            services.AddRazorPages(opt =>
                 {
-                    opt.Filters.Add(typeof(DbContextTransactionPageFilter));
-                    opt.Filters.Add(typeof(ValidatorPageFilter));
-                    opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
+                    opt.Conventions.ConfigureFilter(new DbContextTransactionPageFilter());
+                    opt.Conventions.ConfigureFilter(new ValidatorPageFilter());
                 })
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
+
+            services.AddMvc(opt => opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

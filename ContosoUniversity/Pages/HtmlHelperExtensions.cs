@@ -27,11 +27,17 @@ namespace ContosoUniversity.Pages
 
         public static HtmlTag ValidationDiv(this IHtmlHelper helper)
         {
-            return new HtmlTag("div")
+            var outerDiv = new HtmlTag("div")
                 .Id("validationSummary")
-                .AddClass("alert")
-                .AddClass("alert-danger")
-                .AddClass("hidden");
+                .AddClass("validation-summary-valid")
+                .Data("valmsg-summary", true);
+
+            var ul = new HtmlTag("ul");
+            ul.Add("li", li => li.Style("display", "none"));
+
+            outerDiv.Children.Add(ul);
+
+            return outerDiv;
         }
 
         public static HtmlTag FormBlock<T, TMember>(this IHtmlHelper<T> helper,
