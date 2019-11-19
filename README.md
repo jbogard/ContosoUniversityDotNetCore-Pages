@@ -2,6 +2,8 @@
 
 Contoso University, the way I would write it.
 
+This example requires some global tools, you can run `Init.ps1` to install them.
+
 To run, execute the build script (`Build.ps1`). Open the solution and run!
 
 ## Things demonstrated
