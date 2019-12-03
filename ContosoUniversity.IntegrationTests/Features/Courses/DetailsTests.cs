@@ -1,11 +1,13 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Courses
+﻿using System;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Shouldly;
+using Xunit;
+using Details = ContosoUniversity.Pages.Courses.Details;
+
+namespace ContosoUniversity.IntegrationTests.Features.Courses
 {
-    using System;
-    using System.Threading.Tasks;
-    using Pages.Courses;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class DetailsTests : IntegrationTestBase
@@ -13,17 +15,17 @@
         [Fact]
         public async Task Should_query_for_details()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var dept = new Department
             {
                 Name = "History",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };

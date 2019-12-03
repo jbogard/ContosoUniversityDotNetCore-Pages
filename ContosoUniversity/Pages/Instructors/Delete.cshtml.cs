@@ -49,7 +49,7 @@ namespace ContosoUniversity.Pages.Instructors
 
         public class Command : IRequest
         {
-            public int? ID { get; set; }
+            public int? Id { get; set; }
 
             public string LastName { get; set; }
             [Display(Name = "First Name")]
@@ -95,7 +95,7 @@ namespace ContosoUniversity.Pages.Instructors
             {
                 Instructor instructor = await _db.Instructors
                     .Include(i => i.OfficeAssignment)
-                    .Where(i => i.Id == message.ID)
+                    .Where(i => i.Id == message.Id)
                     .SingleAsync(token);
 
                 instructor.Handle(message);
@@ -103,11 +103,11 @@ namespace ContosoUniversity.Pages.Instructors
                 _db.Instructors.Remove(instructor);
 
                 var department = await _db.Departments
-                    .Where(d => d.InstructorID == message.ID)
+                    .Where(d => d.InstructorId == message.Id)
                     .SingleOrDefaultAsync(token);
                 if (department != null)
                 {
-                    department.InstructorID = null;
+                    department.InstructorId = null;
                 }
 
                 return default;

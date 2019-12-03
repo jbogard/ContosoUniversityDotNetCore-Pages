@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Students;
+using Shouldly;
 using Xunit;
 using static ContosoUniversity.IntegrationTests.SliceFixture;
-using ContosoUniversity.Pages.Students;
-using ContosoUniversity.Models;
-using Shouldly;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {

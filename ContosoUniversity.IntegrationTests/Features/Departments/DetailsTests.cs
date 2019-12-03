@@ -1,13 +1,13 @@
-﻿using ContosoUniversity.Pages.Departments;
+﻿using System;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Shouldly;
+using Xunit;
+using Details = ContosoUniversity.Pages.Departments.Details;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using System;
-    using Microsoft.EntityFrameworkCore;
-    using System.Threading.Tasks;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class DetailsTests : IntegrationTestBase
@@ -15,17 +15,17 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
         [Fact]
         public async Task Should_get_department_details()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var dept = new Department
             {
                 Name = "History",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };

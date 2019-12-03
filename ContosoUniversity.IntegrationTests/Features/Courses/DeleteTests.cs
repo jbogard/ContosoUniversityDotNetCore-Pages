@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ContosoUniversity.Pages.Courses;
 using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
-using Microsoft.EntityFrameworkCore;
 using static ContosoUniversity.IntegrationTests.SliceFixture;
+using Delete = ContosoUniversity.Pages.Courses.Delete;
 
 
 namespace ContosoUniversity.IntegrationTests.Features.Courses
@@ -16,17 +17,17 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
         [Fact]
         public async Task Should_query_for_command()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var dept = new Department
             {
                 Name = "History",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
@@ -52,17 +53,17 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
         [Fact]
         public async Task Should_delete()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var dept = new Department
             {
                 Name = "History",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };

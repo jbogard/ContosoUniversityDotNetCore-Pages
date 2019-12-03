@@ -1,14 +1,15 @@
-﻿using System.Linq;
-using ContosoUniversity.Pages.Departments;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Microsoft.EntityFrameworkCore;
+using Shouldly;
+using Xunit;
+using Delete = ContosoUniversity.Pages.Departments.Delete;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using System;
-    using Microsoft.EntityFrameworkCore;
-    using System.Threading.Tasks;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class DeleteTests : IntegrationTestBase
@@ -16,17 +17,17 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
         [Fact]
         public async Task Should_delete_department()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var dept = new Department
             {
                 Name = "History",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };

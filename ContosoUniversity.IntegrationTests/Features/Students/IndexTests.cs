@@ -35,8 +35,8 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
             var result = await SendAsync(query);
 
             result.Results.Count.ShouldBeGreaterThanOrEqualTo(2);
-            result.Results.Select(r => r.ID).ShouldContain(student1.Id);
-            result.Results.Select(r => r.ID).ShouldContain(student2.Id);
+            result.Results.Select(r => r.Id).ShouldContain(student1.Id);
+            result.Results.Select(r => r.Id).ShouldContain(student2.Id);
         }
 
         [Fact]
@@ -63,8 +63,8 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
             var result = await SendAsync(query);
 
             result.Results.Count.ShouldBe(2);
-            result.Results[0].ID.ShouldBe(student1.Id);
-            result.Results[1].ID.ShouldBe(student2.Id);
+            result.Results[0].Id.ShouldBe(student1.Id);
+            result.Results[1].Id.ShouldBe(student2.Id);
         }
     }
 }

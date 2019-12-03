@@ -14,8 +14,7 @@ namespace ContosoUniversity.Infrastructure
             if (original != ValueProviderResult.None)
             {
                 var originalValue = original.FirstValue;
-                int id;
-                if (int.TryParse(originalValue, out id))
+                if (int.TryParse(originalValue, out var id))
                 {
                     var dbContext = bindingContext.HttpContext.RequestServices.GetService<SchoolContext>();
                     IEntity entity = null;

@@ -45,7 +45,7 @@ namespace ContosoUniversity.Pages.Students
 
         public class Model
         {
-            public int ID { get; set; }
+            public int Id { get; set; }
             [Display(Name = "First Name")]
             public string FirstMidName { get; set; }
             public string LastName { get; set; }
@@ -75,7 +75,7 @@ namespace ContosoUniversity.Pages.Students
                 {
                     CurrentSort = message.SortOrder,
                     NameSortParm = String.IsNullOrEmpty(message.SortOrder) ? "name_desc" : "",
-                    DateSortParm = message.SortOrder == "Date" ? "date_desc" : "Date",
+                    DateSortParm = message.SortOrder == "Date" ? "date_desc" : "Date"
                 };
 
                 if (message.SearchString != null)
@@ -113,7 +113,7 @@ namespace ContosoUniversity.Pages.Students
                 }
 
                 int pageSize = 3;
-                int pageNumber = (message.Page ?? 1);
+                int pageNumber = message.Page ?? 1;
                 model.Results = await students
                     //.Select(src => new Model
                     //{

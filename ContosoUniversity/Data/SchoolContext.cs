@@ -33,7 +33,7 @@ namespace ContosoUniversity.Data
             modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignment");
 
             modelBuilder.Entity<CourseAssignment>()
-                .HasKey(c => new { c.CourseID, c.InstructorID });
+                .HasKey(c => new { CourseID = c.CourseId, InstructorID = c.InstructorId });
         }
 
         public async Task BeginTransactionAsync()

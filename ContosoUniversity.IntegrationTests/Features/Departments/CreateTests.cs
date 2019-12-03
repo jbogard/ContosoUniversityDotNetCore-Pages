@@ -1,14 +1,14 @@
-﻿using ContosoUniversity.Pages.Departments;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ContosoUniversity.Pages.Departments;
+using ContosoUniversity.Pages.Instructors;
+using Microsoft.EntityFrameworkCore;
+using Shouldly;
+using Xunit;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using System;
-    using Microsoft.EntityFrameworkCore;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class CreateTests : IntegrationTestBase
@@ -16,11 +16,11 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
         [Fact]
         public async Task Should_create_new_department()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             Create.Command command = null;
@@ -45,7 +45,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
             created.ShouldNotBeNull();
             created.Budget.ShouldBe(command.Budget.GetValueOrDefault());
             created.StartDate.ShouldBe(command.StartDate.GetValueOrDefault());
-            created.InstructorID.ShouldBe(adminId);
+            created.InstructorId.ShouldBe(adminId);
         }
     }
 }

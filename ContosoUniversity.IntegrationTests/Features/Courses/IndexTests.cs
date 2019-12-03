@@ -1,10 +1,13 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Courses
+﻿using System;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Shouldly;
+using Xunit;
+using Index = ContosoUniversity.Pages.Courses.Index;
+
+namespace ContosoUniversity.IntegrationTests.Features.Courses
 {
-    using System;
-    using System.Threading.Tasks;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class IndexTests : IntegrationTestBase
@@ -12,24 +15,24 @@
         [Fact]
         public async Task Should_return_all_courses()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var englishDept = new Department
             {
                 Name = "English",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
             var historyDept = new Department
             {
                 Name = "History",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
@@ -50,7 +53,7 @@
             };
             await InsertAsync(englishDept, historyDept, english, history);
 
-            var result = await SendAsync(new Pages.Courses.Index.Query());
+            var result = await SendAsync(new Index.Query());
 
             result.ShouldNotBeNull();
             result.Courses.Count.ShouldBeGreaterThanOrEqualTo(2);

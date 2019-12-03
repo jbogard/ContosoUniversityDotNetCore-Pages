@@ -1,14 +1,14 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Instructors
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Microsoft.EntityFrameworkCore;
+using Shouldly;
+using Xunit;
+
+namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.EntityFrameworkCore;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Pages.Instructors;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class CreateEditTests : IntegrationTestBase
@@ -89,7 +89,7 @@
                 FirstMidName = "George",
                 LastName = "Costanza",
                 OfficeAssignmentLocation = "Austin",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var command = new CreateEdit.Command
@@ -166,7 +166,7 @@
             edited.OfficeAssignment.ShouldNotBeNull();
             edited.OfficeAssignment.Location.ShouldBe(command.OfficeAssignmentLocation);
             edited.CourseAssignments.Count.ShouldBe(1);
-            edited.CourseAssignments.First().CourseID.ShouldBe(english201.Id);
+            edited.CourseAssignments.First().CourseId.ShouldBe(english201.Id);
         }
 
     }

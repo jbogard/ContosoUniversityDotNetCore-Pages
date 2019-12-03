@@ -1,8 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using ContosoUniversity.Data;
 using ContosoUniversity.Infrastructure;
 using ContosoUniversity.Infrastructure.Tags;
@@ -10,8 +6,11 @@ using ContosoUniversity.Pages.Instructors;
 using FluentValidation.AspNetCore;
 using HtmlTags;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace ContosoUniversity

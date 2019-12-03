@@ -32,7 +32,7 @@ namespace ContosoUniversity.Pages.Students
 
         public class Model
         {
-            public int ID { get; set; }
+            public int Id { get; set; }
             [Display(Name = "First Name")]
             public string FirstMidName { get; set; }
             public string LastName { get; set; }

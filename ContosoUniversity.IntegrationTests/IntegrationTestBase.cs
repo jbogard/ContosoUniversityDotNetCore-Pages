@@ -6,7 +6,7 @@ namespace ContosoUniversity.IntegrationTests
 {
     public abstract class IntegrationTestBase : IAsyncLifetime
     {
-        private static readonly AsyncLock Mutex = new AsyncLock();
+        private static readonly AsyncLock _mutex = new AsyncLock();
 
         private static bool _initialized;
 
@@ -15,7 +15,7 @@ namespace ContosoUniversity.IntegrationTests
             if (_initialized)
                 return;
 
-            using (await Mutex.LockAsync())
+            using (await _mutex.LockAsync())
             {
                 if (_initialized)
                     return;

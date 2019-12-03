@@ -4,9 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
-using FakeItEasy;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
@@ -191,9 +189,9 @@ namespace ContosoUniversity.IntegrationTests
             });
         }
 
-        private static int CourseNumber = 1;
+        private static int _courseNumber = 1;
 
-        public static int NextCourseNumber() => Interlocked.Increment(ref CourseNumber);
+        public static int NextCourseNumber() => Interlocked.Increment(ref _courseNumber);
 
     }
 }
