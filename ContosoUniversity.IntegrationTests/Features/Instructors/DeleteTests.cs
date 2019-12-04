@@ -1,15 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Microsoft.EntityFrameworkCore;
+using Shouldly;
+using Xunit;
 
 namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.EntityFrameworkCore;
-    using System.Threading.Tasks;
-    using Pages.Instructors;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class DeleteTests : IntegrationTestBase
@@ -56,13 +55,13 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 FirstMidName = "George",
                 LastName = "Costanza",
                 OfficeAssignmentLocation = "Austin",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
             var englishDept = new Department
             {
                 Name = "English",
                 StartDate = DateTime.Today,
-                InstructorID = instructorId
+                InstructorId = instructorId
             };
             var english101 = new Course
             {
@@ -84,7 +83,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 SelectedCourses = new[] { english101.Id.ToString() }
             });
 
-            await SendAsync(new Delete.Command { ID = instructorId });
+            await SendAsync(new Delete.Command { Id = instructorId });
 
             var instructorCount = await ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId).CountAsync());
 
@@ -93,9 +92,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
             var englishDeptId = englishDept.Id;
             englishDept = await ExecuteDbContextAsync(db => db.Departments.FindAsync(englishDeptId));
 
-            englishDept.InstructorID.ShouldBeNull();
+            englishDept.InstructorId.ShouldBeNull();
 
-            var courseInstructorCount = await ExecuteDbContextAsync(db => db.CourseAssignments.Where(ci => ci.InstructorID == instructorId).CountAsync());
+            var courseInstructorCount = await ExecuteDbContextAsync(db => db.CourseAssignments.Where(ci => ci.InstructorId == instructorId).CountAsync());
 
             courseInstructorCount.ShouldBe(0);
         }

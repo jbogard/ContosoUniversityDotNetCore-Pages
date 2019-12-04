@@ -46,8 +46,8 @@ namespace ContosoUniversity.Pages
             Action<HtmlTag> inputModifier = null
         ) where T : class
         {
-            labelModifier = labelModifier ?? (_ => { });
-            inputModifier = inputModifier ?? (_ => { });
+            labelModifier ??= _ => { };
+            inputModifier ??= _ => { };
 
             var divTag = new HtmlTag("div");
             divTag.AddClass("form-group");

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using HtmlTags;
 using HtmlTags.Conventions;
-using HtmlTags.Reflection;
 
 namespace ContosoUniversity.Infrastructure.Tags
 {

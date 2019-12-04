@@ -82,8 +82,8 @@ namespace ContosoUniversity.Pages.Instructors
 
         public class Model
         {
-            public int? InstructorID { get; set; }
-            public int? CourseID { get; set; }
+            public int? InstructorId { get; set; }
+            public int? CourseId { get; set; }
 
             public IList<Instructor> Instructors { get; set; }
             public IList<Course> Courses { get; set; }
@@ -91,7 +91,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public class Instructor
             {
-                public int ID { get; set; }
+                public int Id { get; set; }
 
                 [Display(Name = "Last Name")]
                 public string LastName { get; set; }
@@ -110,7 +110,7 @@ namespace ContosoUniversity.Pages.Instructors
 
             public class CourseAssignment
             {
-                public int CourseID { get; set; }
+                public int CourseId { get; set; }
                 public string CourseTitle { get; set; }
             }
 
@@ -173,7 +173,7 @@ namespace ContosoUniversity.Pages.Instructors
                 if (message.Id != null)
                 {
                     courses = await _db.CourseAssignments
-                        .Where(ci => ci.InstructorID == message.Id)
+                        .Where(ci => ci.InstructorId == message.Id)
                         .Select(ci => ci.Course)
                         .ProjectTo<Model.Course>(_configuration)
                         .ToListAsync(token);
@@ -182,7 +182,7 @@ namespace ContosoUniversity.Pages.Instructors
                 if (message.CourseId != null)
                 {
                     enrollments = await _db.Enrollments
-                        .Where(x => x.CourseID == message.CourseId)
+                        .Where(x => x.CourseId == message.CourseId)
                         .ProjectTo<Model.Enrollment>(_configuration)
                         .ToListAsync(token);
                 }
@@ -192,8 +192,8 @@ namespace ContosoUniversity.Pages.Instructors
                     Instructors = instructors,
                     Courses = courses,
                     Enrollments = enrollments,
-                    InstructorID = message.Id,
-                    CourseID = message.CourseId
+                    InstructorId = message.Id,
+                    CourseId = message.CourseId
                 };
 
                 return viewModel;

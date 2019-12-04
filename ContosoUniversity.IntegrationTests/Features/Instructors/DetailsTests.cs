@@ -1,12 +1,12 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Instructors
+﻿using System;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Shouldly;
+using Xunit;
+
+namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Pages.Instructors;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class DetailsTests : IntegrationTestBase

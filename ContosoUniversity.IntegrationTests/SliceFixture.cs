@@ -4,9 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
-using FakeItEasy;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
@@ -40,47 +38,43 @@ namespace ContosoUniversity.IntegrationTests
 
         public static async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {
-            using (var scope = _scopeFactory.CreateScope())
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<SchoolContext>();
+
+            try
             {
-                var dbContext = scope.ServiceProvider.GetService<SchoolContext>();
+                await dbContext.BeginTransactionAsync().ConfigureAwait(false);
 
-                try
-                {
-                    await dbContext.BeginTransactionAsync().ConfigureAwait(false);
+                await action(scope.ServiceProvider).ConfigureAwait(false);
 
-                    await action(scope.ServiceProvider).ConfigureAwait(false);
-
-                    await dbContext.CommitTransactionAsync().ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    dbContext.RollbackTransaction();
-                    throw;
-                }
+                await dbContext.CommitTransactionAsync().ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                dbContext.RollbackTransaction(); 
+                throw;
             }
         }
 
         public static async Task<T> ExecuteScopeAsync<T>(Func<IServiceProvider, Task<T>> action)
         {
-            using (var scope = _scopeFactory.CreateScope())
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<SchoolContext>();
+
+            try
             {
-                var dbContext = scope.ServiceProvider.GetService<SchoolContext>();
+                await dbContext.BeginTransactionAsync().ConfigureAwait(false);
 
-                try
-                {
-                    await dbContext.BeginTransactionAsync().ConfigureAwait(false);
+                var result = await action(scope.ServiceProvider).ConfigureAwait(false);
 
-                    var result = await action(scope.ServiceProvider).ConfigureAwait(false);
+                await dbContext.CommitTransactionAsync().ConfigureAwait(false);
 
-                    await dbContext.CommitTransactionAsync().ConfigureAwait(false);
-
-                    return result;
-                }
-                catch (Exception)
-                {
-                    dbContext.RollbackTransaction();
-                    throw;
-                }
+                return result;
+            }
+            catch (Exception)
+            {
+                dbContext.RollbackTransaction();
+                throw;
             }
         }
 
@@ -195,9 +189,9 @@ namespace ContosoUniversity.IntegrationTests
             });
         }
 
-        private static int CourseNumber = 1;
+        private static int _courseNumber = 1;
 
-        public static int NextCourseNumber() => Interlocked.Increment(ref CourseNumber);
+        public static int NextCourseNumber() => Interlocked.Increment(ref _courseNumber);
 
     }
 }

@@ -27,7 +27,7 @@ namespace ContosoUniversity.Pages
                 .Select(x => new EnrollmentDateGroup
                 {
                     EnrollmentDate = x.Key,
-                    StudentCount = x.Count(),
+                    StudentCount = x.Count()
                 })
                 .ToListAsync();
 

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Students;
+using Shouldly;
 using Xunit;
 using static ContosoUniversity.IntegrationTests.SliceFixture;
-using ContosoUniversity.Pages.Students;
-using ContosoUniversity.Models;
-using Shouldly;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
@@ -48,7 +48,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
 
             var deleteCommand = new Delete.Command
             {
-                ID = studentId
+                Id = studentId
             };
 
             await SendAsync(deleteCommand);

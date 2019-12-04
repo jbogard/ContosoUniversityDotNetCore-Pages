@@ -39,7 +39,7 @@ namespace ContosoUniversity.Pages.Instructors
 
         public class Model
         {
-            public int? ID { get; set; }
+            public int? Id { get; set; }
 
             public string LastName { get; set; }
             [Display(Name = "First Name")]

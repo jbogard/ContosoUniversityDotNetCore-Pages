@@ -1,13 +1,15 @@
-﻿namespace ContosoUniversity.IntegrationTests.Features.Courses
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Courses;
+using ContosoUniversity.Pages.Instructors;
+using Microsoft.EntityFrameworkCore;
+using Shouldly;
+using Xunit;
+
+namespace ContosoUniversity.IntegrationTests.Features.Courses
 {
-    using System;
-    using Microsoft.EntityFrameworkCore;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Pages.Courses;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class CreateTests : IntegrationTestBase
@@ -15,17 +17,17 @@
         [Fact]
         public async Task Should_create_new_course()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var dept = new Department
             {
                 Name = "History",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
@@ -49,7 +51,7 @@
             var created = await ExecuteDbContextAsync(db => db.Courses.Where(c => c.Id == command.Number).SingleOrDefaultAsync());
 
             created.ShouldNotBeNull();
-            created.DepartmentID.ShouldBe(dept.Id);
+            created.DepartmentId.ShouldBe(dept.Id);
             created.Credits.ShouldBe(command.Credits);
             created.Title.ShouldBe(command.Title);
         }

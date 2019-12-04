@@ -1,12 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using Shouldly;
+using Xunit;
+using Index = ContosoUniversity.Pages.Departments.Index;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using System;
-    using System.Threading.Tasks;
-    using Models;
-    using Shouldly;
-    using Xunit;
     using static SliceFixture;
 
     public class IndexTests : IntegrationTestBase
@@ -14,31 +16,31 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
         [Fact]
         public async Task Should_list_departments()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var dept = new Department
             {
                 Name = "History",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
             var dept2 = new Department
             {
                 Name = "English",
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 456m,
                 StartDate = DateTime.Today
             };
 
             await InsertAsync(dept, dept2);
 
-            var query = new Pages.Departments.Index.Query();
+            var query = new Index.Query();
 
             var result = await SendAsync(query);
 

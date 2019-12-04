@@ -71,13 +71,13 @@ namespace ContosoUniversity.Models
                 return;
             }
 
-            var selectedCoursesHS = new HashSet<string>(selectedCourses);
+            var selectedCoursesHs = new HashSet<string>(selectedCourses);
             var instructorCourses = new HashSet<int>
-                (CourseAssignments.Select(c => c.CourseID));
+                (CourseAssignments.Select(c => c.CourseId));
 
             foreach (var course in courses)
             {
-                if (selectedCoursesHS.Contains(course.Id.ToString()))
+                if (selectedCoursesHs.Contains(course.Id.ToString()))
                 {
                     if (!instructorCourses.Contains(course.Id))
                     {
@@ -88,7 +88,7 @@ namespace ContosoUniversity.Models
                 {
                     if (instructorCourses.Contains(course.Id))
                     {
-                        var toRemove = CourseAssignments.Single(ci => ci.CourseID == course.Id);
+                        var toRemove = CourseAssignments.Single(ci => ci.CourseId == course.Id);
                         CourseAssignments.Remove(toRemove);
                     }
                 }

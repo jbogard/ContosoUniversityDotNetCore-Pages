@@ -12,8 +12,8 @@ namespace ContosoUniversity.Models
     {
         [Column("EnrollmentID")]
         public int Id { get; set; }
-        public int CourseID { get; set; }
-        public int StudentID { get; set; }
+        public int CourseId { get; set; }
+        public int StudentId { get; set; }
         [DisplayFormat(NullDisplayText = "No grade")]
         public Grade? Grade { get; set; }
 

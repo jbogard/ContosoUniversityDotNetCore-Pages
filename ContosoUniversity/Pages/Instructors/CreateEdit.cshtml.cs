@@ -86,14 +86,14 @@ namespace ContosoUniversity.Pages.Instructors
 
             public class AssignedCourseData
             {
-                public int CourseID { get; set; }
+                public int CourseId { get; set; }
                 public string Title { get; set; }
                 public bool Assigned { get; set; }
             }
 
             public class CourseAssignment
             {
-                public int CourseID { get; set; }
+                public int CourseId { get; set; }
             }
         }
 
@@ -152,10 +152,10 @@ namespace ContosoUniversity.Pages.Instructors
             private void PopulateAssignedCourseData(Command model)
             {
                 var allCourses = _db.Courses;
-                var instructorCourses = new HashSet<int>(model.CourseAssignments.Select(c => c.CourseID));
+                var instructorCourses = new HashSet<int>(model.CourseAssignments.Select(c => c.CourseId));
                 var viewModel = allCourses.Select(course => new Command.AssignedCourseData
                 {
-                    CourseID = course.Id,
+                    CourseId = course.Id,
                     Title = course.Title,
                     Assigned = instructorCourses.Any() && instructorCourses.Contains(course.Id)
                 }).ToList();

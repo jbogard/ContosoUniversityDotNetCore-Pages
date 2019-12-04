@@ -39,7 +39,7 @@ namespace ContosoUniversity.Pages.Students
 
         public class Command : IRequest
         {
-            public int ID { get; set; }
+            public int Id { get; set; }
             [Display(Name = "First Name")]
             public string FirstMidName { get; set; }
             public string LastName { get; set; }
@@ -77,7 +77,7 @@ namespace ContosoUniversity.Pages.Students
 
             public async Task<Unit> Handle(Command message, CancellationToken token)
             {
-                _db.Students.Remove(await _db.Students.FindAsync(message.ID));
+                _db.Students.Remove(await _db.Students.FindAsync(message.Id));
 
                 return default;
             }

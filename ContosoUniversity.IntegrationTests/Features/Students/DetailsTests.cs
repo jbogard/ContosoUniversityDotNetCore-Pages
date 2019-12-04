@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using ContosoUniversity.Pages.Students;
 using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Instructors;
+using ContosoUniversity.Pages.Students;
 using Shouldly;
 using Xunit;
 using static ContosoUniversity.IntegrationTests.SliceFixture;
+using Details = ContosoUniversity.Pages.Students.Details;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
@@ -14,33 +15,33 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
         [Fact]
         public async Task Should_get_details()
         {
-            var adminId = await SendAsync(new Pages.Instructors.CreateEdit.Command
+            var adminId = await SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
-                HireDate = DateTime.Today,
+                HireDate = DateTime.Today
             });
 
             var englishDept = new Department
             {
-                InstructorID = adminId,
+                InstructorId = adminId,
                 Budget = 123m,
                 Name = "English 101",
-                StartDate = DateTime.Today,
+                StartDate = DateTime.Today
             };
             await InsertAsync(englishDept);
             var deptId = englishDept.Id;
 
             var course1 = new Course
             {
-                DepartmentID = deptId,
+                DepartmentId = deptId,
                 Credits = 10,
                 Id = NextCourseNumber(),
                 Title = "Course 1"
             };
             var course2 = new Course
             {
-                DepartmentID = deptId,
+                DepartmentId = deptId,
                 Credits = 10,
                 Id = NextCourseNumber(),
                 Title = "Course 2"
@@ -57,15 +58,15 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
 
             var enrollment1 = new Enrollment
             {
-                CourseID = course1.Id,
+                CourseId = course1.Id,
                 Grade = Grade.A,
-                StudentID = studentId,
+                StudentId = studentId
             };
             var enrollment2 = new Enrollment
             {
-                CourseID = course2.Id,
+                CourseId = course2.Id,
                 Grade = Grade.F,
-                StudentID = studentId,
+                StudentId = studentId
             };
             await InsertAsync(enrollment1, enrollment2);
 
