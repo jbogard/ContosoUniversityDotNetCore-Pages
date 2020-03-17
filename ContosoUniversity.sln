@@ -23,6 +23,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		setup.sh = setup.sh
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{3CC83AD8-1CC5-4783-BA58-001898EB1CC2}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\main.yaml = .github\workflows\main.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +45,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3CC83AD8-1CC5-4783-BA58-001898EB1CC2} = {13186C93-7307-4FEA-A17C-4556F54FF5F1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C21030AE-F720-490E-BC96-D0B38EF8C332}

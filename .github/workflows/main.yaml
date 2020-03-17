@@ -1,0 +1,66 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request 
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v2
+
+    # GitVersion on GitHub Actions
+    # https://github.com/marketplace/actions/use-actions
+    # GitVersion requires more history to calculate versions
+    - name: Fetch all history for all tags and branches
+      run: git fetch --prune --unshallow
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.2
+      with:
+        versionSpec: '5.2.x'
+    - name: Generate Version using GitVersion
+      id: gitversion # step id used as reference for output values
+      uses: gittools/actions/gitversion/execute@v0.9.2
+ 
+# Windows agent already has SDK versions installed
+#    - name: Install .NET 2.1 Runtime for RoundHousE
+#      uses: actions/setup-dotnet@v1
+#      with:
+#        dotnet-version: '2.1.804'
+#    - name: Install .NET 3.1 SDK for Build Process
+#      uses: actions/setup-dotnet@v1
+#      with:
+#        dotnet-version: '3.1.200'
+
+    - name: Setup Required Build Dependencies
+      run: pwsh .\setup.ps1
+
+    - name: Build and Test
+      shell: pwsh
+      run: |
+        invoke-psake ci -properties ${'version':'${{ steps.gitversion.outputs.semVer }}'}
+
+    - name: Upload Website Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: website
+        path: publish
+
+    - name: Upload Test Result Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: test-results
+        path: TestResults
