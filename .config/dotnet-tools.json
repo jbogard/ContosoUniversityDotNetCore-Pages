@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "dotnet-roundhouse": {
+      "version": "1.2.0",
+      "commands": [
+        "rh"
+      ]
+    },
+    "gitversion.tool": {
+      "version": "5.2.4",
+      "commands": [
+        "dotnet-gitversion"
+      ]
+    }
+  }
+}
