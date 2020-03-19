@@ -1,4 +1,6 @@
-# ContosoUniversity on ASP.NET Core 3.0 on .NET Core and Razor Pages
+![CI](https://github.com/jbogard/ContosoUniversityDotNetCore-Pages/workflows/CI/badge.svg)
+
+# ContosoUniversity on ASP.NET Core 3.1 on .NET Core and Razor Pages
 
 Contoso University, the way I would write it.
 
