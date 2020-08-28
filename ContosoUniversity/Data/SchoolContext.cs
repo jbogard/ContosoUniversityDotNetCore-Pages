@@ -52,7 +52,7 @@ namespace ContosoUniversity.Data
             {
                 await SaveChangesAsync().ConfigureAwait(false);
 
-                _currentTransaction?.Commit();
+                await (_currentTransaction?.CommitAsync() ?? Task.CompletedTask);
             }
             catch
             {
