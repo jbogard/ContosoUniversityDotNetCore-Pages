@@ -9,10 +9,14 @@ using Index = ContosoUniversity.Pages.Instructors.Index;
 
 namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
-    using static SliceFixture;
-
-    public class IndexTests : IntegrationTestBase
+    
+    [Collection(nameof(SliceFixture))]
+    public class IndexTests
     {
+        private readonly SliceFixture _fixture;
+
+        public IndexTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_get_list_instructor_with_details()
         {
@@ -26,19 +30,19 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
             var english201 = new Course
             {
                 Department = englishDept,
                 Title = "English 201",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
 
-            await InsertAsync(englishDept, english101, english201);
+            await _fixture.InsertAsync(englishDept, english101, english201);
 
-            var instructor1Id = await SendAsync(new CreateEdit.Command
+            var instructor1Id = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -47,7 +51,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 OfficeAssignmentLocation = "Austin"
             });
 
-            var instructor2Id = await SendAsync(new CreateEdit.Command
+            var instructor2Id = await _fixture.SendAsync(new CreateEdit.Command
             {
                 OfficeAssignmentLocation = "Houston",
                 FirstMidName = "Jerry",
@@ -68,14 +72,14 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 EnrollmentDate = DateTime.Today
             };
 
-            await InsertAsync(student1, student2);
+            await _fixture.InsertAsync(student1, student2);
 
             var enrollment1 = new Enrollment { StudentId = student1.Id, CourseId = english101.Id };
             var enrollment2 = new Enrollment { StudentId = student2.Id, CourseId = english101.Id };
 
-            await InsertAsync(enrollment1, enrollment2);
+            await _fixture.InsertAsync(enrollment1, enrollment2);
 
-            var result = await SendAsync(new Index.Query { Id = instructor1Id, CourseId = english101.Id });
+            var result = await _fixture.SendAsync(new Index.Query { Id = instructor1Id, CourseId = english101.Id });
 
             result.ShouldNotBeNull();
 

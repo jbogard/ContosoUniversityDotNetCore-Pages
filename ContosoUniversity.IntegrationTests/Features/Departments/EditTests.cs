@@ -10,14 +10,18 @@ using Xunit;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using static SliceFixture;
-
-    public class EditTests : IntegrationTestBase
+    
+    [Collection(nameof(SliceFixture))]
+    public class EditTests
     {
+        private readonly SliceFixture _fixture;
+
+        public EditTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_get_edit_department_details()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -31,14 +35,14 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
-            await InsertAsync(dept);
+            await _fixture.InsertAsync(dept);
 
             var query = new Edit.Query
             {
                 Id = dept.Id
             };
 
-            var result = await SendAsync(query);
+            var result = await _fixture.SendAsync(query);
 
             result.ShouldNotBeNull();
             result.Name.ShouldBe(dept.Name);
@@ -48,14 +52,14 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
         [Fact]
         public async Task Should_edit_department()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
                 HireDate = DateTime.Today
             });
 
-            var admin2Id = await SendAsync(new CreateEdit.Command
+            var admin2Id = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -69,12 +73,12 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
-            await InsertAsync(dept);
+            await _fixture.InsertAsync(dept);
 
             Edit.Command command = null;
-            await ExecuteDbContextAsync(async (ctxt, mediator) =>
+            await _fixture.ExecuteDbContextAsync(async (ctxt, mediator) =>
             {
-                var admin2 = await FindAsync<Instructor>(admin2Id);
+                var admin2 = await _fixture.FindAsync<Instructor>(admin2Id);
 
                 command = new Edit.Command
                 {
@@ -88,7 +92,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 await mediator.Send(command);
             });
 
-            var result = await ExecuteDbContextAsync(db => db.Departments.Where(d => d.Id == dept.Id).Include(d => d.Administrator).SingleOrDefaultAsync());
+            var result = await _fixture.ExecuteDbContextAsync(db => db.Departments.Where(d => d.Id == dept.Id).Include(d => d.Administrator).SingleOrDefaultAsync());
 
             result.Name.ShouldBe(command.Name);
             result.Administrator.Id.ShouldBe(command.Administrator.Id);

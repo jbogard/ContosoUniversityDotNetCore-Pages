@@ -4,12 +4,16 @@ using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Students;
 using Shouldly;
 using Xunit;
-using static ContosoUniversity.IntegrationTests.SliceFixture;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
-    public class CreateTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class CreateTests
     {
+        private readonly SliceFixture _fixture;
+
+        public CreateTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_create_student()
         {
@@ -20,9 +24,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
                 EnrollmentDate = DateTime.Today
             };
 
-            var studentId = await SendAsync(cmd);
+            var studentId = await _fixture.SendAsync(cmd);
 
-            var student = await FindAsync<Student>(studentId);
+            var student = await _fixture.FindAsync<Student>(studentId);
 
             student.ShouldNotBeNull();
             student.FirstMidName.ShouldBe(cmd.FirstMidName);

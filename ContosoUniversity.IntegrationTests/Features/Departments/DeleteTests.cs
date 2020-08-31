@@ -10,14 +10,18 @@ using Delete = ContosoUniversity.Pages.Departments.Delete;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using static SliceFixture;
-
-    public class DeleteTests : IntegrationTestBase
+    
+    [Collection(nameof(SliceFixture))]
+    public class DeleteTests
     {
+        private readonly SliceFixture _fixture;
+
+        public DeleteTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_delete_department()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -31,7 +35,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
-            await InsertAsync(dept);
+            await _fixture.InsertAsync(dept);
 
             var command = new Delete.Command
             {
@@ -39,9 +43,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 RowVersion = dept.RowVersion
             };
 
-            await SendAsync(command);
+            await _fixture.SendAsync(command);
 
-            var any = await ExecuteDbContextAsync(db => db.Departments.Where(d => d.Id == command.Id).AnyAsync());
+            var any = await _fixture.ExecuteDbContextAsync(db => db.Departments.Where(d => d.Id == command.Id).AnyAsync());
 
             any.ShouldBeFalse();
         }

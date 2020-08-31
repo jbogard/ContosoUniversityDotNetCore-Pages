@@ -8,14 +8,18 @@ using Details = ContosoUniversity.Pages.Departments.Details;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using static SliceFixture;
-
-    public class DetailsTests : IntegrationTestBase
+    
+    [Collection(nameof(SliceFixture))]
+    public class DetailsTests
     {
+        private readonly SliceFixture _fixture;
+
+        public DetailsTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_get_department_details()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -29,15 +33,15 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
-            await InsertAsync(dept);
+            await _fixture.InsertAsync(dept);
 
             var query = new Details.Query
             {
                 Id = dept.Id
             };
 
-            var result = await SendAsync(query);
-            var admin = await FindAsync<Instructor>(adminId);
+            var result = await _fixture.SendAsync(query);
+            var admin = await _fixture.FindAsync<Instructor>(adminId);
 
             result.ShouldNotBeNull();
             result.Name.ShouldBe(dept.Name);

@@ -10,14 +10,17 @@ using Xunit;
 
 namespace ContosoUniversity.IntegrationTests.Features.Courses
 {
-    using static SliceFixture;
-
-    public class CreateTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class CreateTests
     {
+        private readonly SliceFixture _fixture;
+
+        public CreateTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_create_new_course()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -32,23 +35,22 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
                 StartDate = DateTime.Today
             };
 
-
             Create.Command command = null;
 
-            await ExecuteDbContextAsync(async (ctxt, mediator) =>
+            await _fixture.ExecuteDbContextAsync(async (ctxt, mediator) =>
             {
                 await ctxt.Departments.AddAsync(dept);
                 command = new Create.Command
                 {
                     Credits = 4,
                     Department = dept,
-                    Number = NextCourseNumber(),
+                    Number = _fixture.NextCourseNumber(),
                     Title = "English 101"
                 };
                 await mediator.Send(command);
             });
 
-            var created = await ExecuteDbContextAsync(db => db.Courses.Where(c => c.Id == command.Number).SingleOrDefaultAsync());
+            var created = await _fixture.ExecuteDbContextAsync(db => db.Courses.Where(c => c.Id == command.Number).SingleOrDefaultAsync());
 
             created.ShouldNotBeNull();
             created.DepartmentId.ShouldBe(dept.Id);

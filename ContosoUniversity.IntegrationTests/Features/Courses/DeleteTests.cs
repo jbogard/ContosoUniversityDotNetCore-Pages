@@ -6,18 +6,22 @@ using ContosoUniversity.Pages.Instructors;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
-using static ContosoUniversity.IntegrationTests.SliceFixture;
 using Delete = ContosoUniversity.Pages.Courses.Delete;
 
 
 namespace ContosoUniversity.IntegrationTests.Features.Courses
 {
-    public class DeleteTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class DeleteTests
     {
+        private readonly SliceFixture _fixture;
+
+        public DeleteTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_query_for_command()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -36,13 +40,13 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
             {
                 Credits = 4,
                 Department = dept,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };
 
-            await InsertAsync(dept, course);
+            await _fixture.InsertAsync(dept, course);
 
-            var result = await SendAsync(new Delete.Query {Id = course.Id});
+            var result = await _fixture.SendAsync(new Delete.Query { Id = course.Id });
 
             result.ShouldNotBeNull();
             result.Credits.ShouldBe(course.Credits);
@@ -53,7 +57,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
         [Fact]
         public async Task Should_delete()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -72,15 +76,15 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
             {
                 Credits = 4,
                 Department = dept,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };
 
-            await InsertAsync(dept, course);
+            await _fixture.InsertAsync(dept, course);
 
-            await SendAsync(new Delete.Command {Id = course.Id});
+            await _fixture.SendAsync(new Delete.Command { Id = course.Id });
 
-            var result = await ExecuteDbContextAsync(db => db.Courses.Where(c => c.Id == course.Id).SingleOrDefaultAsync());
+            var result = await _fixture.ExecuteDbContextAsync(db => db.Courses.Where(c => c.Id == course.Id).SingleOrDefaultAsync());
 
             result.ShouldBeNull();
         }

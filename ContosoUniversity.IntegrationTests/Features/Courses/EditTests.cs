@@ -8,14 +8,17 @@ using Xunit;
 
 namespace ContosoUniversity.IntegrationTests.Features.Courses
 {
-    using static SliceFixture;
-
-    public class EditTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class EditTests
     {
+        private readonly SliceFixture _fixture;
+
+        public EditTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_query_for_command()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -34,12 +37,12 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
             {
                 Credits = 4,
                 Department = dept,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };
-            await InsertAsync(dept, course);
+            await _fixture.InsertAsync(dept, course);
 
-            var result = await SendAsync(new Edit.Query { Id = course.Id });
+            var result = await _fixture.SendAsync(new Edit.Query { Id = course.Id });
 
             result.ShouldNotBeNull();
             result.Credits.ShouldBe(course.Credits);
@@ -50,7 +53,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
         [Fact]
         public async Task Should_edit()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -76,14 +79,14 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
             {
                 Credits = 4,
                 Department = dept,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };
-            await InsertAsync(dept, newDept, course);
+            await _fixture.InsertAsync(dept, newDept, course);
 
             Edit.Command command = null;
 
-            await ExecuteDbContextAsync(async (ctxt, mediator) =>
+            await _fixture.ExecuteDbContextAsync(async (ctxt, mediator) =>
             {
                 newDept = await ctxt.Departments.FindAsync(dept.Id);
                 command = new Edit.Command
@@ -96,7 +99,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
                 await mediator.Send(command);
             });
 
-            var edited = await FindAsync<Course>(course.Id);
+            var edited = await _fixture.FindAsync<Course>(course.Id);
 
             edited.ShouldNotBeNull();
             edited.DepartmentId.ShouldBe(newDept.Id);

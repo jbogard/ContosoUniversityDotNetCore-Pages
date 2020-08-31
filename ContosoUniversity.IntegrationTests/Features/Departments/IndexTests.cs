@@ -9,14 +9,18 @@ using Index = ContosoUniversity.Pages.Departments.Index;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using static SliceFixture;
-
-    public class IndexTests : IntegrationTestBase
+    
+    [Collection(nameof(SliceFixture))]
+    public class IndexTests
     {
+        private readonly SliceFixture _fixture;
+
+        public IndexTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_list_departments()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -38,11 +42,11 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 StartDate = DateTime.Today
             };
 
-            await InsertAsync(dept, dept2);
+            await _fixture.InsertAsync(dept, dept2);
 
             var query = new Index.Query();
 
-            var result = await SendAsync(query);
+            var result = await _fixture.SendAsync(query);
 
             result.ShouldNotBeNull();
             result.Count.ShouldBeGreaterThanOrEqualTo(2);

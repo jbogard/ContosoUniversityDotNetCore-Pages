@@ -5,17 +5,21 @@ using ContosoUniversity.Pages.Instructors;
 using ContosoUniversity.Pages.Students;
 using Shouldly;
 using Xunit;
-using static ContosoUniversity.IntegrationTests.SliceFixture;
 using Details = ContosoUniversity.Pages.Students.Details;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
-    public class DetailsTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class DetailsTests
     {
+        private readonly SliceFixture _fixture;
+
+        public DetailsTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_get_details()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -29,24 +33,24 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
                 Name = "English 101",
                 StartDate = DateTime.Today
             };
-            await InsertAsync(englishDept);
+            await _fixture.InsertAsync(englishDept);
             var deptId = englishDept.Id;
 
             var course1 = new Course
             {
                 DepartmentId = deptId,
                 Credits = 10,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "Course 1"
             };
             var course2 = new Course
             {
                 DepartmentId = deptId,
                 Credits = 10,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "Course 2"
             };
-            await InsertAsync(course1, course2);
+            await _fixture.InsertAsync(course1, course2);
 
             var command = new Create.Command
             {
@@ -54,7 +58,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
                 LastName = "Schmoe",
                 EnrollmentDate = new DateTime(2013, 1, 1)
             };
-            var studentId = await SendAsync(command);
+            var studentId = await _fixture.SendAsync(command);
 
             var enrollment1 = new Enrollment
             {
@@ -68,9 +72,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
                 Grade = Grade.F,
                 StudentId = studentId
             };
-            await InsertAsync(enrollment1, enrollment2);
+            await _fixture.InsertAsync(enrollment1, enrollment2);
 
-            var details = await SendAsync(new Details.Query {Id = studentId});
+            var details = await _fixture.SendAsync(new Details.Query {Id = studentId});
 
             details.ShouldNotBeNull();
             details.FirstMidName.ShouldBe(command.FirstMidName);

@@ -4,13 +4,17 @@ using System.Threading.Tasks;
 using ContosoUniversity.Models;
 using Shouldly;
 using Xunit;
-using static ContosoUniversity.IntegrationTests.SliceFixture;
 using Index = ContosoUniversity.Pages.Students.Index;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
-    public class IndexTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class IndexTests
     {
+        private readonly SliceFixture _fixture;
+
+        public IndexTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_return_all_items_for_default_search()
         {
@@ -28,11 +32,11 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
                  FirstMidName = "Jane",
                  LastName = lastName
             };
-            await InsertAsync(student1, student2);
+            await _fixture.InsertAsync(student1, student2);
 
             var query = new Index.Query{CurrentFilter = lastName };
 
-            var result = await SendAsync(query);
+            var result = await _fixture.SendAsync(query);
 
             result.Results.Count.ShouldBeGreaterThanOrEqualTo(2);
             result.Results.Select(r => r.Id).ShouldContain(student1.Id);
@@ -56,11 +60,11 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
                  FirstMidName = "Jane",
                  LastName = lastName + "aaa"
             };
-            await InsertAsync(student1, student2);
+            await _fixture.InsertAsync(student1, student2);
 
             var query = new Index.Query{CurrentFilter = lastName, SortOrder = "name_desc" };
 
-            var result = await SendAsync(query);
+            var result = await _fixture.SendAsync(query);
 
             result.Results.Count.ShouldBe(2);
             result.Results[0].Id.ShouldBe(student1.Id);

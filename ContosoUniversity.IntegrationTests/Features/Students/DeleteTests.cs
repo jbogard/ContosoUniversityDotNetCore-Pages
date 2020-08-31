@@ -4,12 +4,16 @@ using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Students;
 using Shouldly;
 using Xunit;
-using static ContosoUniversity.IntegrationTests.SliceFixture;
 
 namespace ContosoUniversity.IntegrationTests.Features.Students
 {
-    public class DeleteTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class DeleteTests
     {
+        private readonly SliceFixture _fixture;
+
+        public DeleteTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_get_delete_details()
         {
@@ -20,14 +24,14 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
                 EnrollmentDate = DateTime.Today
             };
 
-            var studentId = await SendAsync(cmd);
+            var studentId = await _fixture.SendAsync(cmd);
 
             var query = new Delete.Query
             {
                 Id = studentId
             };
 
-            var result = await SendAsync(query);
+            var result = await _fixture.SendAsync(query);
 
             result.FirstMidName.ShouldBe(cmd.FirstMidName);
             result.LastName.ShouldBe(cmd.LastName);
@@ -44,16 +48,16 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
                 EnrollmentDate = DateTime.Today
             };
 
-            var studentId = await SendAsync(createCommand);
+            var studentId = await _fixture.SendAsync(createCommand);
 
             var deleteCommand = new Delete.Command
             {
                 Id = studentId
             };
 
-            await SendAsync(deleteCommand);
+            await _fixture.SendAsync(deleteCommand);
 
-            var student = await FindAsync<Student>(studentId);
+            var student = await _fixture.FindAsync<Student>(studentId);
 
             student.ShouldBeNull();
         }

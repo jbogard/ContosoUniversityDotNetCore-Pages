@@ -9,10 +9,14 @@ using Xunit;
 
 namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
-    using static SliceFixture;
-
-    public class CreateEditTests : IntegrationTestBase
+    
+    [Collection(nameof(SliceFixture))]
+    public class CreateEditTests
     {
+        private readonly SliceFixture _fixture;
+
+        public CreateEditTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_create_new_instructor()
         {
@@ -26,17 +30,17 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
             var english201 = new Course
             {
                 Department = englishDept,
                 Title = "English 201",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
 
-            await InsertAsync(englishDept, english101, english201);
+            await _fixture.InsertAsync(englishDept, english101, english201);
 
             var command = new CreateEdit.Command
             {
@@ -47,9 +51,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 SelectedCourses = new [] {english101.Id.ToString(), english201.Id.ToString()}
             };
 
-            var id = await SendAsync(command);
+            var id = await _fixture.SendAsync(command);
 
-            var created = await ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == id).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
+            var created = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == id).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
             created.FirstMidName.ShouldBe(command.FirstMidName);
             created.LastName.ShouldBe(command.LastName);
@@ -72,19 +76,19 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
             var english201 = new Course
             {
                 Department = englishDept,
                 Title = "English 201",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
 
-            await InsertAsync(englishDept, english101, english201);
+            await _fixture.InsertAsync(englishDept, english101, english201);
 
-            var instructorId = await SendAsync(new CreateEdit.Command
+            var instructorId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -102,9 +106,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 Id = instructorId
             };
 
-            await SendAsync(command);
+            await _fixture.SendAsync(command);
 
-            var edited = await ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
+            var edited = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
             edited.FirstMidName.ShouldBe(command.FirstMidName);
             edited.LastName.ShouldBe(command.LastName);
@@ -126,18 +130,18 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
             var english201 = new Course
             {
                 Department = englishDept,
                 Title = "English 201",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
-            await InsertAsync(englishDept, english101, english201);
+            await _fixture.InsertAsync(englishDept, english101, english201);
 
-            var instructorId = await SendAsync(new CreateEdit.Command
+            var instructorId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -156,9 +160,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 Id = instructorId
             };
 
-            await SendAsync(command);
+            await _fixture.SendAsync(command);
 
-            var edited = await ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
+            var edited = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
             edited.FirstMidName.ShouldBe(command.FirstMidName);
             edited.LastName.ShouldBe(command.LastName);

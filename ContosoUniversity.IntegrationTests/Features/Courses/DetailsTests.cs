@@ -8,14 +8,17 @@ using Details = ContosoUniversity.Pages.Courses.Details;
 
 namespace ContosoUniversity.IntegrationTests.Features.Courses
 {
-    using static SliceFixture;
-
-    public class DetailsTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class DetailsTests
     {
+        private readonly SliceFixture _fixture;
+
+        public DetailsTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_query_for_details()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -34,13 +37,13 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
             {
                 Credits = 4,
                 Department = dept,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };
 
-            await InsertAsync(dept, course);
+            await _fixture.InsertAsync(dept, course);
 
-            var result = await SendAsync(new Details.Query { Id = course.Id });
+            var result = await _fixture.SendAsync(new Details.Query { Id = course.Id });
 
             result.ShouldNotBeNull();
             result.Credits.ShouldBe(course.Credits);

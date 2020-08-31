@@ -7,10 +7,14 @@ using Xunit;
 
 namespace ContosoUniversity.IntegrationTests.Features.Instructors
 {
-    using static SliceFixture;
-
-    public class DetailsTests : IntegrationTestBase
+    
+    [Collection(nameof(SliceFixture))]
+    public class DetailsTests
     {
+        private readonly SliceFixture _fixture;
+
+        public DetailsTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_get_instructor_details()
         {
@@ -24,9 +28,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 Department = englishDept,
                 Title = "English 101",
                 Credits = 4,
-                Id = NextCourseNumber()
+                Id = _fixture.NextCourseNumber()
             };
-            await InsertAsync(englishDept, english101);
+            await _fixture.InsertAsync(englishDept, english101);
 
             var command = new CreateEdit.Command
             {
@@ -36,9 +40,9 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
                 HireDate = DateTime.Today,
                 SelectedCourses = new[] { english101.Id.ToString() }
             };
-            var instructorId = await SendAsync(command);
+            var instructorId = await _fixture.SendAsync(command);
 
-            var result = await SendAsync(new Details.Query { Id = instructorId });
+            var result = await _fixture.SendAsync(new Details.Query { Id = instructorId });
 
             result.ShouldNotBeNull();
             result.FirstMidName.ShouldBe(command.FirstMidName);

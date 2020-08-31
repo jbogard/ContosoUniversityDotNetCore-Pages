@@ -8,14 +8,17 @@ using Index = ContosoUniversity.Pages.Courses.Index;
 
 namespace ContosoUniversity.IntegrationTests.Features.Courses
 {
-    using static SliceFixture;
-
-    public class IndexTests : IntegrationTestBase
+    [Collection(nameof(SliceFixture))]
+    public class IndexTests
     {
+        private readonly SliceFixture _fixture;
+
+        public IndexTests(SliceFixture fixture) => _fixture = fixture;
+
         [Fact]
         public async Task Should_return_all_courses()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -41,19 +44,19 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
             {
                 Credits = 4,
                 Department = englishDept,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };
             var history = new Course
             {
                 Credits = 4,
                 Department = historyDept,
-                Id = NextCourseNumber(),
+                Id = _fixture.NextCourseNumber(),
                 Title = "History 101"
             };
-            await InsertAsync(englishDept, historyDept, english, history);
+            await _fixture.InsertAsync(englishDept, historyDept, english, history);
 
-            var result = await SendAsync(new Index.Query());
+            var result = await _fixture.SendAsync(new Index.Query());
 
             result.ShouldNotBeNull();
             result.Courses.Count.ShouldBeGreaterThanOrEqualTo(2);

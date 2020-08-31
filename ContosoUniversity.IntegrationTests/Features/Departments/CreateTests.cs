@@ -9,14 +9,19 @@ using Xunit;
 
 namespace ContosoUniversity.IntegrationTests.Features.Departments
 {
-    using static SliceFixture;
-
-    public class CreateTests : IntegrationTestBase
+    
+    [Collection(nameof(SliceFixture))]
+    public class CreateTests
     {
+        private readonly SliceFixture _fixture;
+
+        public CreateTests(SliceFixture fixture) => _fixture = fixture;
+
+
         [Fact]
         public async Task Should_create_new_department()
         {
-            var adminId = await SendAsync(new CreateEdit.Command
+            var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
                 FirstMidName = "George",
                 LastName = "Costanza",
@@ -25,7 +30,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
 
             Create.Command command = null;
 
-            await ExecuteDbContextAsync(async (db, mediator) =>
+            await _fixture.ExecuteDbContextAsync(async (db, mediator) =>
             {
                 var admin = await db.Instructors.FindAsync(adminId);
 
@@ -40,7 +45,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 await mediator.Send(command);
             });
 
-            var created = await ExecuteDbContextAsync(db => db.Departments.Where(d => d.Name == command.Name).SingleOrDefaultAsync());
+            var created = await _fixture.ExecuteDbContextAsync(db => db.Departments.Where(d => d.Name == command.Name).SingleOrDefaultAsync());
 
             created.ShouldNotBeNull();
             created.Budget.ShouldBe(command.Budget.GetValueOrDefault());
