@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
 
-namespace ContosoUniversity.IntegrationTests.Features.Courses
+namespace ContosoUniversity.IntegrationTests.Pages.Courses
 {
     [Collection(nameof(SliceFixture))]
     public class CreateTests

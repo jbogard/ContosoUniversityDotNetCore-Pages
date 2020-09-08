@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using ContosoUniversity.Models;
+using ContosoUniversity.Pages.Courses;
 using ContosoUniversity.Pages.Instructors;
-using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
-using Delete = ContosoUniversity.Pages.Courses.Delete;
 
-
-namespace ContosoUniversity.IntegrationTests.Features.Courses
+namespace ContosoUniversity.IntegrationTests.Pages.Courses
 {
     [Collection(nameof(SliceFixture))]
-    public class DeleteTests
+    public class EditTests
     {
         private readonly SliceFixture _fixture;
 
-        public DeleteTests(SliceFixture fixture) => _fixture = fixture;
+        public EditTests(SliceFixture fixture) => _fixture = fixture;
 
         [Fact]
         public async Task Should_query_for_command()
@@ -43,19 +40,18 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
                 Id = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };
-
             await _fixture.InsertAsync(dept, course);
 
-            var result = await _fixture.SendAsync(new Delete.Query { Id = course.Id });
+            var result = await _fixture.SendAsync(new Edit.Query { Id = course.Id });
 
             result.ShouldNotBeNull();
             result.Credits.ShouldBe(course.Credits);
-            result.DepartmentName.ShouldBe(dept.Name);
+            result.Department.Id.ShouldBe(dept.Id);
             result.Title.ShouldBe(course.Title);
         }
 
         [Fact]
-        public async Task Should_delete()
+        public async Task Should_edit()
         {
             var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
@@ -71,6 +67,13 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
+            var newDept = new Department
+            {
+                Name = "English",
+                InstructorId = adminId,
+                Budget = 123m,
+                StartDate = DateTime.Today
+            };
 
             var course = new Course
             {
@@ -79,14 +82,28 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
                 Id = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };
+            await _fixture.InsertAsync(dept, newDept, course);
 
-            await _fixture.InsertAsync(dept, course);
+            var command = new Edit.Command
+            {
+                Id = course.Id,
+                Credits = 5,
+                Title = "English 202"
+            };
 
-            await _fixture.SendAsync(new Delete.Command { Id = course.Id });
+            await _fixture.ExecuteDbContextAsync(async (ctxt, mediator) =>
+            {
+                command.Department = await ctxt.Departments.FindAsync(newDept.Id);
 
-            var result = await _fixture.ExecuteDbContextAsync(db => db.Courses.Where(c => c.Id == course.Id).SingleOrDefaultAsync());
+                await mediator.Send(command);
+            });
 
-            result.ShouldBeNull();
+            var edited = await _fixture.FindAsync<Course>(course.Id);
+
+            edited.ShouldNotBeNull();
+            edited.DepartmentId.ShouldBe(newDept.Id);
+            edited.Credits.ShouldBe(command.Credits.GetValueOrDefault());
+            edited.Title.ShouldBe(command.Title);
         }
     }
 }

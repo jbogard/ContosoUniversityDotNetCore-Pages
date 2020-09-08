@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Instructors;
 using Shouldly;
 using Xunit;
-using Index = ContosoUniversity.Pages.Departments.Index;
+using Details = ContosoUniversity.Pages.Departments.Details;
 
-namespace ContosoUniversity.IntegrationTests.Features.Departments
+namespace ContosoUniversity.IntegrationTests.Pages.Departments
 {
     
     [Collection(nameof(SliceFixture))]
-    public class IndexTests
+    public class DetailsTests
     {
         private readonly SliceFixture _fixture;
 
-        public IndexTests(SliceFixture fixture) => _fixture = fixture;
+        public DetailsTests(SliceFixture fixture) => _fixture = fixture;
 
         [Fact]
-        public async Task Should_list_departments()
+        public async Task Should_get_department_details()
         {
             var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
@@ -34,24 +33,19 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
                 Budget = 123m,
                 StartDate = DateTime.Today
             };
-            var dept2 = new Department
+            await _fixture.InsertAsync(dept);
+
+            var query = new Details.Query
             {
-                Name = "English",
-                InstructorId = adminId,
-                Budget = 456m,
-                StartDate = DateTime.Today
+                Id = dept.Id
             };
 
-            await _fixture.InsertAsync(dept, dept2);
-
-            var query = new Index.Query();
-
             var result = await _fixture.SendAsync(query);
+            var admin = await _fixture.FindAsync<Instructor>(adminId);
 
             result.ShouldNotBeNull();
-            result.Count.ShouldBeGreaterThanOrEqualTo(2);
-            result.Select(m => m.Id).ShouldContain(dept.Id);
-            result.Select(m => m.Id).ShouldContain(dept2.Id);
+            result.Name.ShouldBe(dept.Name);
+            result.AdministratorFullName.ShouldBe(admin.FullName);
         }
 
     }

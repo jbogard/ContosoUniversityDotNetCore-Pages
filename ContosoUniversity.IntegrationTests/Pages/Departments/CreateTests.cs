@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
 
-namespace ContosoUniversity.IntegrationTests.Features.Departments
+namespace ContosoUniversity.IntegrationTests.Pages.Departments
 {
     
     [Collection(nameof(SliceFixture))]

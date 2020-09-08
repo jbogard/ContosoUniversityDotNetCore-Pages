@@ -7,7 +7,7 @@ using Shouldly;
 using Xunit;
 using Index = ContosoUniversity.Pages.Instructors.Index;
 
-namespace ContosoUniversity.IntegrationTests.Features.Instructors
+namespace ContosoUniversity.IntegrationTests.Pages.Instructors
 {
     
     [Collection(nameof(SliceFixture))]

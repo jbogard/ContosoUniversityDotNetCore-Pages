@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ContosoUniversity.Models;
-using ContosoUniversity.Pages.Instructors;
 using Shouldly;
 using Xunit;
-using Index = ContosoUniversity.Pages.Courses.Index;
 
-namespace ContosoUniversity.IntegrationTests.Features.Courses
+namespace ContosoUniversity.IntegrationTests.Pages.Courses
 {
+    using ContosoUniversity.Pages.Courses;
+
     [Collection(nameof(SliceFixture))]
     public class IndexTests
     {
@@ -18,12 +19,13 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
         [Fact]
         public async Task Should_return_all_courses()
         {
-            var adminId = await _fixture.SendAsync(new CreateEdit.Command
-            {
-                FirstMidName = "George",
-                LastName = "Costanza",
-                HireDate = DateTime.Today
-            });
+            var adminId = await _fixture.SendAsync(
+                new ContosoUniversity.Pages.Instructors.CreateEdit.Command
+                {
+                    FirstMidName = "George",
+                    LastName = "Jones",
+                    HireDate = DateTime.Today
+                });
 
             var englishDept = new Department
             {
@@ -54,12 +56,20 @@ namespace ContosoUniversity.IntegrationTests.Features.Courses
                 Id = _fixture.NextCourseNumber(),
                 Title = "History 101"
             };
-            await _fixture.InsertAsync(englishDept, historyDept, english, history);
+            await _fixture.InsertAsync(
+                englishDept, 
+                historyDept, 
+                english, 
+                history);
 
             var result = await _fixture.SendAsync(new Index.Query());
 
             result.ShouldNotBeNull();
             result.Courses.Count.ShouldBeGreaterThanOrEqualTo(2);
+
+            var courseIds = result.Courses.Select(c => c.Id).ToList();
+            courseIds.ShouldContain(english.Id);
+            courseIds.ShouldContain(history.Id);
         }
     }
 }

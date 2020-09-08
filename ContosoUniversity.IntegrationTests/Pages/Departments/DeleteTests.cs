@@ -1,23 +1,25 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Instructors;
+using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
-using Details = ContosoUniversity.Pages.Departments.Details;
+using Delete = ContosoUniversity.Pages.Departments.Delete;
 
-namespace ContosoUniversity.IntegrationTests.Features.Departments
+namespace ContosoUniversity.IntegrationTests.Pages.Departments
 {
     
     [Collection(nameof(SliceFixture))]
-    public class DetailsTests
+    public class DeleteTests
     {
         private readonly SliceFixture _fixture;
 
-        public DetailsTests(SliceFixture fixture) => _fixture = fixture;
+        public DeleteTests(SliceFixture fixture) => _fixture = fixture;
 
         [Fact]
-        public async Task Should_get_department_details()
+        public async Task Should_delete_department()
         {
             var adminId = await _fixture.SendAsync(new CreateEdit.Command
             {
@@ -35,18 +37,17 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
             };
             await _fixture.InsertAsync(dept);
 
-            var query = new Details.Query
+            var command = new Delete.Command
             {
-                Id = dept.Id
+                Id = dept.Id,
+                RowVersion = dept.RowVersion
             };
 
-            var result = await _fixture.SendAsync(query);
-            var admin = await _fixture.FindAsync<Instructor>(adminId);
+            await _fixture.SendAsync(command);
 
-            result.ShouldNotBeNull();
-            result.Name.ShouldBe(dept.Name);
-            result.AdministratorFullName.ShouldBe(admin.FullName);
+            var any = await _fixture.ExecuteDbContextAsync(db => db.Departments.Where(d => d.Id == command.Id).AnyAsync());
+
+            any.ShouldBeFalse();
         }
-
     }
 }

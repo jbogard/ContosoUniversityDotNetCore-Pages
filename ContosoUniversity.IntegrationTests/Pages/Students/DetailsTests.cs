@@ -7,7 +7,7 @@ using Shouldly;
 using Xunit;
 using Details = ContosoUniversity.Pages.Students.Details;
 
-namespace ContosoUniversity.IntegrationTests.Features.Students
+namespace ContosoUniversity.IntegrationTests.Pages.Students
 {
     [Collection(nameof(SliceFixture))]
     public class DetailsTests

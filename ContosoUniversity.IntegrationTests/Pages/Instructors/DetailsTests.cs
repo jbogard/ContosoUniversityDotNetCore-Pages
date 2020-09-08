@@ -5,7 +5,7 @@ using ContosoUniversity.Pages.Instructors;
 using Shouldly;
 using Xunit;
 
-namespace ContosoUniversity.IntegrationTests.Features.Instructors
+namespace ContosoUniversity.IntegrationTests.Pages.Instructors
 {
     
     [Collection(nameof(SliceFixture))]

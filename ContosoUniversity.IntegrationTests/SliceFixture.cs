@@ -35,7 +35,8 @@ namespace ContosoUniversity.IntegrationTests
             _checkpoint = new Checkpoint();
         }
 
-        private class ContosoTestApplicationFactory : WebApplicationFactory<Startup>
+        public class ContosoTestApplicationFactory 
+            : WebApplicationFactory<Startup>
         {
             protected override void ConfigureWebHost(IWebHostBuilder builder)
             {
@@ -43,14 +44,13 @@ namespace ContosoUniversity.IntegrationTests
                 {
                     configBuilder.AddInMemoryCollection(new Dictionary<string, string>
                     {
-                        ["ConnectionStrings:DefaultConnection"] =
-                            "Server=(localdb)\\mssqllocaldb;Database=ContosoUniversityDotNetCore-Pages-Test;Trusted_Connection=True;MultipleActiveResultSets=true"
+                        {"ConnectionStrings:DefaultConnection", _connectionString}
                     });
                 });
             }
-        }
 
-        public Task ResetCheckpoint() => _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+            private readonly string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=ContosoUniversityDotNetCore-Pages-Test;Trusted_Connection=True;MultipleActiveResultSets=true";
+        }
 
         public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {
@@ -59,11 +59,11 @@ namespace ContosoUniversity.IntegrationTests
 
             try
             {
-                await dbContext.BeginTransactionAsync().ConfigureAwait(false);
+                await dbContext.BeginTransactionAsync();
 
-                await action(scope.ServiceProvider).ConfigureAwait(false);
+                await action(scope.ServiceProvider);
 
-                await dbContext.CommitTransactionAsync().ConfigureAwait(false);
+                await dbContext.CommitTransactionAsync();
             }
             catch (Exception)
             {
@@ -79,11 +79,11 @@ namespace ContosoUniversity.IntegrationTests
 
             try
             {
-                await dbContext.BeginTransactionAsync().ConfigureAwait(false);
+                await dbContext.BeginTransactionAsync();
 
-                var result = await action(scope.ServiceProvider).ConfigureAwait(false);
+                var result = await action(scope.ServiceProvider);
 
-                await dbContext.CommitTransactionAsync().ConfigureAwait(false);
+                await dbContext.CommitTransactionAsync();
 
                 return result;
             }
@@ -209,7 +209,8 @@ namespace ContosoUniversity.IntegrationTests
 
         public int NextCourseNumber() => Interlocked.Increment(ref _courseNumber);
 
-        public Task InitializeAsync() => ResetCheckpoint();
+        public Task InitializeAsync() 
+            => _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
 
         public Task DisposeAsync()
         {

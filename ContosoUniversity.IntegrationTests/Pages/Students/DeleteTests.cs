@@ -5,17 +5,17 @@ using ContosoUniversity.Pages.Students;
 using Shouldly;
 using Xunit;
 
-namespace ContosoUniversity.IntegrationTests.Features.Students
+namespace ContosoUniversity.IntegrationTests.Pages.Students
 {
     [Collection(nameof(SliceFixture))]
-    public class EditTests
+    public class DeleteTests
     {
         private readonly SliceFixture _fixture;
 
-        public EditTests(SliceFixture fixture) => _fixture = fixture;
+        public DeleteTests(SliceFixture fixture) => _fixture = fixture;
 
         [Fact]
-        public async Task Should_get_edit_details()
+        public async Task Should_get_delete_details()
         {
             var cmd = new Create.Command
             {
@@ -26,7 +26,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
 
             var studentId = await _fixture.SendAsync(cmd);
 
-            var query = new Edit.Query
+            var query = new Delete.Query
             {
                 Id = studentId
             };
@@ -35,11 +35,11 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
 
             result.FirstMidName.ShouldBe(cmd.FirstMidName);
             result.LastName.ShouldBe(cmd.LastName);
-            result.EnrollmentDate.ShouldBe(cmd.EnrollmentDate);
+            result.EnrollmentDate.ShouldBe(cmd.EnrollmentDate.GetValueOrDefault());
         }
 
         [Fact]
-        public async Task Should_edit_student()
+        public async Task Should_delete_student()
         {
             var createCommand = new Create.Command
             {
@@ -50,22 +50,16 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
 
             var studentId = await _fixture.SendAsync(createCommand);
 
-            var editCommand = new Edit.Command
+            var deleteCommand = new Delete.Command
             {
-                Id = studentId,
-                FirstMidName = "Mary",
-                LastName = "Smith",
-                EnrollmentDate = DateTime.Today.AddYears(-1)
+                Id = studentId
             };
 
-            await _fixture.SendAsync(editCommand);
+            await _fixture.SendAsync(deleteCommand);
 
             var student = await _fixture.FindAsync<Student>(studentId);
 
-            student.ShouldNotBeNull();
-            student.FirstMidName.ShouldBe(editCommand.FirstMidName);
-            student.LastName.ShouldBe(editCommand.LastName);
-            student.EnrollmentDate.ShouldBe(editCommand.EnrollmentDate.GetValueOrDefault());
+            student.ShouldBeNull();
         }
     }
 }
