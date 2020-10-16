@@ -7,14 +7,12 @@ namespace ContosoUniversity.Pages
     public static class PageModelExtensions
     {
         public static ActionResult RedirectToPageJson<TPage>(this TPage controller, string pageName)
-            where TPage : PageModel
-        {
-            return controller.JsonNet(new
+            where TPage : PageModel =>
+            controller.JsonNet(new
                 {
                     redirect = controller.Url.Page(pageName)
                 }
             );
-        }
 
         public static ContentResult JsonNet(this PageModel controller, object model)
         {
