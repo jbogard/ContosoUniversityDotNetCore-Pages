@@ -27,9 +27,7 @@ task MigrateTest -description "Recreate the testing database" {
 
 task Test -depends Compile, MigrateTest -description "Run unit tests" {
     # find any directory that ends in "Tests" and execute a test
-    get-childitem . *Tests -directory | foreach-object {
-        exec { dotnet test --configuration $configuration --no-build -l "trx;LogFileName=$($_.name).trx" -l "html;LogFileName=$($_.name).html" -l "console;verbosity=normal" -r $testResults } -workingDirectory $_.fullname
-    }
+    exec { dotnet test --configuration $configuration --no-build -l "trx;LogFileName=$($_.name).trx" -l "html;LogFileName=$($_.name).html" -l "console;verbosity=normal" -r $testResults }
 }
  
 task Compile -depends Info -description "Compile the solution" {
