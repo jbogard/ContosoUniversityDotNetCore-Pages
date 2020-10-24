@@ -32,25 +32,25 @@ namespace ContosoUniversity.Pages.Students
             public int? Page { get; set; }
         }
 
-        public class Result
+        public record Result
         {
-            public string CurrentSort { get; set; }
-            public string NameSortParm { get; set; }
-            public string DateSortParm { get; set; }
-            public string CurrentFilter { get; set; }
-            public string SearchString { get; set; }
+            public string CurrentSort { get; init; }
+            public string NameSortParm { get; init; }
+            public string DateSortParm { get; init; }
+            public string CurrentFilter { get; init; }
+            public string SearchString { get; init; }
 
-            public PaginatedList<Model> Results { get; set; }
+            public PaginatedList<Model> Results { get; init; }
         }
 
-        public class Model
+        public record Model
         {
-            public int Id { get; set; }
+            public int Id { get; init; }
             [Display(Name = "First Name")]
-            public string FirstMidName { get; set; }
-            public string LastName { get; set; }
-            public DateTime EnrollmentDate { get; set; }
-            public int EnrollmentsCount { get; set; }
+            public string FirstMidName { get; init; }
+            public string LastName { get; init; }
+            public DateTime EnrollmentDate { get; init; }
+            public int EnrollmentsCount { get; init; }
         }
 
         public class MappingProfile : Profile
@@ -71,60 +71,39 @@ namespace ContosoUniversity.Pages.Students
 
             public async Task<Result> Handle(Query message, CancellationToken token)
             {
+                var searchString = message.SearchString ?? message.CurrentFilter;
+
+                IQueryable<Student> students = _db.Students;
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    students = students.Where(s => s.LastName.Contains(searchString)
+                                                   || s.FirstMidName.Contains(searchString));
+                }
+
+                students = message.SortOrder switch
+                {
+                    "name_desc" => students.OrderByDescending(s => s.LastName),
+                    "Date" => students.OrderBy(s => s.EnrollmentDate),
+                    "date_desc" => students.OrderByDescending(s => s.EnrollmentDate),
+                    _ => students.OrderBy(s => s.LastName)
+                };
+
+                int pageSize = 3;
+                int pageNumber = (message.SearchString == null ? message.Page : 1) ?? 1;
+
+                var results = await students
+                    .ProjectTo<Model>(_configuration)
+                    .PaginatedListAsync(pageNumber, pageSize);
+
                 var model = new Result
                 {
                     CurrentSort = message.SortOrder,
-                    NameSortParm = String.IsNullOrEmpty(message.SortOrder) ? "name_desc" : "",
-                    DateSortParm = message.SortOrder == "Date" ? "date_desc" : "Date"
+                    NameSortParm = string.IsNullOrEmpty(message.SortOrder) ? "name_desc" : "",
+                    DateSortParm = message.SortOrder == "Date" ? "date_desc" : "Date",
+                    CurrentFilter = searchString,
+                    SearchString = searchString,
+                    Results = results
                 };
-
-                if (message.SearchString != null)
-                {
-                    message.Page = 1;
-                }
-                else
-                {
-                    message.SearchString = message.CurrentFilter;
-                }
-
-                model.CurrentFilter = message.SearchString;
-                model.SearchString = message.SearchString;
-
-                IQueryable<Student> students = _db.Students;
-                if (!String.IsNullOrEmpty(message.SearchString))
-                {
-                    students = students.Where(s => s.LastName.Contains(message.SearchString)
-                                                   || s.FirstMidName.Contains(message.SearchString));
-                }
-                switch (message.SortOrder)
-                {
-                    case "name_desc":
-                        students = students.OrderByDescending(s => s.LastName);
-                        break;
-                    case "Date":
-                        students = students.OrderBy(s => s.EnrollmentDate);
-                        break;
-                    case "date_desc":
-                        students = students.OrderByDescending(s => s.EnrollmentDate);
-                        break;
-                    default: // Name ascending 
-                        students = students.OrderBy(s => s.LastName);
-                        break;
-                }
-
-                int pageSize = 3;
-                int pageNumber = message.Page ?? 1;
-                model.Results = await students
-                    //.Select(src => new Model
-                    //{
-                    //    ID = src.Id,
-                    //    FirstMidName = src.FirstMidName,
-                    //    LastName = src.LastName,
-                    //    EnrollmentsCount = src.Enrollments.Count(),
-                    //    EnrollmentDate = src.EnrollmentDate
-                    //})
-                    .ProjectTo<Model>(_configuration)
-                    .PaginatedListAsync(pageNumber, pageSize);
 
                 return model;
             }

@@ -35,14 +35,14 @@ namespace ContosoUniversity.Pages.Students
             public MappingProfile() => CreateMap<Command, Student>(MemberList.Source);
         }
 
-        public class Command : IRequest<int>
+        public record Command : IRequest<int>
         {
-            public string LastName { get; set; }
+            public string LastName { get; init; }
 
             [Display(Name = "First Name")]
-            public string FirstMidName { get; set; }
+            public string FirstMidName { get; init; }
 
-            public DateTime? EnrollmentDate { get; set; }
+            public DateTime? EnrollmentDate { get; init; }
         }
 
         public class Validator : AbstractValidator<Command>
