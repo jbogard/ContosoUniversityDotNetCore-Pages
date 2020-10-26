@@ -33,22 +33,22 @@ namespace ContosoUniversity.Pages.Departments
             return this.RedirectToPageJson("Index");
         }
 
-        public class Query : IRequest<Command>
+        public record Query : IRequest<Command>
         {
-            public int Id { get; set; }
+            public int Id { get; init; }
         }
 
-        public class Command : IRequest
+        public record Command : IRequest
         {
-            public string Name { get; set; }
+            public string Name { get; init; }
 
-            public decimal? Budget { get; set; }
+            public decimal? Budget { get; init; }
 
-            public DateTime? StartDate { get; set; }
+            public DateTime? StartDate { get; init; }
 
-            public Instructor Administrator { get; set; }
-            public int Id { get; set; }
-            public byte[] RowVersion { get; set; }
+            public Instructor Administrator { get; init; }
+            public int Id { get; init; }
+            public byte[] RowVersion { get; init; }
         }
 
         public class Validator : AbstractValidator<Command>
@@ -104,10 +104,9 @@ namespace ContosoUniversity.Pages.Departments
                 var dept = 
                     await _db.Departments.FindAsync(message.Id);
 
-                message.Administrator = 
-                    await _db.Instructors.FindAsync(message.Administrator.Id);
-
                 _mapper.Map(message, dept);
+
+                dept.Administrator = await _db.Instructors.FindAsync(message.Administrator.Id);
 
                 return default;
             }

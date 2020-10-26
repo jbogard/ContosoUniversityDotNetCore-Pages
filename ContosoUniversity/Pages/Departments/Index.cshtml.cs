@@ -24,21 +24,21 @@ namespace ContosoUniversity.Pages.Departments
         public async Task OnGetAsync()
             => Data = await _mediator.Send(new Query());
 
-        public class Query : IRequest<List<Model>>
+        public record Query : IRequest<List<Model>>
         {
         }
 
-        public class Model
+        public record Model
         {
-            public string Name { get; set; }
+            public string Name { get; init; }
 
-            public decimal Budget { get; set; }
+            public decimal Budget { get; init; }
 
-            public DateTime StartDate { get; set; }
+            public DateTime StartDate { get; init; }
 
-            public int Id { get; set; }
+            public int Id { get; init; }
 
-            public string AdministratorFullName { get; set; }
+            public string AdministratorFullName { get; init; }
         }
 
         public class MappingProfile : Profile

@@ -23,9 +23,9 @@ namespace ContosoUniversity.Pages.Courses
 
         public async Task OnGetAsync(Query query) => Data = await _mediator.Send(query);
 
-        public class Query : IRequest<Model>
+        public record Query : IRequest<Model>
         {
-            public int? Id { get; set; }
+            public int? Id { get; init; }
         }
 
         public class Validator : AbstractValidator<Query>
@@ -36,13 +36,13 @@ namespace ContosoUniversity.Pages.Courses
             }
         }
 
-        public class Model
+        public record Model
         {
-            public int Id { get; set; }
-            public string Title { get; set; }
-            public int Credits { get; set; }
+            public int Id { get; init; }
+            public string Title { get; init; }
+            public int Credits { get; init; }
             [Display(Name = "Department")]
-            public string DepartmentName { get; set; }
+            public string DepartmentName { get; init; }
         }
 
         public class MappingProfile : Profile

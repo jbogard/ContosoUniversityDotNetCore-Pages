@@ -33,25 +33,25 @@ namespace ContosoUniversity.Pages.Departments
             return this.RedirectToPageJson("Index");
         }
 
-        public class Query : IRequest<Command>
+        public record Query : IRequest<Command>
         {
-            public int Id { get; set; }
+            public int Id { get; init; }
         }
 
-        public class Command : IRequest
+        public record Command : IRequest
         {
-            public string Name { get; set; }
+            public string Name { get; init; }
 
-            public decimal Budget { get; set; }
+            public decimal Budget { get; init; }
 
-            public DateTime StartDate { get; set; }
+            public DateTime StartDate { get; init; }
 
-            public int Id { get; set; }
+            public int Id { get; init; }
 
             [Display(Name = "Administrator")]
-            public string AdministratorFullName { get; set; }
+            public string AdministratorFullName { get; init; }
 
-            public byte[] RowVersion { get; set; }
+            public byte[] RowVersion { get; init; }
         }
 
         public class MappingProfile : Profile

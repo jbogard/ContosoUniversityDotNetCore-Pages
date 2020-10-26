@@ -25,13 +25,13 @@ namespace ContosoUniversity.Pages.Courses
             return this.RedirectToPageJson("Index");
         }
 
-        public class Command : IRequest<int>
+        public record Command : IRequest<int>
         {
             [IgnoreMap]
-            public int Number { get; set; }
-            public string Title { get; set; }
-            public int Credits { get; set; }
-            public Department Department { get; set; }
+            public int Number { get; init; }
+            public string Title { get; init; }
+            public int Credits { get; init; }
+            public Department Department { get; init; }
         }
 
         public class MappingProfile : Profile

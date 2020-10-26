@@ -20,20 +20,20 @@ namespace ContosoUniversity.Pages.Courses
 
         public async Task OnGetAsync() => Data = await _mediator.Send(new Query());
 
-        public class Query : IRequest<Result>
+        public record Query : IRequest<Result>
         {
         }
 
-        public class Result
+        public record Result
         {
-            public List<Course> Courses { get; set; }
+            public List<Course> Courses { get; init; }
 
-            public class Course
+            public record Course
             {
-                public int Id { get; set; }
-                public string Title { get; set; }
-                public int Credits { get; set; }
-                public string DepartmentName { get; set; }
+                public int Id { get; init; }
+                public string Title { get; init; }
+                public int Credits { get; init; }
+                public string DepartmentName { get; init; }
             }
         }
 

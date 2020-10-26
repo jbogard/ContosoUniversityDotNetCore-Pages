@@ -74,58 +74,58 @@ namespace ContosoUniversity.Pages.Instructors
         public async Task OnGetAsync(Query query)
             => Data = await _mediator.Send(query);
 
-        public class Query : IRequest<Model>
+        public record Query : IRequest<Model>
         {
-            public int? Id { get; set; }
-            public int? CourseId { get; set; }
+            public int? Id { get; init; }
+            public int? CourseId { get; init; }
         }
 
-        public class Model
+        public record Model
         {
-            public int? InstructorId { get; set; }
-            public int? CourseId { get; set; }
+            public int? InstructorId { get; init; }
+            public int? CourseId { get; init; }
 
-            public IList<Instructor> Instructors { get; set; }
-            public IList<Course> Courses { get; set; }
-            public IList<Enrollment> Enrollments { get; set; }
+            public IList<Instructor> Instructors { get; init; }
+            public IList<Course> Courses { get; init; }
+            public IList<Enrollment> Enrollments { get; init; }
 
-            public class Instructor
+            public record Instructor
             {
-                public int Id { get; set; }
+                public int Id { get; init; }
 
                 [Display(Name = "Last Name")]
-                public string LastName { get; set; }
+                public string LastName { get; init; }
 
                 [Display(Name = "First Name")]
-                public string FirstMidName { get; set; }
+                public string FirstMidName { get; init; }
 
                 [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
                 [Display(Name = "Hire Date")]
-                public DateTime HireDate { get; set; }
+                public DateTime HireDate { get; init; }
 
-                public string OfficeAssignmentLocation { get; set; }
+                public string OfficeAssignmentLocation { get; init; }
 
-                public IEnumerable<CourseAssignment> CourseAssignments { get; set; }
+                public IEnumerable<CourseAssignment> CourseAssignments { get; init; }
             }
 
-            public class CourseAssignment
+            public record CourseAssignment
             {
-                public int CourseId { get; set; }
-                public string CourseTitle { get; set; }
+                public int CourseId { get; init; }
+                public string CourseTitle { get; init; }
             }
 
-            public class Course
+            public record Course
             {
-                public int Id { get; set; }
-                public string Title { get; set; }
-                public string DepartmentName { get; set; }
+                public int Id { get; init; }
+                public string Title { get; init; }
+                public string DepartmentName { get; init; }
             }
 
-            public class Enrollment
+            public record Enrollment
             {
                 [DisplayFormat(NullDisplayText = "No grade")]
-                public Grade? Grade { get; set; }
-                public string StudentFullName { get; set; }
+                public Grade? Grade { get; init; }
+                public string StudentFullName { get; init; }
             }
         }
 

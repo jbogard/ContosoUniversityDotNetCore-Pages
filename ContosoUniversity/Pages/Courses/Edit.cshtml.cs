@@ -32,9 +32,9 @@ namespace ContosoUniversity.Pages.Courses
             return this.RedirectToPageJson(nameof(Index));
         }
 
-        public class Query : IRequest<Command>
+        public record Query : IRequest<Command>
         {
-            public int? Id { get; set; }
+            public int? Id { get; init; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -63,13 +63,13 @@ namespace ContosoUniversity.Pages.Courses
                     .SingleOrDefaultAsync(token);
         }
 
-        public class Command : IRequest
+        public record Command : IRequest
         {
             [Display(Name = "Number")]
-            public int Id { get; set; }
-            public string Title { get; set; }
-            public int? Credits { get; set; }
-            public Department Department { get; set; }
+            public int Id { get; init; }
+            public string Title { get; init; }
+            public int? Credits { get; init; }
+            public Department Department { get; init; }
         }
 
         public class MappingProfile : Profile
