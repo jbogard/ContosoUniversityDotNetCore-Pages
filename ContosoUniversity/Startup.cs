@@ -36,12 +36,12 @@ namespace ContosoUniversity
             services.AddAutoMapper(typeof(Startup));
 
             services.AddMediatR(typeof(Startup));
-            services.AddScoped(
-                typeof(IPipelineBehavior<,>), 
-                typeof(TransactionBehavior<,>));
-            services.AddScoped(
-                typeof(IPipelineBehavior<,>), 
-                typeof(LoggingBehavior<,>));
+            //services.AddScoped(
+            //    typeof(IPipelineBehavior<,>), 
+            //    typeof(TransactionBehavior<,>));
+            //services.AddScoped(
+            //    typeof(IPipelineBehavior<,>), 
+            //    typeof(LoggingBehavior<,>));
 
             services.AddHtmlTags(new TagConventions());
 

@@ -74,7 +74,7 @@ namespace ContosoUniversity.Pages.Courses
 
         public class MappingProfile : Profile
         {
-            public MappingProfile() => CreateMap<Course, Command>().ReverseMap();
+            public MappingProfile() => CreateMap<Course, Command>();
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -89,19 +89,16 @@ namespace ContosoUniversity.Pages.Courses
         public class CommandHandler : IRequestHandler<Command, Unit>
         {
             private readonly SchoolContext _db;
-            private readonly IMapper _mapper;
 
-            public CommandHandler(SchoolContext db, IMapper mapper)
-            {
-                _db = db;
-                _mapper = mapper;
-            }
+            public CommandHandler(SchoolContext db) => _db = db;
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var course = await _db.Courses.FindAsync(request.Id);
 
-                _mapper.Map(request, course);
+                course.Title = request.Title;
+                course.Department = request.Department;
+                course.Credits = request.Credits!.Value;
 
                 return default;
             }

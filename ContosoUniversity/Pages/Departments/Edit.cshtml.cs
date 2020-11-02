@@ -64,7 +64,7 @@ namespace ContosoUniversity.Pages.Departments
 
         public class MappingProfile : Profile
         {
-            public MappingProfile() => CreateMap<Department, Command>().ReverseMap();
+            public MappingProfile() => CreateMap<Department, Command>();
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -90,22 +90,18 @@ namespace ContosoUniversity.Pages.Departments
         public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
-            private readonly IMapper _mapper;
 
-            public CommandHandler(SchoolContext db, IMapper mapper)
-            {
-                _db = db;
-                _mapper = mapper;
-            }
+            public CommandHandler(SchoolContext db) => _db = db;
 
             public async Task<Unit> Handle(Command message, 
                 CancellationToken token)
             {
-                var dept = 
-                    await _db.Departments.FindAsync(message.Id);
+                var dept = await _db.Departments.FindAsync(message.Id);
 
-                _mapper.Map(message, dept);
-
+                dept.Name = message.Name;
+                dept.StartDate = message.StartDate!.Value;
+                dept.Budget = message.Budget!.Value;
+                dept.RowVersion = message.RowVersion;
                 dept.Administrator = await _db.Instructors.FindAsync(message.Administrator.Id);
 
                 return default;

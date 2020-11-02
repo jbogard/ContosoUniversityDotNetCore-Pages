@@ -70,7 +70,7 @@ namespace ContosoUniversity.Pages.Students
 
         public class MappingProfile : Profile
         {
-            public MappingProfile() => CreateMap<Student, Command>().ReverseMap();
+            public MappingProfile() => CreateMap<Student, Command>();
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -93,17 +93,16 @@ namespace ContosoUniversity.Pages.Students
         public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
-            private readonly IMapper _mapper;
 
-            public CommandHandler(SchoolContext db, IMapper mapper)
-            {
-                _db = db;
-                _mapper = mapper;
-            }
+            public CommandHandler(SchoolContext db) => _db = db;
 
             public async Task<Unit> Handle(Command message, CancellationToken token)
             {
-                _mapper.Map(message, await _db.Students.FindAsync(message.Id));
+                var student = await _db.Students.FindAsync(message.Id);
+
+                student.FirstMidName = message.FirstMidName;
+                student.LastName = message.LastName;
+                student.EnrollmentDate = message.EnrollmentDate!.Value;
 
                 return default;
             }
