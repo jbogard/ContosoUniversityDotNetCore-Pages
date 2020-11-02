@@ -43,8 +43,7 @@ jobs:
     - name: Install .NET 5.0 rc SDK for Build Process
       uses: actions/setup-dotnet@v1
       with:    
-#        dotnet-version: '5.0.100-rc.2.20479.15'
-        dotnet-version: '5.0.0-rc.2.20475.17'
+        dotnet-version: '5.0.100-rc.2.20479.15'
 
     - name: Setup Required Build Dependencies
       run: pwsh .\setup.ps1
