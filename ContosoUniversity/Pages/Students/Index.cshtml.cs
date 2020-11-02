@@ -35,7 +35,7 @@ namespace ContosoUniversity.Pages.Students
         public record Result
         {
             public string CurrentSort { get; init; }
-            public string NameSortParm { get; init; }
+            public string NameSortParm { get; set; }
             public string DateSortParm { get; init; }
             public string CurrentFilter { get; init; }
             public string SearchString { get; init; }
@@ -45,12 +45,12 @@ namespace ContosoUniversity.Pages.Students
 
         public record Model
         {
-            public int Id { get; init; }
+            public int Id { get; set; }
             [Display(Name = "First Name")]
-            public string FirstMidName { get; init; }
-            public string LastName { get; init; }
+            public string FirstMidName { get; set; }
+            public string LastName { get; set; }
             public DateTime EnrollmentDate { get; init; }
-            public int EnrollmentsCount { get; init; }
+            public int EnrollmentsCount { get; set; }
         }
 
         public class MappingProfile : Profile
@@ -103,7 +103,9 @@ namespace ContosoUniversity.Pages.Students
                     CurrentFilter = searchString,
                     SearchString = searchString,
                     Results = results
-                };
+                };      
+
+                model.NameSortParm = "asdf";
 
                 return model;
             }

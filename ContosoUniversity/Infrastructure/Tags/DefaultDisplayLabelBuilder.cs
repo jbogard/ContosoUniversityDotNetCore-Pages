@@ -27,7 +27,7 @@ namespace ContosoUniversity.Infrastructure.Tags
                 "([a-zA-Z])([0-9])"
             };
             var output = patterns.Aggregate(fieldName,
-                (current, pattern) => Regex.Replace(current, pattern, "$1 $2", RegexOptions.IgnorePatternWhitespace));
+                static (current, pattern) => Regex.Replace(current, pattern, "$1 $2", RegexOptions.IgnorePatternWhitespace));
             return output.Replace('_', ' ');
         }
     }

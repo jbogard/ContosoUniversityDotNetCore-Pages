@@ -22,7 +22,7 @@ namespace ContosoUniversity.Infrastructure
                 else
                 {
                     var result = new ContentResult();
-                    string content = JsonConvert.SerializeObject(context.ModelState,
+                    var content = JsonConvert.SerializeObject(context.ModelState,
                         new JsonSerializerSettings
                         {
                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore

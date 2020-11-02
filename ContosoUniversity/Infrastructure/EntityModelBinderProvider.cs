@@ -5,9 +5,7 @@ namespace ContosoUniversity.Infrastructure
 {
     public class EntityModelBinderProvider : IModelBinderProvider
     {
-        public IModelBinder GetBinder(ModelBinderProviderContext context)
-        {
-            return typeof(IEntity).IsAssignableFrom(context.Metadata.ModelType) ? new EntityModelBinder() : null;
-        }
+        public IModelBinder GetBinder(ModelBinderProviderContext context) 
+            => typeof(IEntity).IsAssignableFrom(context.Metadata.ModelType) ? new EntityModelBinder() : null;
     }
 }
