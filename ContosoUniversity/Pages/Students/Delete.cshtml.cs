@@ -32,18 +32,18 @@ namespace ContosoUniversity.Pages.Students
             return this.RedirectToPageJson(nameof(Index));
         }
 
-        public class Query : IRequest<Command>
+        public record Query : IRequest<Command>
         {
-            public int Id { get; set; }
+            public int Id { get; init; }
         }
 
-        public class Command : IRequest
+        public record Command : IRequest
         {
-            public int Id { get; set; }
+            public int Id { get; init; }
             [Display(Name = "First Name")]
-            public string FirstMidName { get; set; }
-            public string LastName { get; set; }
-            public DateTime EnrollmentDate { get; set; }
+            public string FirstMidName { get; init; }
+            public string LastName { get; init; }
+            public DateTime EnrollmentDate { get; init; }
         }
 
         public class MappingProfile : Profile

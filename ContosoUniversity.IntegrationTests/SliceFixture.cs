@@ -40,7 +40,7 @@ namespace ContosoUniversity.IntegrationTests
         {
             protected override void ConfigureWebHost(IWebHostBuilder builder)
             {
-                builder.ConfigureAppConfiguration((context, configBuilder) =>
+                builder.ConfigureAppConfiguration((_, configBuilder) =>
                 {
                     configBuilder.AddInMemoryCollection(new Dictionary<string, string>
                     {
@@ -55,7 +55,7 @@ namespace ContosoUniversity.IntegrationTests
         public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {
             using var scope = _scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetService<SchoolContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<SchoolContext>();
 
             try
             {
@@ -75,7 +75,7 @@ namespace ContosoUniversity.IntegrationTests
         public async Task<T> ExecuteScopeAsync<T>(Func<IServiceProvider, Task<T>> action)
         {
             using var scope = _scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetService<SchoolContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<SchoolContext>();
 
             try
             {
@@ -189,7 +189,7 @@ namespace ContosoUniversity.IntegrationTests
         {
             return ExecuteScopeAsync(sp =>
             {
-                var mediator = sp.GetService<IMediator>();
+                var mediator = sp.GetRequiredService<IMediator>();
 
                 return mediator.Send(request);
             });
@@ -199,7 +199,7 @@ namespace ContosoUniversity.IntegrationTests
         {
             return ExecuteScopeAsync(sp =>
             {
-                var mediator = sp.GetService<IMediator>();
+                var mediator = sp.GetRequiredService<IMediator>();
 
                 return mediator.Send(request);
             });

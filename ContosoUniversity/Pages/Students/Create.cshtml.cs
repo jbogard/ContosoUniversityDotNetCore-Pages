@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using FluentValidation;
@@ -30,19 +29,14 @@ namespace ContosoUniversity.Pages.Students
             return this.RedirectToPageJson(nameof(Index));
         }
 
-        public class MappingProfile : Profile
+        public record Command : IRequest<int>
         {
-            public MappingProfile() => CreateMap<Command, Student>(MemberList.Source);
-        }
-
-        public class Command : IRequest<int>
-        {
-            public string LastName { get; set; }
+            public string LastName { get; init; }
 
             [Display(Name = "First Name")]
-            public string FirstMidName { get; set; }
+            public string FirstMidName { get; init; }
 
-            public DateTime? EnrollmentDate { get; set; }
+            public DateTime? EnrollmentDate { get; init; }
         }
 
         public class Validator : AbstractValidator<Command>
@@ -58,19 +52,19 @@ namespace ContosoUniversity.Pages.Students
         public class Handler : IRequestHandler<Command, int>
         {
             private readonly SchoolContext _db;
-            private readonly IMapper _mapper;
 
-            public Handler(SchoolContext db, IMapper mapper)
-            {
-                _db = db;
-                _mapper = mapper;
-            }
+            public Handler(SchoolContext db) => _db = db;
 
             public async Task<int> Handle(Command message, CancellationToken token)
             {
-                var student = _mapper.Map<Command, Student>(message);
+                var student = new Student
+                {
+                    FirstMidName = message.FirstMidName,
+                    LastName = message.LastName,
+                    EnrollmentDate = message.EnrollmentDate!.Value
+                };
 
-                _db.Students.Add(student);
+                await _db.Students.AddAsync(student, token);
 
                 await _db.SaveChangesAsync(token);
 

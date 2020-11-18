@@ -24,9 +24,9 @@ namespace ContosoUniversity.Pages.Instructors
 
         public async Task OnGetAsync(Query query) => Data = await _mediator.Send(query);
 
-        public class Query : IRequest<Model>
+        public record Query : IRequest<Model>
         {
-            public int? Id { get; set; }
+            public int? Id { get; init; }
         }
 
         public class Validator : AbstractValidator<Query>
@@ -37,19 +37,19 @@ namespace ContosoUniversity.Pages.Instructors
             }
         }
 
-        public class Model
+        public record Model
         {
-            public int? Id { get; set; }
+            public int? Id { get; init; }
 
-            public string LastName { get; set; }
+            public string LastName { get; init; }
             [Display(Name = "First Name")]
-            public string FirstMidName { get; set; }
+            public string FirstMidName { get; init; }
 
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-            public DateTime? HireDate { get; set; }
+            public DateTime? HireDate { get; init; }
 
             [Display(Name = "Location")]
-            public string OfficeAssignmentLocation { get; set; }
+            public string OfficeAssignmentLocation { get; init; }
         }
 
         public class MappingProfile : Profile

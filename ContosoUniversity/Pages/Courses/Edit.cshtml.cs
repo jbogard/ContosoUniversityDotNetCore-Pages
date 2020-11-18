@@ -32,9 +32,9 @@ namespace ContosoUniversity.Pages.Courses
             return this.RedirectToPageJson(nameof(Index));
         }
 
-        public class Query : IRequest<Command>
+        public record Query : IRequest<Command>
         {
-            public int? Id { get; set; }
+            public int? Id { get; init; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -63,18 +63,18 @@ namespace ContosoUniversity.Pages.Courses
                     .SingleOrDefaultAsync(token);
         }
 
-        public class Command : IRequest
+        public record Command : IRequest
         {
             [Display(Name = "Number")]
-            public int Id { get; set; }
-            public string Title { get; set; }
-            public int? Credits { get; set; }
-            public Department Department { get; set; }
+            public int Id { get; init; }
+            public string Title { get; init; }
+            public int? Credits { get; init; }
+            public Department Department { get; init; }
         }
 
         public class MappingProfile : Profile
         {
-            public MappingProfile() => CreateMap<Course, Command>().ReverseMap();
+            public MappingProfile() => CreateMap<Course, Command>();
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -89,19 +89,16 @@ namespace ContosoUniversity.Pages.Courses
         public class CommandHandler : IRequestHandler<Command, Unit>
         {
             private readonly SchoolContext _db;
-            private readonly IMapper _mapper;
 
-            public CommandHandler(SchoolContext db, IMapper mapper)
-            {
-                _db = db;
-                _mapper = mapper;
-            }
+            public CommandHandler(SchoolContext db) => _db = db;
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var course = await _db.Courses.FindAsync(request.Id);
 
-                _mapper.Map(request, course);
+                course.Title = request.Title;
+                course.Department = request.Department;
+                course.Credits = request.Credits!.Value;
 
                 return default;
             }

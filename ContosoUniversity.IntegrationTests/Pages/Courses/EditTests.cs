@@ -84,16 +84,17 @@ namespace ContosoUniversity.IntegrationTests.Pages.Courses
             };
             await _fixture.InsertAsync(dept, newDept, course);
 
-            var command = new Edit.Command
-            {
-                Id = course.Id,
-                Credits = 5,
-                Title = "English 202"
-            };
+            Edit.Command command = default;
 
             await _fixture.ExecuteDbContextAsync(async (ctxt, mediator) =>
             {
-                command.Department = await ctxt.Departments.FindAsync(newDept.Id);
+                command = new Edit.Command
+                {
+                    Id = course.Id,
+                    Credits = 5,
+                    Title = "English 202",
+                    Department = await ctxt.Departments.FindAsync(newDept.Id)
+                };
 
                 await mediator.Send(command);
             });

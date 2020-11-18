@@ -43,9 +43,9 @@ namespace ContosoUniversity.Pages.Instructors
             return this.RedirectToPageJson(nameof(Index));
         }
 
-        public class Query : IRequest<Command>
+        public record Query : IRequest<Command>
         {
-            public int? Id { get; set; }
+            public int? Id { get; init; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -56,7 +56,7 @@ namespace ContosoUniversity.Pages.Instructors
             }
         }
 
-        public class Command : IRequest<int>
+        public record Command : IRequest<int>
         {
             public Command()
             {
@@ -65,35 +65,35 @@ namespace ContosoUniversity.Pages.Instructors
                 SelectedCourses = new string[0];
             }
 
-            public int? Id { get; set; }
+            public int? Id { get; init; }
 
-            public string LastName { get; set; }
+            public string LastName { get; init; }
             [Display(Name = "First Name")]
-            public string FirstMidName { get; set; }
+            public string FirstMidName { get; init; }
 
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-            public DateTime? HireDate { get; set; }
+            public DateTime? HireDate { get; init; }
 
             [Display(Name = "Location")]
-            public string OfficeAssignmentLocation { get; set; }
+            public string OfficeAssignmentLocation { get; init; }
 
             [IgnoreMap]
-            public string[] SelectedCourses { get; set; }
+            public string[] SelectedCourses { get; init; }
 
             [IgnoreMap]
-            public List<AssignedCourseData> AssignedCourses { get; set; }
-            public List<CourseAssignment> CourseAssignments { get; set; }
+            public List<AssignedCourseData> AssignedCourses { get; init; }
+            public List<CourseAssignment> CourseAssignments { get; init; }
 
-            public class AssignedCourseData
+            public record AssignedCourseData
             {
-                public int CourseId { get; set; }
-                public string Title { get; set; }
-                public bool Assigned { get; set; }
+                public int CourseId { get; init; }
+                public string Title { get; init; }
+                public bool Assigned { get; init; }
             }
 
-            public class CourseAssignment
+            public record CourseAssignment
             {
-                public int CourseId { get; set; }
+                public int CourseId { get; init; }
             }
         }
 
@@ -137,31 +137,23 @@ namespace ContosoUniversity.Pages.Instructors
                 else
                 {
                     model = await _db.Instructors
-                        //.Include(m => m.CourseAssignments)
-                        //.ThenInclude(ca => ca.Course)
                         .Where(i => i.Id == message.Id)
                         .ProjectTo<Command>(_configuration)
                         .SingleOrDefaultAsync(token);
                 }
 
-                PopulateAssignedCourseData(model);
-
-                return model;
-            }
-
-            private void PopulateAssignedCourseData(Command model)
-            {
-                var allCourses = _db.Courses;
                 var instructorCourses = new HashSet<int>(model.CourseAssignments.Select(c => c.CourseId));
-                var viewModel = allCourses.Select(course => new Command.AssignedCourseData
+                var viewModel = _db.Courses.Select(course => new Command.AssignedCourseData
                 {
                     CourseId = course.Id,
                     Title = course.Title,
                     Assigned = instructorCourses.Any() && instructorCourses.Contains(course.Id)
                 }).ToList();
-                model.AssignedCourses = viewModel;
-            }
 
+                model = model with { AssignedCourses = viewModel };
+
+                return model;
+            }
         }
 
         public class CommandHandler : IRequestHandler<Command, int>
@@ -176,7 +168,7 @@ namespace ContosoUniversity.Pages.Instructors
                 if (message.Id == null)
                 {
                     instructor = new Instructor();
-                    _db.Instructors.Add(instructor);
+                    await _db.Instructors.AddAsync(instructor, token);
                 }
                 else
                 {

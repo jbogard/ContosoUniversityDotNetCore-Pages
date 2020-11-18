@@ -12,7 +12,7 @@ namespace ContosoUniversity.Infrastructure
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
-            var dbContext = context.HttpContext.RequestServices.GetService<SchoolContext>();
+            var dbContext = context.HttpContext.RequestServices.GetRequiredService<SchoolContext>();
 
             try
             {

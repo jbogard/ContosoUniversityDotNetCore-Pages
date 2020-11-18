@@ -16,7 +16,7 @@ namespace ContosoUniversity.Infrastructure
                 var originalValue = original.FirstValue;
                 if (int.TryParse(originalValue, out var id))
                 {
-                    var dbContext = bindingContext.HttpContext.RequestServices.GetService<SchoolContext>();
+                    var dbContext = bindingContext.HttpContext.RequestServices.GetRequiredService<SchoolContext>();
                     IEntity entity = null;
                     if (bindingContext.ModelType == typeof(Course))
                     {

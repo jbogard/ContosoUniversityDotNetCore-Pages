@@ -21,29 +21,21 @@ jobs:
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v2
-
-    # GitVersion on GitHub Actions
-    # https://github.com/marketplace/actions/use-actions
-    # GitVersion requires more history to calculate versions
-    - name: Fetch all history for all tags and branches
-      run: git fetch --prune --unshallow
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.2
       with:
-        versionSpec: '5.2.x'
-    - name: Generate Version using GitVersion
-      id: gitversion # step id used as reference for output values
-      uses: gittools/actions/gitversion/execute@v0.9.2
- 
-# Windows agent already has SDK versions installed
-#    - name: Install .NET 2.1 Runtime for RoundHousE
-#      uses: actions/setup-dotnet@v1
-#      with:
-#        dotnet-version: '2.1.804'
-#    - name: Install .NET 3.1 SDK for Build Process
-#      uses: actions/setup-dotnet@v1
-#      with:    
-#        dotnet-version: '3.1.200'
+        fetch-depth: 0
+
+    - name: Setup dotnet 5.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.100'
+    - name: Setup dotnet 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+    - name: Setup dotnet 2.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '2.1.x'
 
     - name: Setup Required Build Dependencies
       run: pwsh .\setup.ps1

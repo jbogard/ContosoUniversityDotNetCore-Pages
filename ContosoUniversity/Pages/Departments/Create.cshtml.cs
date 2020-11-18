@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using FluentValidation;
@@ -20,10 +19,7 @@ namespace ContosoUniversity.Pages.Departments
         [BindProperty]
         public Command Data { get; set; }
 
-        public Create(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public Create(IMediator mediator) => _mediator = mediator;
 
         public async Task<ActionResult> OnPostAsync()
         {
@@ -43,43 +39,39 @@ namespace ContosoUniversity.Pages.Departments
             }
         }
 
-        public class MappingProfiler : Profile
-        {
-            public MappingProfiler() => CreateMap<Command, Department>(MemberList.Source);
-        }
-
-        public class Command : IRequest<int>
+        public record Command : IRequest<int>
         {
             [StringLength(50, MinimumLength = 3)]
-            public string Name { get; set; }
+            public string Name { get; init; }
 
             [DataType(DataType.Currency)]
             [Column(TypeName = "money")]
-            public decimal? Budget { get; set; }
+            public decimal? Budget { get; init; }
 
             [DataType(DataType.Date)]
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-            public DateTime? StartDate { get; set; }
+            public DateTime? StartDate { get; init; }
 
-            public Instructor Administrator { get; set; }
+            public Instructor Administrator { get; init; }
         }
 
         public class CommandHandler : IRequestHandler<Command, int>
         {
             private readonly SchoolContext _context;
-            private readonly IMapper _mapper;
 
-            public CommandHandler(SchoolContext context, IMapper mapper)
-            {
-                _context = context;
-                _mapper = mapper;
-            }
+            public CommandHandler(SchoolContext context) => _context = context;
 
             public async Task<int> Handle(Command message, CancellationToken token)
             {
-                var department = _mapper.Map<Command, Department>(message);
+                var department = new Department
+                {
+                    Administrator = message.Administrator,
+                    Budget = message.Budget!.Value,
+                    Name = message.Name,
+                    StartDate = message.StartDate!.Value
+                };
 
-                _context.Departments.Add(department);
+                await _context.Departments.AddAsync(department, token);
 
                 await _context.SaveChangesAsync(token);
 

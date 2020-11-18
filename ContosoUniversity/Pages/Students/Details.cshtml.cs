@@ -25,24 +25,24 @@ namespace ContosoUniversity.Pages.Students
         public async Task OnGetAsync(Query query)
             => Data = await _mediator.Send(query);
 
-        public class Query : IRequest<Model>
+        public record Query : IRequest<Model>
         {
-            public int Id { get; set; }
+            public int Id { get; init; }
         }
 
-        public class Model
+        public record Model
         {
-            public int Id { get; set; }
+            public int Id { get; init; }
             [Display(Name = "First Name")]
-            public string FirstMidName { get; set; }
-            public string LastName { get; set; }
-            public DateTime EnrollmentDate { get; set; }
-            public List<Enrollment> Enrollments { get; set; }
+            public string FirstMidName { get; init; }
+            public string LastName { get; init; }
+            public DateTime EnrollmentDate { get; init; }
+            public List<Enrollment> Enrollments { get; init; }
 
-            public class Enrollment
+            public record Enrollment
             {
-                public string CourseTitle { get; set; }
-                public Grade? Grade { get; set; }
+                public string CourseTitle { get; init; }
+                public Grade? Grade { get; init; }
             }
         }
 
