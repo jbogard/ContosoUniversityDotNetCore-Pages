@@ -2,7 +2,6 @@ include "./psake-build-helpers.ps1"
 
 properties {
     $configuration = 'Release'
-    $version = '1.0.999'
     $owner = 'Jimmy Bogard'
     $product = 'Contoso University Core'
     $yearInitiated = '2016'
@@ -31,7 +30,7 @@ task Test -depends Compile, MigrateTest -description "Run unit tests" {
 }
  
 task Compile -depends Info -description "Compile the solution" {
-    exec { dotnet build --configuration $configuration --nologo -p:"Product=$($product)" -p:"Copyright=$(get-copyright)" -p:"Version=$($version)" } -workingDirectory .
+    exec { dotnet build --configuration $configuration --nologo -p:"Product=$($product)" -p:"Copyright=$(get-copyright)" } -workingDirectory .
 }
 
 task Publish -depends Compile -description "Publish the primary projects for distribution" {
@@ -49,11 +48,6 @@ task Clean -description "Clean out all the binary folders" {
     remove-directory-silently $testResults
 }
 
-task LocalVersion -description "Create a local version number for the build" {
-    $localVersion = (dotnet gitversion /output json /showvariable SemVer)
-    Write-Host "Version: ${localVersion}"
-}
-  
 task ? -alias help -description "Display help content and possible targets" {
     WriteDocumentation
 }

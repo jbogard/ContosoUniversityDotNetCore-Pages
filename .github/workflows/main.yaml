@@ -21,20 +21,9 @@ jobs:
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v2
-
-    # GitVersion on GitHub Actions
-    # https://github.com/marketplace/actions/use-actions
-    # GitVersion requires more history to calculate versions
-    - name: Fetch all history for all tags and branches
-      run: git fetch --prune --unshallow
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.6
       with:
-        versionSpec: '5.2.x'
-    - name: Generate Version using GitVersion
-      id: gitversion # step id used as reference for output values
-      uses: gittools/actions/gitversion/execute@v0.9.6
- 
+        fetch-depth: 0
+
     - name: Setup dotnet
       uses: actions/setup-dotnet@v1
       with:
