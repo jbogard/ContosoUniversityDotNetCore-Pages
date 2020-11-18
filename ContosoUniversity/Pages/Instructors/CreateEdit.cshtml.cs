@@ -168,7 +168,7 @@ namespace ContosoUniversity.Pages.Instructors
                 if (message.Id == null)
                 {
                     instructor = new Instructor();
-                    _db.Instructors.Add(instructor);
+                    await _db.Instructors.AddAsync(instructor, token);
                 }
                 else
                 {
