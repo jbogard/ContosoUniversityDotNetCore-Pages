@@ -85,7 +85,7 @@ namespace ContosoUniversity.Pages.Students
                     "name_desc" => students.OrderByDescending(s => s.LastName),
                     "Date" => students.OrderBy(s => s.EnrollmentDate),
                     "date_desc" => students.OrderByDescending(s => s.EnrollmentDate),
-                    _ => students.OrderBy(s => s.LastName)
+                    => students.OrderBy(s => s.LastName)
                 };
 
                 int pageSize = 3;
