@@ -24,18 +24,18 @@ namespace ContosoUniversity.Pages.Students
             string currentFilter, string searchString, int? pageIndex)
             => Data = await _mediator.Send(new Query { CurrentFilter = currentFilter, Page = pageIndex, SearchString = searchString, SortOrder = sortOrder});
 
-        public class Query : IRequest<Result>
+        public record Query : IRequest<Result>
         {
-            public string SortOrder { get; set; }
-            public string CurrentFilter { get; set; }
-            public string SearchString { get; set; }
-            public int? Page { get; set; }
+            public string SortOrder { get; init; }
+            public string CurrentFilter { get; init; }
+            public string SearchString { get; init; }
+            public int? Page { get; init; }
         }
 
         public record Result
         {
             public string CurrentSort { get; init; }
-            public string NameSortParm { get; set; }
+            public string NameSortParm { get; init; }
             public string DateSortParm { get; init; }
             public string CurrentFilter { get; init; }
             public string SearchString { get; init; }
@@ -45,12 +45,12 @@ namespace ContosoUniversity.Pages.Students
 
         public record Model
         {
-            public int Id { get; set; }
+            public int Id { get; init; }
             [Display(Name = "First Name")]
-            public string FirstMidName { get; set; }
-            public string LastName { get; set; }
+            public string FirstMidName { get; init; }
+            public string LastName { get; init; }
             public DateTime EnrollmentDate { get; init; }
-            public int EnrollmentsCount { get; set; }
+            public int EnrollmentsCount { get; init; }
         }
 
         public class MappingProfile : Profile
@@ -104,8 +104,6 @@ namespace ContosoUniversity.Pages.Students
                     SearchString = searchString,
                     Results = results
                 };      
-
-                model.NameSortParm = "asdf";
 
                 return model;
             }
