@@ -30,7 +30,7 @@ namespace ContosoUniversity.Pages.Departments
         {
             await _mediator.Send(Data);
 
-            return this.RedirectToPageJson("Index");
+             return this.RedirectToPageJson(nameof(Index));
         }
 
         public record Query : IRequest<Command>
