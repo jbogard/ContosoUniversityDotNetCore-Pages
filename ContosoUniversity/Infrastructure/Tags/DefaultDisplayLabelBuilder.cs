@@ -8,15 +8,9 @@ namespace ContosoUniversity.Infrastructure.Tags
 {
     public class DefaultDisplayLabelBuilder : IElementBuilder
     {
-        public bool Matches(ElementRequest subject)
-        {
-            return true;
-        }
+        public bool Matches(ElementRequest subject) => true;
 
-        public HtmlTag Build(ElementRequest request)
-        {
-            return new HtmlTag("").NoTag().Text(BreakUpCamelCase(request.Accessor.Name));
-        }
+        public HtmlTag Build(ElementRequest request) => new HtmlTag("").NoTag().Text(BreakUpCamelCase(request.Accessor.Name));
 
         public static string BreakUpCamelCase(string fieldName)
         {
