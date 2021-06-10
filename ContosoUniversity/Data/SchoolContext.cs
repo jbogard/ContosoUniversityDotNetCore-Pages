@@ -24,13 +24,13 @@ namespace ContosoUniversity.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Course>().ToTable("Course");
-            modelBuilder.Entity<Enrollment>().ToTable("Enrollment");
-            modelBuilder.Entity<Student>().ToTable("Student");
-            modelBuilder.Entity<Department>().ToTable("Department");
-            modelBuilder.Entity<Instructor>().ToTable("Instructor");
-            modelBuilder.Entity<OfficeAssignment>().ToTable("OfficeAssignment");
-            modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignment");
+            modelBuilder.Entity<Course>().ToTable(nameof(Course));
+            modelBuilder.Entity<Enrollment>().ToTable(nameof(Enrollment));
+            modelBuilder.Entity<Student>().ToTable(nameof(Student));
+            modelBuilder.Entity<Department>().ToTable(nameof(Department));
+            modelBuilder.Entity<Instructor>().ToTable(nameof(Instructor));
+            modelBuilder.Entity<OfficeAssignment>().ToTable(nameof(OfficeAssignment));
+            modelBuilder.Entity<CourseAssignment>().ToTable(nameof(CourseAssignment));
 
             modelBuilder.Entity<CourseAssignment>()
                 .HasKey(c => new { CourseID = c.CourseId, InstructorID = c.InstructorId });
