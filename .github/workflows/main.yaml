@@ -32,10 +32,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
-    - name: Setup dotnet 2.1
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '2.1.x'
 
     - name: Setup Required Build Dependencies
       run: pwsh .\setup.ps1
