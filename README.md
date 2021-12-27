@@ -20,7 +20,7 @@ To prepare the database, execute the build script using [PSake](https://psake.re
 
 ## Migrating the Database
 
-RoundHousE will automatically create or upgrade (migrate) the database to the latest schema version when you run it:
+DbUp will automatically create or upgrade (migrate) the database to the latest schema version when you run it:
 
 From PowerShell:
 ```
