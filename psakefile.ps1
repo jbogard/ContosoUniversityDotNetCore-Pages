@@ -20,8 +20,8 @@ task Info -description "Display runtime information" {
 
 task MigrateTest -description "Recreate the testing database" {
     # drop and recreate the test database
-    exec { dotnet dbup drop ContosoUniversity/App_Data/runAfterCreateDatabase/dbup-test.yml }
-    exec { dotnet dbup upgrade ContosoUniversity/App_Data/runAfterCreateDatabase/dbup-test.yml --ensure }
+    exec { dotnet rh /d=ContosoUniversityDotNetCore-Pages-Test /f=ContosoUniversity/App_Data /s="(LocalDb)\mssqllocaldb" /silent /drop }
+    exec { dotnet rh /d=ContosoUniversityDotNetCore-Pages-Test /f=ContosoUniversity/App_Data /s="(LocalDb)\mssqllocaldb" /silent /simple }
 }
 
 task Test -depends Compile, MigrateTest -description "Run unit tests" {
@@ -39,7 +39,7 @@ task Publish -depends Compile -description "Publish the primary projects for dis
 }
 
 task Migrate -description "Migrate the changes into the runtime database" {
-    exec { dotnet dbup upgrade ContosoUniversity/App_Data/runAfterCreateDatabase/dbup.yml --ensure }
+    exec { dotnet rh /d=ContosoUniversityDotNetCore-Pages /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent }
 }
   
 task Clean -description "Clean out all the binary folders" {
