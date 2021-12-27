@@ -1,0 +1,4 @@
+dbUp:
+  version: 1                    # should be 1
+  provider: sqlserver           # DB provider: sqlserver
+  connectionString: "Server=(localdb)\\mssqllocaldb;Database=ContosoUniversityDotNetCore-Pages-Test;Trusted_Connection=True;MultipleActiveResultSets=true"  

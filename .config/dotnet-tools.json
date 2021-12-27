@@ -2,10 +2,10 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "dotnet-roundhouse": {
-      "version": "1.3.1",
+    "dbup-cli": {
+      "version": "1.6.0",
       "commands": [
-        "rh"
+        "dbup"
       ]
     },
     "gitversion.tool": {
