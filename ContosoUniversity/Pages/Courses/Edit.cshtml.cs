@@ -12,96 +12,95 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Pages.Courses
+namespace ContosoUniversity.Pages.Courses;
+
+public class Edit : PageModel
 {
-    public class Edit : PageModel
+    private readonly IMediator _mediator;
+
+    [BindProperty]
+    public Command Data { get; set; }
+
+    public Edit(IMediator mediator) => _mediator = mediator;
+
+    public async Task OnGetAsync(Query query) => Data = await _mediator.Send(query);
+
+    public async Task<IActionResult> OnPostAsync()
     {
-        private readonly IMediator _mediator;
+        await _mediator.Send(Data);
 
-        [BindProperty]
-        public Command Data { get; set; }
+        return this.RedirectToPageJson(nameof(Index));
+    }
 
-        public Edit(IMediator mediator) => _mediator = mediator;
+    public record Query : IRequest<Command>
+    {
+        public int? Id { get; init; }
+    }
 
-        public async Task OnGetAsync(Query query) => Data = await _mediator.Send(query);
-
-        public async Task<IActionResult> OnPostAsync()
+    public class QueryValidator : AbstractValidator<Query>
+    {
+        public QueryValidator()
         {
-            await _mediator.Send(Data);
+            RuleFor(m => m.Id).NotNull();
+        }
+    }
 
-            return this.RedirectToPageJson(nameof(Index));
+    public class QueryHandler : IRequestHandler<Query, Command>
+    {
+        private readonly SchoolContext _db;
+        private readonly IConfigurationProvider _configuration;
+
+        public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+        {
+            _db = db;
+            _configuration = configuration;
         }
 
-        public record Query : IRequest<Command>
+        public Task<Command> Handle(Query message, CancellationToken token) =>
+            _db.Courses
+                .Where(c => c.Id == message.Id)
+                .ProjectTo<Command>(_configuration)
+                .SingleOrDefaultAsync(token);
+    }
+
+    public record Command : IRequest
+    {
+        [Display(Name = "Number")]
+        public int Id { get; init; }
+        public string Title { get; init; }
+        public int? Credits { get; init; }
+        public Department Department { get; init; }
+    }
+
+    public class MappingProfile : Profile
+    {
+        public MappingProfile() => CreateMap<Course, Command>();
+    }
+
+    public class CommandValidator : AbstractValidator<Command>
+    {
+        public CommandValidator()
         {
-            public int? Id { get; init; }
+            RuleFor(m => m.Title).NotNull().Length(3, 50);
+            RuleFor(m => m.Credits).NotNull().InclusiveBetween(0, 5);
         }
+    }
 
-        public class QueryValidator : AbstractValidator<Query>
+    public class CommandHandler : IRequestHandler<Command, Unit>
+    {
+        private readonly SchoolContext _db;
+
+        public CommandHandler(SchoolContext db) => _db = db;
+
+        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            public QueryValidator()
-            {
-                RuleFor(m => m.Id).NotNull();
-            }
-        }
+            var course = await _db.Courses.FindAsync(request.Id);
 
-        public class QueryHandler : IRequestHandler<Query, Command>
-        {
-            private readonly SchoolContext _db;
-            private readonly IConfigurationProvider _configuration;
+            course.Title = request.Title;
+            course.Department = request.Department;
+            course.Credits = request.Credits!.Value;
 
-            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
-            {
-                _db = db;
-                _configuration = configuration;
-            }
-
-            public Task<Command> Handle(Query message, CancellationToken token) =>
-                _db.Courses
-                    .Where(c => c.Id == message.Id)
-                    .ProjectTo<Command>(_configuration)
-                    .SingleOrDefaultAsync(token);
-        }
-
-        public record Command : IRequest
-        {
-            [Display(Name = "Number")]
-            public int Id { get; init; }
-            public string Title { get; init; }
-            public int? Credits { get; init; }
-            public Department Department { get; init; }
-        }
-
-        public class MappingProfile : Profile
-        {
-            public MappingProfile() => CreateMap<Course, Command>();
-        }
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(m => m.Title).NotNull().Length(3, 50);
-                RuleFor(m => m.Credits).NotNull().InclusiveBetween(0, 5);
-            }
-        }
-
-        public class CommandHandler : IRequestHandler<Command, Unit>
-        {
-            private readonly SchoolContext _db;
-
-            public CommandHandler(SchoolContext db) => _db = db;
-
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var course = await _db.Courses.FindAsync(request.Id);
-
-                course.Title = request.Title;
-                course.Department = request.Department;
-                course.Credits = request.Credits!.Value;
-
-                return default;
-            }
+            return default;
         }
     }
 }

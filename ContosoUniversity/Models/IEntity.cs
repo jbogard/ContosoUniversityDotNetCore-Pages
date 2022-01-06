@@ -1,7 +1,6 @@
-﻿namespace ContosoUniversity.Models
+﻿namespace ContosoUniversity.Models;
+
+public interface IEntity
 {
-    public interface IEntity
-    {
-        int Id { get; }
-    }
+    int Id { get; }
 }
