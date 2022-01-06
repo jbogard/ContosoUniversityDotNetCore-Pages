@@ -20,8 +20,12 @@ task Info -description "Display runtime information" {
 
 task MigrateTest -description "Recreate the testing database" {
     # drop and recreate the test database
-    exec { dotnet rh /d=ContosoUniversityDotNetCore-Pages-Test /f=ContosoUniversity/App_Data /s="(LocalDb)\mssqllocaldb" /silent /drop }
-    exec { dotnet rh /d=ContosoUniversityDotNetCore-Pages-Test /f=ContosoUniversity/App_Data /s="(LocalDb)\mssqllocaldb" /silent /simple }
+    exec { dotnet grate `
+            -c "Server=(localdb)\mssqllocaldb;Database=ContosoUniversityDotNetCore-Pages-Test;Trusted_Connection=True;MultipleActiveResultSets=true" `
+            -f ContosoUniversity/App_Data `
+            --silent `
+            --drop `
+    }
 }
 
 task Test -depends Compile, MigrateTest -description "Run unit tests" {
@@ -39,7 +43,11 @@ task Publish -depends Compile -description "Publish the primary projects for dis
 }
 
 task Migrate -description "Migrate the changes into the runtime database" {
-    exec { dotnet rh /d=ContosoUniversityDotNetCore-Pages /f=ContosoUniversity\App_Data /s="(LocalDb)\mssqllocaldb" /silent }
+    exec { dotnet grate `
+            -c "Server=(localdb)\mssqllocaldb;Database=ContosoUniversityDotNetCore-Pages;Trusted_Connection=True;MultipleActiveResultSets=true" `
+            -f ContosoUniversity/App_Data `
+            --silent `
+    } 
 }
   
 task Clean -description "Clean out all the binary folders" {

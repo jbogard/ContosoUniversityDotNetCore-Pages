@@ -1,6 +1,6 @@
 ![CI](https://github.com/jbogard/ContosoUniversityDotNetCore-Pages/workflows/CI/badge.svg)
 
-# ContosoUniversity on ASP.NET Core 5.0 on .NET Core and Razor Pages
+# ContosoUniversity on ASP.NET Core 6.0 on .NET 6 and Razor Pages
 
 Contoso University, the way I would write it.
 
@@ -20,7 +20,7 @@ To prepare the database, execute the build script using [PSake](https://psake.re
 
 ## Migrating the Database
 
-RoundHousE will automatically create or upgrade (migrate) the database to the latest schema version when you run it:
+Grate will automatically create or upgrade (migrate) the database to the latest schema version when you run it:
 
 From PowerShell:
 ```
