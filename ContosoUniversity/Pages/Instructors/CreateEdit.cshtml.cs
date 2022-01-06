@@ -77,10 +77,8 @@ namespace ContosoUniversity.Pages.Instructors
             [Display(Name = "Location")]
             public string OfficeAssignmentLocation { get; init; }
 
-            [IgnoreMap]
             public string[] SelectedCourses { get; init; }
 
-            [IgnoreMap]
             public List<AssignedCourseData> AssignedCourses { get; init; }
             public List<CourseAssignment> CourseAssignments { get; init; }
 
@@ -111,7 +109,9 @@ namespace ContosoUniversity.Pages.Instructors
         {
             public MappingProfile()
             {
-                CreateMap<Instructor, Command>();
+                CreateMap<Instructor, Command>()
+                    .ForMember(d => d.SelectedCourses, opt => opt.Ignore())
+                    .ForMember(d => d.AssignedCourses, opt => opt.Ignore());
                 CreateMap<CourseAssignment, Command.CourseAssignment>();
             }
         }

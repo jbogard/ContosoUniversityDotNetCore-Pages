@@ -23,7 +23,7 @@ namespace ContosoUniversity.IntegrationTests
         private readonly Checkpoint _checkpoint;
         private readonly IConfiguration _configuration;
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly WebApplicationFactory<Startup> _factory;
+        private readonly WebApplicationFactory<Program> _factory;
 
         public SliceFixture()
         {
@@ -35,8 +35,8 @@ namespace ContosoUniversity.IntegrationTests
             _checkpoint = new Checkpoint();
         }
 
-        public class ContosoTestApplicationFactory 
-            : WebApplicationFactory<Startup>
+        class ContosoTestApplicationFactory 
+            : WebApplicationFactory<Program>
         {
             protected override void ConfigureWebHost(IWebHostBuilder builder)
             {
