@@ -54,15 +54,9 @@ static void ConfigureApplication(WebApplication app)
         app.UseExceptionHandler("/Error");
         app.UseHsts();
     }
-    else
-    {
-        app.UseDeveloperExceptionPage();
-    }
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
-
-    app.UseRouting();
 
     app.UseAuthorization();
 
