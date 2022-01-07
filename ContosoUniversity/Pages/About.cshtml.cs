@@ -6,32 +6,31 @@ using ContosoUniversity.Models.SchoolViewModels;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Pages
+namespace ContosoUniversity.Pages;
+
+public class AboutPage : PageModel
 {
-    public class AboutPage : PageModel
+    private readonly SchoolContext _context;
+
+    public AboutPage(SchoolContext context)
     {
-        private readonly SchoolContext _context;
+        _context = context;
+    }
 
-        public AboutPage(SchoolContext context)
-        {
-            _context = context;
-        }
+    public IEnumerable<EnrollmentDateGroup> Data { get; private set; }
 
-        public IEnumerable<EnrollmentDateGroup> Data { get; private set; }
+    public async Task OnGetAsync()
+    {
+        var groups = await _context
+            .Students
+            .GroupBy(x => x.EnrollmentDate)
+            .Select(x => new EnrollmentDateGroup
+            {
+                EnrollmentDate = x.Key,
+                StudentCount = x.Count()
+            })
+            .ToListAsync();
 
-        public async Task OnGetAsync()
-        {
-            var groups = await _context
-                .Students
-                .GroupBy(x => x.EnrollmentDate)
-                .Select(x => new EnrollmentDateGroup
-                {
-                    EnrollmentDate = x.Key,
-                    StudentCount = x.Count()
-                })
-                .ToListAsync();
-
-            Data = groups;
-        }
+        Data = groups;
     }
 }

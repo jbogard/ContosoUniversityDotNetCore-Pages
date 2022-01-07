@@ -4,35 +4,34 @@ using ContosoUniversity.Data;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ContosoUniversity.Infrastructure
+namespace ContosoUniversity.Infrastructure;
+
+public class DbContextTransactionPageFilter : IAsyncPageFilter
 {
-    public class DbContextTransactionPageFilter : IAsyncPageFilter
+    public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context) => Task.CompletedTask;
+
+    public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
     {
-        public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context) => Task.CompletedTask;
+        var dbContext = context.HttpContext.RequestServices.GetRequiredService<SchoolContext>();
 
-        public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
+        try
         {
-            var dbContext = context.HttpContext.RequestServices.GetRequiredService<SchoolContext>();
+            await dbContext.BeginTransactionAsync();
 
-            try
-            {
-                await dbContext.BeginTransactionAsync();
-
-                var actionExecuted = await next();
-                if (actionExecuted.Exception != null && !actionExecuted.ExceptionHandled)
-                {
-                    dbContext.RollbackTransaction();
-                }
-                else
-                {
-                    await dbContext.CommitTransactionAsync();
-                }
-            }
-            catch (Exception)
+            var actionExecuted = await next();
+            if (actionExecuted.Exception != null && !actionExecuted.ExceptionHandled)
             {
                 dbContext.RollbackTransaction();
-                throw;
             }
+            else
+            {
+                await dbContext.CommitTransactionAsync();
+            }
+        }
+        catch (Exception)
+        {
+            dbContext.RollbackTransaction();
+            throw;
         }
     }
 }

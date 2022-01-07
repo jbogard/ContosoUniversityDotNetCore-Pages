@@ -4,49 +4,41 @@ using HtmlTags;
 using HtmlTags.Conventions;
 using HtmlTags.Conventions.Elements;
 
-namespace ContosoUniversity.Infrastructure.Tags
+namespace ContosoUniversity.Infrastructure.Tags;
+
+public abstract class EntitySelectElementBuilder<T> : ElementTagBuilder where T : class
 {
-    public abstract class EntitySelectElementBuilder<T> : ElementTagBuilder where T : class
+    public override bool Matches(ElementRequest subject) => typeof(T).IsAssignableFrom(subject.Accessor.PropertyType);
+
+    public override HtmlTag Build(ElementRequest request)
     {
-        public override bool Matches(ElementRequest subject)
+        var results = Source(request);
+
+        var selectTag = new SelectTag(t =>
         {
-            return typeof(T).IsAssignableFrom(subject.Accessor.PropertyType);
-        }
-
-        public override HtmlTag Build(ElementRequest request)
-        {
-            var results = Source(request);
-
-            var selectTag = new SelectTag(t =>
+            t.Option(string.Empty, string.Empty); // blank default option
+            foreach (var result in results)
             {
-                t.Option(string.Empty, string.Empty); // blank default option
-                foreach (var result in results)
-                {
-                    BuildOptionTag(t, result, request);
-                }
-            });
-
-            var entity = request.Value<T>();
-
-            if (entity != null)
-            {
-                selectTag.SelectByValue(GetValue(entity));
+                BuildOptionTag(t, result, request);
             }
+        });
 
-            return selectTag;
-        }
+        var entity = request.Value<T>();
 
-        protected virtual HtmlTag BuildOptionTag(SelectTag select, T model, ElementRequest request)
+        if (entity != null)
         {
-            return select.Option(GetDisplayValue(model), GetValue(model));
+            selectTag.SelectByValue(GetValue(entity));
         }
 
-        protected abstract int GetValue(T instance);
-        protected abstract string GetDisplayValue(T instance);
-
-        protected virtual IEnumerable<T> Source(ElementRequest request)
-        {
-            return request.Get<SchoolContext>().Set<T>();
-        }
+        return selectTag;
     }
+
+    protected virtual HtmlTag BuildOptionTag(SelectTag select, T model, ElementRequest request) 
+        => @select.Option(GetDisplayValue(model), GetValue(model));
+
+    protected abstract int GetValue(T instance);
+    protected abstract string GetDisplayValue(T instance);
+
+    protected virtual IEnumerable<T> Source(ElementRequest request) 
+        => request.Get<SchoolContext>().Set<T>();
 }

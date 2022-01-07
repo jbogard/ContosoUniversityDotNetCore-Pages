@@ -12,85 +12,84 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Pages.Departments
+namespace ContosoUniversity.Pages.Departments;
+
+public class Delete : PageModel
 {
-    public class Delete : PageModel
+    private readonly IMediator _mediator;
+
+    public Delete(IMediator mediator) => _mediator = mediator;
+
+    [BindProperty]
+    public Command Data { get; set; }
+
+    public async Task OnGetAsync(Query query)
+        => Data = await _mediator.Send(query);
+
+    public async Task<ActionResult> OnPostAsync()
     {
-        private readonly IMediator _mediator;
+        await _mediator.Send(Data);
 
-        public Delete(IMediator mediator) => _mediator = mediator;
+        return this.RedirectToPageJson("Index");
+    }
 
-        [BindProperty]
-        public Command Data { get; set; }
+    public record Query : IRequest<Command>
+    {
+        public int Id { get; init; }
+    }
 
-        public async Task OnGetAsync(Query query)
-            => Data = await _mediator.Send(query);
+    public record Command : IRequest
+    {
+        public string Name { get; init; }
 
-        public async Task<ActionResult> OnPostAsync()
+        public decimal Budget { get; init; }
+
+        public DateTime StartDate { get; init; }
+
+        public int Id { get; init; }
+
+        [Display(Name = "Administrator")]
+        public string AdministratorFullName { get; init; }
+
+        public byte[] RowVersion { get; init; }
+    }
+
+    public class MappingProfile : Profile
+    {
+        public MappingProfile() => CreateMap<Department, Command>();
+    }
+
+    public class QueryHandler : IRequestHandler<Query, Command>
+    {
+        private readonly SchoolContext _db;
+        private readonly IConfigurationProvider _configuration;
+
+        public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
         {
-            await _mediator.Send(Data);
-
-            return this.RedirectToPageJson("Index");
+            _db = db;
+            _configuration = configuration;
         }
 
-        public record Query : IRequest<Command>
+        public async Task<Command> Handle(Query message, CancellationToken token) => await _db
+            .Departments
+            .Where(d => d.Id == message.Id)
+            .ProjectTo<Command>(_configuration)
+            .SingleOrDefaultAsync(token);
+    }
+
+    public class CommandHandler : IRequestHandler<Command>
+    {
+        private readonly SchoolContext _db;
+
+        public CommandHandler(SchoolContext db) => _db = db;
+
+        public async Task<Unit> Handle(Command message, CancellationToken token)
         {
-            public int Id { get; init; }
-        }
+            var department = await _db.Departments.FindAsync(message.Id);
 
-        public record Command : IRequest
-        {
-            public string Name { get; init; }
+            _db.Departments.Remove(department);
 
-            public decimal Budget { get; init; }
-
-            public DateTime StartDate { get; init; }
-
-            public int Id { get; init; }
-
-            [Display(Name = "Administrator")]
-            public string AdministratorFullName { get; init; }
-
-            public byte[] RowVersion { get; init; }
-        }
-
-        public class MappingProfile : Profile
-        {
-            public MappingProfile() => CreateMap<Department, Command>();
-        }
-
-        public class QueryHandler : IRequestHandler<Query, Command>
-        {
-            private readonly SchoolContext _db;
-            private readonly IConfigurationProvider _configuration;
-
-            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
-            {
-                _db = db;
-                _configuration = configuration;
-            }
-
-            public async Task<Command> Handle(Query message, CancellationToken token) => await _db
-                .Departments
-                .Where(d => d.Id == message.Id)
-                .ProjectTo<Command>(_configuration)
-                .SingleOrDefaultAsync(token);
-        }
-
-        public class CommandHandler : IRequestHandler<Command>
-        {
-            private readonly SchoolContext _db;
-
-            public CommandHandler(SchoolContext db) => _db = db;
-
-            public async Task<Unit> Handle(Command message, CancellationToken token)
-            {
-                var department = await _db.Departments.FindAsync(message.Id);
-
-                _db.Departments.Remove(department);
-
-                return default;
-            }
+            return default;
         }
     }
 }
