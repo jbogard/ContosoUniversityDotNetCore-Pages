@@ -5,15 +5,15 @@
 
 var highlightFields = function (response) {
 
-    $('.form-group').removeClass('has-error');
-
     $.each(response, function (propName, val) {
         var nameSelector = '[name = "' + propName.replace(/(:|\.|\[|\])/g, "\\$1") + '"]',
             idSelector = '#' + propName.replace(/(:|\.|\[|\])/g, "\\$1");
         var $el = $(nameSelector) || $(idSelector);
 
         if (val.Errors.length > 0) {
-            $el.closest('.form-group').addClass('has-error');
+            $el.addClass('is-invalid');
+        } else {
+            $el.removeClass('is-invalid');
         }
     });
 };
@@ -24,6 +24,7 @@ var highlightErrors = function (xhr) {
         showSummary(data);
         window.scrollTo(0, 0);
     } catch (e) {
+        alert(e);
         // (Hopefully) caught by the generic error handler in `config.js`.
     }
 };
@@ -71,7 +72,7 @@ $('form[method=post]').not('.no-ajax').on('submit', function () {
     var $this = $(this),
         formData = $this.serialize();
 
-    $this.find('div').removeClass('has-error');
+    $this.find('div').removeClass('is-invalid');
 
     $.ajax({
         url: $this.attr('action'),

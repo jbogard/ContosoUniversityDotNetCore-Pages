@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Contoso University</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ContosoUniversity.styles.css" asp-append-version="true" />
+
 </head>
 <body><mini-profiler />
     <header>
@@ -46,12 +48,12 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - Contoso University
+            &copy; 2021 - Contoso University
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/lodash/dist/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 

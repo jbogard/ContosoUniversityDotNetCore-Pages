@@ -37,5 +37,6 @@ public class TagConventions : HtmlConventionRegistry
         Displays.IfPropertyIs<decimal>().ModifyWith(m => m.CurrentTag.Text(m.Value<decimal>().ToString("C")));
     }
 
-    public ElementCategoryExpression DisplayLabels => new ElementCategoryExpression(Library.TagLibrary.Category(nameof(DisplayLabels)).Profile(TagConstants.Default));
+    public ElementCategoryExpression DisplayLabels 
+        => new(Library.TagLibrary.Category(nameof(DisplayLabels)).Profile(TagConstants.Default));
 }
