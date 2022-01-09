@@ -70,7 +70,7 @@ public class Edit : PageModel
 
     public class MappingProfile : Profile
     {
-        public MappingProfile() => CreateMap<Student, Command>();
+        public MappingProfile() => CreateProjection<Student, Command>();
     }
 
     public class QueryHandler : IRequestHandler<Query, Command>

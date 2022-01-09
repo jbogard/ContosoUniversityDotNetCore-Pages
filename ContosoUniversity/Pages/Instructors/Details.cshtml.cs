@@ -54,7 +54,7 @@ public class Details : PageModel
 
     public class MappingProfile : Profile
     {
-        public MappingProfile() => CreateMap<Instructor, Model>();
+        public MappingProfile() => CreateProjection<Instructor, Model>();
     }
 
     public class Handler : IRequestHandler<Query, Model>

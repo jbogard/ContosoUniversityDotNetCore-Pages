@@ -43,7 +43,7 @@ public class Index : PageModel
 
     public class MappingProfile : Profile
     {
-        public MappingProfile() => CreateMap<Department, Model>();
+        public MappingProfile() => CreateProjection<Department, Model>();
     }
 
     public class QueryHandler : IRequestHandler<Query, List<Model>>
