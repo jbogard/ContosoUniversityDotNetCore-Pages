@@ -50,8 +50,8 @@ public class Details : PageModel
     {
         public MappingProfile()
         {
-            CreateMap<Student, Model>();
-            CreateMap<Enrollment, Model.Enrollment>();
+            CreateProjection<Student, Model>();
+            CreateProjection<Enrollment, Model.Enrollment>();
         }
     }
 

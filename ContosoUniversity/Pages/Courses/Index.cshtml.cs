@@ -39,7 +39,7 @@ public class Index : PageModel
 
     public class MappingProfile : Profile
     {
-        public MappingProfile() => CreateMap<Course, Result.Course>();
+        public MappingProfile() => CreateProjection<Course, Result.Course>();
     }
 
     public class Handler : IRequestHandler<Query, Result>

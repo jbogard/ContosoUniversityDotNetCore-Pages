@@ -132,10 +132,10 @@ public class Index : PageModel
     {
         public MappingProfile()
         {
-            CreateMap<Instructor, Model.Instructor>();
-            CreateMap<CourseAssignment, Model.CourseAssignment>();
-            CreateMap<Course, Model.Course>();
-            CreateMap<Enrollment, Model.Enrollment>();
+            CreateProjection<Instructor, Model.Instructor>();
+            CreateProjection<CourseAssignment, Model.CourseAssignment>();
+            CreateProjection<Course, Model.Course>();
+            CreateProjection<Enrollment, Model.Enrollment>();
         }
     }
 

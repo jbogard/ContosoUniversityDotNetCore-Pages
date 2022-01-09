@@ -109,10 +109,10 @@ public class CreateEdit : PageModel
     {
         public MappingProfile()
         {
-            CreateMap<Instructor, Command>()
+            CreateProjection<Instructor, Command>()
                 .ForMember(d => d.SelectedCourses, opt => opt.Ignore())
                 .ForMember(d => d.AssignedCourses, opt => opt.Ignore());
-            CreateMap<CourseAssignment, Command.CourseAssignment>();
+            CreateProjection<CourseAssignment, Command.CourseAssignment>();
         }
     }
 

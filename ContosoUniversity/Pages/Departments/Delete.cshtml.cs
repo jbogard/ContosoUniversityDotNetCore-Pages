@@ -56,7 +56,7 @@ public class Delete : PageModel
 
     public class MappingProfile : Profile
     {
-        public MappingProfile() => CreateMap<Department, Command>();
+        public MappingProfile() => CreateProjection<Department, Command>();
     }
 
     public class QueryHandler : IRequestHandler<Query, Command>
