@@ -1,6 +1,7 @@
 ﻿using ContosoUniversity.Data;
 using ContosoUniversity.Infrastructure;
 using ContosoUniversity.Infrastructure.Tags;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using HtmlTags;
 using MediatR;
@@ -39,8 +40,11 @@ static void RegisterServices(WebApplicationBuilder builder)
         {
             opt.Conventions.ConfigureFilter(new DbContextTransactionPageFilter());
             opt.Conventions.ConfigureFilter(new ValidatorPageFilter());
-        })
-        .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Program>(); });
+        });
+
+    services.AddFluentValidationAutoValidation();
+    services.AddFluentValidationClientsideAdapters();
+    services.AddValidatorsFromAssemblyContaining<Program>();
 
     services.AddMvc(opt => opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider()));
 }

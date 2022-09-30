@@ -20,7 +20,7 @@ public class SliceFixtureCollection : ICollectionFixture<SliceFixture> { }
 
 public class SliceFixture : IAsyncLifetime
 {
-    private readonly Checkpoint _checkpoint;
+    private Respawner _respawner;
     private readonly IConfiguration _configuration;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly WebApplicationFactory<Program> _factory;
@@ -31,8 +31,6 @@ public class SliceFixture : IAsyncLifetime
 
         _configuration = _factory.Services.GetRequiredService<IConfiguration>();
         _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
-
-        _checkpoint = new Checkpoint();
     }
 
     class ContosoTestApplicationFactory 
@@ -209,8 +207,14 @@ public class SliceFixture : IAsyncLifetime
 
     public int NextCourseNumber() => Interlocked.Increment(ref _courseNumber);
 
-    public Task InitializeAsync() 
-        => _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+    public async Task InitializeAsync()
+    {
+        var connectionString = _configuration.GetConnectionString("DefaultConnection");
+        
+        _respawner = await Respawner.CreateAsync(connectionString);
+
+        await _respawner.ResetAsync(connectionString);
+    }
 
     public Task DisposeAsync()
     {
