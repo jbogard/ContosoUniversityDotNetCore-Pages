@@ -48,18 +48,18 @@ public class Index : PageModel
 
     public class QueryHandler : IRequestHandler<Query, List<Model>>
     {
-        private readonly SchoolContext _context;
+        private readonly SchoolContext _db;
         private readonly IConfigurationProvider _configuration;
 
-        public QueryHandler(SchoolContext context, 
+        public QueryHandler(SchoolContext db, 
             IConfigurationProvider configuration)
         {
-            _context = context;
+            _db = db;
             _configuration = configuration;
         }
 
         public Task<List<Model>> Handle(Query message, 
-            CancellationToken token) => _context
+            CancellationToken token) => _db
             .Departments
             .ProjectTo<Model>(_configuration)
             .DecompileAsync()

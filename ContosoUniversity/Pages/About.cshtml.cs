@@ -10,18 +10,18 @@ namespace ContosoUniversity.Pages;
 
 public class AboutPage : PageModel
 {
-    private readonly SchoolContext _context;
+    private readonly SchoolContext _db;
 
-    public AboutPage(SchoolContext context)
+    public AboutPage(SchoolContext db)
     {
-        _context = context;
+        _db = db;
     }
 
     public IEnumerable<EnrollmentDateGroup> Data { get; private set; }
 
     public async Task OnGetAsync()
     {
-        var groups = await _context
+        var groups = await _db
             .Students
             .GroupBy(x => x.EnrollmentDate)
             .Select(x => new EnrollmentDateGroup
