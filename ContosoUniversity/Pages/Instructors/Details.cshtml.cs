@@ -57,12 +57,12 @@ public class Details : PageModel
         public MappingProfile() => CreateProjection<Instructor, Model>();
     }
 
-    public class Handler : IRequestHandler<Query, Model>
+    public class QueryHandler : IRequestHandler<Query, Model>
     {
         private readonly SchoolContext _db;
         private readonly IConfigurationProvider _configuration;
 
-        public Handler(SchoolContext db, IConfigurationProvider configuration)
+        public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
         {
             _db = db;
             _configuration = configuration;

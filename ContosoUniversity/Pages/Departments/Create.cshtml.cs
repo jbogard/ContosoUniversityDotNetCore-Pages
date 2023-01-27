@@ -57,9 +57,9 @@ public class Create : PageModel
 
     public class CommandHandler : IRequestHandler<Command, int>
     {
-        private readonly SchoolContext _context;
+        private readonly SchoolContext _db;
 
-        public CommandHandler(SchoolContext context) => _context = context;
+        public CommandHandler(SchoolContext db) => _db = db;
 
         public async Task<int> Handle(Command message, CancellationToken token)
         {
@@ -71,9 +71,9 @@ public class Create : PageModel
                 StartDate = message.StartDate!.Value
             };
 
-            await _context.Departments.AddAsync(department, token);
+            await _db.Departments.AddAsync(department, token);
 
-            await _context.SaveChangesAsync(token);
+            await _db.SaveChangesAsync(token);
 
             return department.Id;
         }

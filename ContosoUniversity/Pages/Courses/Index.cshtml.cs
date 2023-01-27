@@ -42,12 +42,12 @@ public class Index : PageModel
         public MappingProfile() => CreateProjection<Course, Result.Course>();
     }
 
-    public class Handler : IRequestHandler<Query, Result>
+    public class QueryHandler : IRequestHandler<Query, Result>
     {
         private readonly SchoolContext _db;
         private readonly IConfigurationProvider _configuration;
 
-        public Handler(SchoolContext db, IConfigurationProvider configuration)
+        public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
         {
             _db = db;
             _configuration = configuration;

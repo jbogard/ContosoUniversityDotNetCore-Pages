@@ -49,11 +49,11 @@ public class Create : PageModel
         }
     }
 
-    public class Handler : IRequestHandler<Command, int>
+    public class CommandHandler : IRequestHandler<Command, int>
     {
         private readonly SchoolContext _db;
 
-        public Handler(SchoolContext db) => _db = db;
+        public CommandHandler(SchoolContext db) => _db = db;
 
         public async Task<int> Handle(Command message, CancellationToken token)
         {

@@ -51,18 +51,18 @@ public class Details : PageModel
         
     public class QueryHandler : IRequestHandler<Query, Model>
     {
-        private readonly SchoolContext _context;
+        private readonly SchoolContext _db;
         private readonly IConfigurationProvider _configuration;
 
-        public QueryHandler(SchoolContext context, IConfigurationProvider configuration)
+        public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
         {
-            _context = context;
+            _db = db;
             _configuration = configuration;
         }
 
         public Task<Model> Handle(Query message, 
             CancellationToken token) => 
-            _context.Departments
+            _db.Departments
                 .Where(m => m.Id == message.Id)
                 .ProjectTo<Model>(_configuration)
                 .DecompileAsync()
