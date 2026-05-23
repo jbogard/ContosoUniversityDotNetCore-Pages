@@ -4,7 +4,7 @@
 
 Contoso University, the way I would write it.
 
-To prepare the database, run the Aspire Migrate command on the database (after starting Aspire).
+To prepare the database, run `dotnet tool restore` first, then run the Aspire Migrate command on the database (after starting Aspire).
 
 ## Things demonstrated
 

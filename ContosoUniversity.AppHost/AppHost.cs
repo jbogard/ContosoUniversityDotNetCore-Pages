@@ -28,6 +28,11 @@ db.WithCommand(
 
             await process.WaitForExitAsync(cmd.CancellationToken);
 
+            if (process.ExitCode != 0)
+            {
+                return CommandResults.Failure($"Grate exited with code {process.ExitCode}.");
+            }
+
             return CommandResults.Success();
         },
         commandOptions: new CommandOptions { IconName = "ArrowSquareUpRight" }
